@@ -1,0 +1,42 @@
+-------------------------------------------------TEMPORAIRE-------------------------------------------------
+Risk est un jeu au tour par tour pour 2 a 6 participants.
+Le plateau presente une carte politique stylisee du monde divisee en 42 territoires
+groupes en 6 continents. Pour commencer, un des joueurs distribue les "cartes pays",
+en ayant pris le soin de retirer les jokers. Une fois la distribution faite, tous 
+les joueurs posent un fantassin sur chacun de ces pays. Puis le distributeur des 
+cartes fait choisir, face cachee, une mission. On ne doit bien sur pas connaitre la 
+mission de son adversaire, mais essayer de la deviner en fonction de la strategie de 
+jeu de celui-ci. Ainsi, en fonction de leur mission, ou non s'ils veulent bluffer, 
+les joueurs placent leurs fantassins restants sur leurs pays, sans limite d'effectif, 
+avec un minimum de 1 fantassin par pays.
+Le jeu consiste a allouer des armees dans les territoires controles puis attaquer les 
+zones voisines pour les conquerir. C'etait le premier jeu populaire ou le mouvement 
+n'etait pas determine par un jet de de. La resolution des combats, par exemple, ne 
+demande aucun calcul particulier, il est decide en jetant un, deux ou trois des par 
+joueur participant au combat. Ses deux limites sont la place preponderante du hasard 
+et l'absence de plusieurs niveaux de jeu, c'est a dire l'absence de mecanismes 
+paralleles qui permettent de contrebalancer le desequilibre des forces sur la carte. 
+Un participant est elimine s'il ne lui reste plus de territoires. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+coucou

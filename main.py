@@ -115,10 +115,10 @@ class MainMenu :
                                     troughcolor='red', width=20)
         self.ChoixJoueur.pack(pady=40)
         # bouton valider
-        self.startlogin = tk.Button(self.root, text='VALIDER', font=self.Impact25, bg='grey', command = self.STARTLOGIN)
+        self.startlogin = tk.Button(self.root, text='Valider', font=self.Impact25, bg='grey', command = self.STARTLOGIN)
         self.startlogin.pack(pady=30)
         # bouton retour
-        self.BackTitle = tk.Button(self.root, text='RETOUR AU MENU', font=self.Impact15, bg='grey',command = self.backmenu)
+        self.BackTitle = tk.Button(self.root, text='Retour', font=self.Impact15, bg='grey',command = self.backmenu)
         self.BackTitle.pack(pady=20)
 
     def backmenu(self):
@@ -140,16 +140,16 @@ class MainMenu :
     def Rules_info(self):
         """fenetre d'affichage des regles apres lecture fichier txt contenant les regles"""
         self.ruleswin = tk.Toplevel()
-        self.ruleswin.title("RÈGLES DU JEU")
+        self.ruleswin.title("Règles du jeu")
         self.ruleswin.attributes('-fullscreen', True)  # plein écran
         self.ruleswin.configure(bg='grey')
-        self.txt1 = tk.Label(self.ruleswin, text="RÈGLES DU JEU", font=self.Impact25, bg='grey')
+        self.txt1 = tk.Label(self.ruleswin, text="Règles du jeu", font=self.Impact25, bg='grey')
         self.txt1.pack(pady=50)
         self.display = ScrolledText(self.ruleswin, font=self.Impact15, width=63, bg='lightgrey')  # zone de texte
         self.display.insert(tk.INSERT, self.textrules)
         self.display.configure(state=tk.DISABLED)  # desactive l'édition
         self.display.pack()
-        self.leave = tk.Button(self.ruleswin, text="J'AI COMPRIS!", font=self.Impact15, bg='grey', command = self.escapeTOP)
+        self.leave = tk.Button(self.ruleswin, text="J'ai compris!", font=self.Impact15, bg='grey', command = self.escapeTOP)
         self.leave.pack(pady=40)
 
     def STARTLOGIN(self):
@@ -165,12 +165,16 @@ class MainMenu :
         self.test.pack()
         self.box = tk.Frame(bg='grey', width= 100)
         self.box.pack(pady=50)
+        #rangée de boutons pour chaque connection
         self.buttonPlayer = []
         for i in range(int(self.NbrJoueur.get())):
-            self.buttonPlayer.append(tk.Button(self.box, text='Player '+str(i+1),bg='grey', font = self.Impact25,command=lambda i=i: self.login_win(i)))
+            self.buttonPlayer.append(tk.Button(self.box, text='Joueur '+str(i+1),bg='grey', font = self.Impact25,command=lambda i=i: self.login_win(i)))
             self.buttonPlayer[i].grid(column=i, row=0, sticky=tk.W)
-        self.back_button = tk.Button(self.root, text = 'BACK', font = self.Impact25, bg='grey', command = self.back)
-        self.back_button.pack(pady=50)
+        #creer un compte
+        self.create_acc = tk.Button(self.root, text = 'Créer un compte', bg = 'grey', font = self.Impact15) ##PAS ENCORE DE COMMANDE 
+        self.create_acc.pack(pady=30)
+        self.back_button = tk.Button(self.root, text = 'Retour', font = self.Impact15, bg='grey', command = self.back)
+        self.back_button.pack(pady=10)
 
     def login_win(self,i):
         '''fenetre TOPlayer pour se connecter ou creer un compte'''
@@ -190,11 +194,11 @@ class MainMenu :
         self.mdpentry = tk.Entry(self.login_page,show="*", font = self.Impact25)
         self.mdpentry.pack()
         self.validation = tk.Button(self.login_page, text = 'Valider', command = lambda :self.checkmdp(i,self.choix_joueur.get()), font = self.Impact25, bg='grey')
-        self.validation.pack(pady=20)
+        self.validation.pack(pady=30)
         #self.login_page.bind('<Enter>', self.checkmdp(self.numero_joueur))
         #bouton retour
-        self.retour = tk.Button(self.login_page, text = 'Retour', command = lambda :self.login_page.destroy(), font = self.Impact25, bg='grey')
-        self.retour.pack(pady=20)
+        self.retour = tk.Button(self.login_page, text = 'Retour', command = lambda :self.login_page.destroy(), font = self.Impact15, bg='grey')
+        self.retour.pack(pady=10)
     
     def checkmdp(self,i,joueur):
         print(f'joueur {i+1},{joueur}')
@@ -210,10 +214,12 @@ class MainMenu :
                 self.errorlabel.destroy()
             except:
                 None
+        #si mdp ok, fermer top level et desactiver bouton du joueur qui a validé (mettre en vert le nom du joueur sur le bouton)
 
 
 
     def back(self):
+        self.create_acc.destroy()
         self.test.destroy()
         self.box.destroy()
         self.back_button.destroy()

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """
+
 Created on Tue Mar 28 18:53:04 2023
 
 @author: vince
@@ -53,4 +54,9 @@ def attaque(territoire_attaquant, territoire_attaque):
         print('Oh une égalité, la bataille continue !!')
         attaque(territoire_attaquant, territoire_attaque)
     return gagnant
+
+from random import randint
+def des ():
+    x = randint(1,6)
+    return x
     

@@ -60,3 +60,4 @@ def des ():
     x = randint(1,6)
     return x
     
+#noc kzlsn

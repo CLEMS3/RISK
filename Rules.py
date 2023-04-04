@@ -27,10 +27,13 @@ class mission () :
         self.description = description
         self.etat = etat     #l'etat est un attribut pour distinguer lorsque la mission
                              #est accomplie
-        
+    def mission_accomplie (zone):
+        if zone['joueurs'] == ['joueur'] : 
+            etat = 'accomplie'
 
 class territoire ():
-    def __init__(self, joueur,nombre_troupes,nom_zone,territoires):
+    def __init__(self, joueur,nombre_troupes,nom_zone,nom_territoire):
+        self.nom_territoire = nom_territoire
         self.joueur = joueur
         self.nombre_troupes = nombre_troupes
         self.nom_zone = nom_zone

@@ -12,6 +12,7 @@ try :
 except:
     subprocess.check_call([sys.executable, "-m", "pip", "install", 'pygame'])
     import pygame
+import hashlib
 
 
 class PygameWindow(pygame.Surface):
@@ -51,13 +52,10 @@ class MainMenu :
         # imports
         self.img = tk.PhotoImage(file='Images/Logo_Risk.png')
 
-
-
-        
         with open("Fichiers/Regles.txt", 'r') as f1:
             self.textrules = f1.read()
         #joueurs
-        with open('Joueurs.csv', 'r' ) as f2:
+        with open('Fichiers/Joueurs.csv', 'r' ) as f2:
             csv_joueur = csv.reader(f2,delimiter=";")
             csv_joueur.__next__()
             self.liste_joueurs = []
@@ -65,6 +63,7 @@ class MainMenu :
                 PLAYER = Joueur(row[0],row[1],row[2],row[3])
                 self.liste_joueurs.append(PLAYER)
                 #print(self.liste_joueurs)
+            f2.close()
 
             # Police ecriture
         self.Impact25 = tkinter.font.Font(family='Impact', size=25)
@@ -165,7 +164,7 @@ class MainMenu :
             self.buttonPlayer.append(tk.Button(self.box, text='Joueur '+str(i+1),bg='grey', font = self.Impact25,command=lambda i=i: self.login_win(i)))
             self.buttonPlayer[i].grid(column=i, row=0, sticky=tk.W)
         #creer un compte
-        self.create_acc = tk.Button(self.root, text = 'Créer un compte', bg = 'grey', font = self.Impact15) ##PAS ENCORE DE COMMANDE 
+        self.create_acc = tk.Button(self.root, text = 'Créer un compte', bg = 'grey', font = self.Impact15, command= self.NewAccount('test','motdepasse')) ##PAS ENCORE DE COMMANDE 
         self.create_acc.pack(pady=30)
         self.back_button = tk.Button(self.root, text = 'Retour', font = self.Impact15, bg='grey', command = self.back)
         self.back_button.pack(pady=10)
@@ -210,8 +209,6 @@ class MainMenu :
                 None
         #si mdp ok, fermer top level et desactiver bouton du joueur qui a validé (mettre en vert le nom du joueur sur le bouton)
 
-
-
     def back(self):
         self.create_acc.destroy()
         self.test.destroy()
@@ -228,7 +225,17 @@ class MainMenu :
             window_pg.main_loop()
             pygame.quit()
    
+    def NewAccount(self,Name,Password):
+        print(Password)
+        hashed_mdp = hashlib.sha256(Password.encode('UTF-8')).hexdigest()
+        print(hashed_mdp)
+        newID=len(self.liste_joueurs+1)
+        with open('Fichiers/Joueurs.csv', 'a' ) as f3:
+            writer = csv.writer(f3)
+            nouvelles_données = [newID,Name,hashed_mdp,0]
+        
     
+
 class Joueur():
 
     def __init__(self,ID,nom,MDP,GameWin):
@@ -243,7 +250,7 @@ class Joueur():
     def __repr__(self):
         return(f'{str(self.nom)}')
 
-
+    
 
 if __name__ == "__main__":
     app_tk = MainMenu()

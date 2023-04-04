@@ -41,23 +41,55 @@ class territoire ():
         
         
 def attaque(territoire_attaquant, territoire_attaque):
-    score_attaquant = 0
-    score_attaque = 0
-    gagnant = ''
-    for i in range(territoire_attaquant['nombre_troupes']) : 
-        score_attaquant += des()
-    for i in range(territoire_attaque['nombre_troupes']):
-        score_attaque += des()
-    if score_attaquant<score_attaque : 
-        territoire_attaquant['nombre_troupes']=0
-        gagnant = territoire_attaque['joueur']
-    elif score_attaquant>score_attaque : 
-        territoire_attaque['nombre_troupes']=0
-        gagnant = territoire_attaquant['joueur']
+    scores_attaquant = []
+    scores_attaque = []
+    nb_des_a_comparer = territoire_attaquant['nombre_troupes'] - territoire_attaque['nombre_troupes']
+    for i in range (territoire_attaquant['nombre_troupes']) : 
+        scores_attaquant.append(des())
+    
+    for i in range (territoire_attaque['nombre_troupes']) : 
+        scores_attaque.append(des())
+    scores_attaquant = tri_fusion(scores_attaquant)
+    scores_attaque = tri_fusion(scores_attaque)
+    gagnant = 0
+    while i <= nb_des_a_comparer and gagnant == 0 :
+        if scores_attaquant[i]<=scores_attaque[i] : 
+            territoire_attaquant['nombre_troupes']-=1
+            i+=1
+        if scores_attaquant[i]>scores_attaque[i] : 
+            territoire_attaque['nombre_troupes']-=1
+            i+=1
+        if territoire_attaquant['nombre_troupes']== 0 or territoire_attaque['nombre_troupes'] == 0 :
+            gagnant = 1
+
+
+
+def tri_fusion(liste):
+    liste_triee = []
+    if len(liste)<=1:
+        liste_triee = liste
     else : 
-        print('Oh une égalité, la bataille continue !!')
-        attaque(territoire_attaquant, territoire_attaque)
-    return gagnant
+        milieu = len(liste)//2
+        gauche = tri_fusion(liste[:milieu])
+        droite = tri_fusion(liste[milieu:])
+        liste_triee = fusion_triee(gauche, droite)
+    return liste_triee
+
+def fusion_triee(liste1, liste2):
+    resultat = []
+    i = j = 0
+    while i< len(liste1) and j < len(liste2) : 
+        if liste1[i] < liste2[j] : 
+            resultat.append(liste1[i])
+            i+=1
+        else : 
+            resultat.append(liste2[j])
+            j+=1
+    resultat.extend(liste1[i:] or liste2[j:])
+    return resultat
+
+    
+
 
 def transfert_troupes (territoire_de_depart,territoire_arrivee,nb_troupes_a_transferer):
     territoire_de_depart['nombre_troupes'] = territoire_de_depart['nombre_troupes'] - nb_troupes_a_transferer

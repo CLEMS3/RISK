@@ -12,12 +12,6 @@ try :
 except:
     subprocess.check_call([sys.executable, "-m", "pip", "install", 'pygame'])
     import pygame
-#importation de PIL
-try :
-    from PIL import Image,ImageTk
-except :
-    subprocess.check_call([sys.executable, "-m", "pip", "install", 'pillow'])
-    from PIL import Image, ImageTk
 
 
 class PygameWindow(pygame.Surface):
@@ -55,11 +49,15 @@ class MainMenu :
         # self.root.state('zoomed')      #maximised
 
         # imports
-        self.img = ImageTk.PhotoImage(file="Images\Logo_Risk.png")
-        with open("Fichiers\Regles.txt", 'r') as f1:
+        self.img = tk.PhotoImage(file='Images/Logo_Risk.png')
+
+
+
+        
+        with open("Fichiers/Regles.txt", 'r') as f1:
             self.textrules = f1.read()
         #joueurs
-        with open("Fichiers\Joueurs.csv", 'r' ) as f2:
+        with open('Joueurs.csv', 'r' ) as f2:
             csv_joueur = csv.reader(f2,delimiter=";")
             csv_joueur.__next__()
             self.liste_joueurs = []
@@ -246,7 +244,6 @@ class Joueur():
         return(f'{str(self.nom)}')
 
 
-    ##TEST##
 
 if __name__ == "__main__":
     app_tk = MainMenu()

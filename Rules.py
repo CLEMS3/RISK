@@ -30,10 +30,11 @@ class mission () :
         
 
 class territoire ():
-    def __init__(self, joueur,nombre_troupes,zone):
+    def __init__(self, joueur,nombre_troupes,nom_zone,territoires):
         self.joueur = joueur
         self.nombre_troupes = nombre_troupes
-        self.zone = zone
+        self.nom_zone = nom_zone
+
         
         
 def attaque(territoire_attaquant, territoire_attaque):
@@ -60,4 +61,3 @@ def des ():
     x = randint(1,6)
     return x
     
-#noc kzlsn

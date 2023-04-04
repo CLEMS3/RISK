@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 import csv
 from random import randint
+import tkinter.font
+from tkinter.scrolledtext import ScrolledText
 #importation de pygame, et installation du module si il n'est pas déjà installé
 import subprocess
 import sys
@@ -10,6 +12,12 @@ try :
 except:
     subprocess.check_call([sys.executable, "-m", "pip", "install", 'pygame'])
     import pygame
+#importation de PIL
+try :
+    from PIL import Image,ImageTk
+except :
+    subprocess.check_call([sys.executable, "-m", "pip", "install", 'pillow'])
+    from PIL import Image, ImageTk
 
 
 class PygameWindow(pygame.Surface):
@@ -59,10 +67,6 @@ class MainMenu :
                 PLAYER = Joueur(row[0],row[1],row[2],row[3])
                 self.liste_joueurs.append(PLAYER)
                 #print(self.liste_joueurs)
-
-
-
-
 
             # Police ecriture
         self.Impact25 = tkinter.font.Font(family='Impact', size=25)
@@ -209,6 +213,7 @@ class MainMenu :
         #si mdp ok, fermer top level et desactiver bouton du joueur qui a validé (mettre en vert le nom du joueur sur le bouton)
 
 
+
     def back(self):
         self.create_acc.destroy()
         self.test.destroy()
@@ -241,7 +246,7 @@ class Joueur():
         return(f'{str(self.nom)}')
 
 
-    
+    ##TEST##
 
 if __name__ == "__main__":
     app_tk = MainMenu()

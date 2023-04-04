@@ -12,7 +12,7 @@ def des() :
     return x
 
 class troupes ():
-    def __init__(self,nom,type, joueur,territoire):
+    def __init__(self,nom,type,joueur,territoire):
         self.nom = nom
         self.type = type
         self.joueur = joueur
@@ -59,8 +59,6 @@ def attaque(territoire_attaquant, territoire_attaque):
         attaque(territoire_attaquant, territoire_attaque)
     return gagnant
 
-from random import randint
-def des ():
-    x = randint(1,6)
-    return x
-    
+def transfert_troupes (territoire_de_depart,territoire_arrivee,nb_troupes_a_transferer):
+    territoire_de_depart['nombre_troupes'] = territoire_de_depart['nombre_troupes'] - nb_troupes_a_transferer
+    territoire_arrivee['nombre_troupes'] += nb_troupes_a_transferer

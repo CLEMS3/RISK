@@ -37,7 +37,14 @@ def liste_pays(path_init: str, start: int, stop: int, prefix: str = ""):
 
 # Ecrire la fonction pour changer la couleur des images de pays
 # https://stackoverflow.com/questions/42821442/how-do-i-change-the-colour-of-an-image-in-pygame-without-changing-its-transparen
-
+def changer_couleur(surface, color):
+    """Remplace tous les pixels de la surface avec color, garde la transparence"""
+    width, height = surface.get_size()
+    r, g, b, _ = color
+    for x in range(width):
+        for y in range(height):
+            a = surface.get_at((x, y))[3] #obtient la valeur de la couleur de ce pixel, et le [3] prend donc le 4ème élement, ce qui correspond à la valeur de transparence du pixel
+            surface.set_at((x, y), pygame.Color(r, g, b, a)) #défini la couleur du pixel selon les valeurs de rgb donné en paramètre, et avec la valeur de transparence initiale
 
 class Fenetre():
     def __init__(self,fenetre): 
@@ -56,3 +63,4 @@ class Fenetre():
             image = pygame.transform.scale(image, int(fen_width), int(fen_height))
             lutin = LutinPays(image, int(cptr+1))
             # Appliquer le masque de couleur ici
+            changer_couleur(image)

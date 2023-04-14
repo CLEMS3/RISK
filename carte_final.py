@@ -26,8 +26,9 @@ class PygameWindow(pygame.Surface):
         # Dossier des images de pays
         self.PATH_PAYS = 'Pictures/Maps/'
         # Taille de l'écran
-        self.fen_width = 1280
-        self.fen_height = 800
+        self.fen_width, self.fen_height = pygame.display.get_surface().get_size()
+        self.liste_surface_pays = []
+        self.charger_carte()
 
     def main_loop(self):
         running = True
@@ -43,23 +44,24 @@ class PygameWindow(pygame.Surface):
             # update the window
             pygame.display.update()
 
+    def charger_carte(self):
+        """
+        Charge toute les images et les transforme comme il faut
+        """
+        pays_liste = self.liste_pays(self.PATH_PAYS, 1, 42)
+        self.liste_surface_pays = []
+        for cptr, pays in enumerate(pays_liste):
+            image = pygame.image.load(pays).convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
+            image = pygame.transform.scale(image, (int(self.fen_width), int(self.fen_height)))
+            lutin = LutinPays(image, int(cptr + 1))
+            self.liste_surface_pays.append(image)
+
+
     def afficher_carte(self):
         """
         Affiche les pays sur la surface de la fenêtre
         """
-        pays_liste = self.liste_pays(self.PATH_PAYS, 1, 42)
-        debug = 0
-        for cptr, pays in enumerate(pays_liste):
-            debug +=1
-            print(debug)
-            image = pygame.image.load(pays).convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
-            # coeff = (int(fen_width/image.get_width()), int(fen_height/image.get_width()))
-            image = pygame.transform.scale(image, (int(self.fen_width), int(self.fen_height)))
-            lutin = LutinPays(image, int(cptr+1))
-            # Appliquer le masque de couleur ici
-            ref = time.time()
-            self.changer_couleur(image,(255, 255, 255)) #pour le moment on met tout en blanc, on mettra selon la couleur de la zone plus tard
-            print(time.time()-ref)
+        for image in self.liste_surface_pays:
             self.window.blit(image, (0,0))
 
 

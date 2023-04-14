@@ -55,12 +55,15 @@ class PygameWindow(pygame.Surface):
             image = pygame.transform.scale(image, (int(self.fen_width), int(self.fen_height)))
             lutin = LutinPays(image, int(cptr + 1))
             self.liste_surface_pays.append(image)
+        self.bg = pygame.image.load("Images/ocean_texture.jpg").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
+        self.bg = pygame.transform.scale(self.bg, (int(self.fen_width), int(self.fen_height)))
 
 
     def afficher_carte(self):
         """
         Affiche les pays sur la surface de la fenêtre
         """
+        self.window.blit(self.bg, (0, 0))
         for image in self.liste_surface_pays:
             self.window.blit(image, (0,0))
 

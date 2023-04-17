@@ -6,10 +6,20 @@ Created on Tue Mar 28 18:53:04 2023
 @author: vince
 """
 from random import randint
-
+from time import sleep
 def des() : 
     x = randint(1,6)
     return x
+
+def timer(nb_secondes_dans_compte_à_rebours) :
+    while nb_secondes_dans_compte_à_rebours>=0 : 
+        print(nb_secondes_dans_compte_à_rebours)    # fonction qui marche mais pas très jolie d'un point de vue algorithmique
+        nb_secondes_dans_compte_à_rebours-=1
+        sleep(1)
+
+
+
+
 
 class troupes ():
     def __init__(self,nom,type,joueur,territoire):
@@ -18,25 +28,37 @@ class troupes ():
         self.joueur = joueur
         self.territoire = territoire
         
-        
+#Les missions seront en fonction du nombre de joueurs et du temps approximatifs de la partie à laquelle ils veulent jouer
+# exemple : si il  y a 3 joueurs qui veulent jouer 10 minutes : ils doivent conquérir 15 territoires avec au moins 2 trouês par territoires        
 class mission () : 
-    def __init__(self, zone, joueur, nom, description,etat):
+    def __init__(self, zone, joueur, nom, description,nb_territoires_pour_mission,etat,nb_troupes_sur_territoires):
         self.nom = nom
         self.joueur = joueur
-        self.zone= zone
+        self.nb_territoires_pour_mission = nb_territoires_pour_mission
+        self.nb_troupes_sur_territoires = nb_troupes_sur_territoires
         self.description = description
         self.etat = etat     #l'etat est un attribut pour distinguer lorsque la mission
                              #est accomplie
-    def mission_accomplie (zone):
-        if zone['joueurs'] == ['joueur'] : 
-            etat = 'accomplie'
+    def mission_accomplie (joueur,mission):
+        for territoire_occupe in joueur['territoires_que_le_joueur_occupe'] : 
+            if joueur['nb_territoires_du_joueurs']>=mission['nb_territoires_pour_mission'] and territoire_occupe['nombre_troupes']>= mission['nb_troupes_sur_territoires'] : 
+                mission['etat'] = 'accomplie'
+
+                #pour e+repérer si un joueur a gagné la partie on doit vérifier que toutes les missions qu'il a sont terminées (à lier à la classe joueur)
+
+
+#class bonus() : 
+#a faire quand les autres trucs marcheront
+
+
+
 
 class territoire ():
     def __init__(self, joueur,nombre_troupes,nom_zone,nom_territoire):
         self.nom_territoire = nom_territoire
         self.joueur = joueur
         self.nombre_troupes = nombre_troupes
-        self.nom_zone = nom_zone
+        self.nom_zone = nom_zone    # ce sera pour les bonus
 
         
         
@@ -59,8 +81,12 @@ def attaque(territoire_attaquant, territoire_attaque):
         if scores_attaquant[i]>scores_attaque[i] : 
             territoire_attaque['nombre_troupes']-=1
             i+=1
-        if territoire_attaquant['nombre_troupes']== 0 or territoire_attaque['nombre_troupes'] == 0 :
+        if territoire_attaquant['nombre_troupes']== 0 : 
             gagnant = 1
+            print('Défenseur, vous vous êtes bien défendu, il ne reste plus de troupes à votre ennemi, déplacez vos troupes pour occuper son territoire!')
+        if territoire_attaque['nombre_troupes'] == 0 :
+            gagnant = 1
+            print('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
 
 
 
@@ -92,5 +118,10 @@ def fusion_triee(liste1, liste2):
 
 
 def transfert_troupes (territoire_de_depart,territoire_arrivee,nb_troupes_a_transferer):
-    territoire_de_depart['nombre_troupes'] = territoire_de_depart['nombre_troupes'] - nb_troupes_a_transferer
-    territoire_arrivee['nombre_troupes'] += nb_troupes_a_transferer
+    if nb_troupes_a_transferer<=0 : 
+        print('Veuillez donner un nombre strictement positif de troupes à transférer')
+    if nb_troupes_a_transferer < territoire_de_depart : 
+        territoire_de_depart['nombre_troupes'] = territoire_de_depart['nombre_troupes'] - nb_troupes_a_transferer
+        territoire_arrivee['nombre_troupes'] += nb_troupes_a_transferer
+    else : 
+        print('Vous ne pouvez pas transférer autant de troupes !!!!')

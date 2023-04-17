@@ -6,16 +6,20 @@ Created on Tue Mar 28 18:53:04 2023
 @author: vince
 """
 from random import randint
-from time import sleep
+import time
 def des() : 
     x = randint(1,6)
     return x
 
-def timer(nb_secondes_dans_compte_à_rebours) :
-    while nb_secondes_dans_compte_à_rebours>=0 : 
-        print(nb_secondes_dans_compte_à_rebours)    # fonction qui marche mais pas très jolie d'un point de vue algorithmique
-        nb_secondes_dans_compte_à_rebours-=1
-        sleep(1)
+
+class timer:
+
+    def __init__(self, duree):
+        self.reference = time.time()
+        self.duree = duree
+
+    def temps_restant(self):
+        return self.reference - (time.time() - self.reference)
 
 
 

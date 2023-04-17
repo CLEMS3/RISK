@@ -5,7 +5,7 @@ Created on Tue Mar 28 18:53:04 2023
 
 @author: vince
 """
-from random import randint
+from random import randint, random
 import time
 def des() : 
     x = randint(1,6)
@@ -128,4 +128,67 @@ def transfert_troupes (territoire_de_depart,territoire_arrivee,nb_troupes_a_tran
         territoire_de_depart['nombre_troupes'] = territoire_de_depart['nombre_troupes'] - nb_troupes_a_transferer
         territoire_arrivee['nombre_troupes'] += nb_troupes_a_transferer
     else : 
-        print('Vous ne pouvez pas transférer autant de troupes !!!!')
+        print('Vous ne pouvez pas transférer autant de troupes !!!!')    # il faut rajouter la condition de proximité lorsque l'on est dans la partie après le placement
+
+
+
+
+
+
+
+
+liste_territoires = ledictionnaireissudefichierjsondeCLEMENT.keys()      # CLEMENT, EST CE QUE TU PEUX ARRANGER CETTE PARTIE ????? Il faut que ce soit la liste 
+                                                                        # des territoires qui ne sont pas encore occupés par les autres joueurs au début de la partie
+
+
+def placement_initial(joueur,nb_troupes_a_placer,nb_territoire_a_occuper): 
+    joueur['nb_troupes']= nb_troupes_a_placer          #depend du nombre de joueurs : l'info sera à mettre sur un fichier json que l'on lira
+    i=0
+    territoires_occupés_par_le_joueur=[]
+    nombre_de_troupes_qu_il_reste_a_placer = nb_troupes_a_placer
+
+
+    while i <=nb_territoire_a_occuper : 
+        a=random.randint(0,(len(liste_territoires)-1))                      #  On attribue une liste de territoires a occuper par le joueur
+        territoires_occupés_par_le_joueur.append(liste_territoires[a])
+        liste_territoires.remove(liste_territoires[a])
+        i+=1
+
+    for territoire in territoires_occupés_par_le_joueur : 
+
+
+        if nombre_de_troupes_qu_il_reste_a_placer > 0 : 
+
+            nb_troupes_a_placer_sur_ce_territoire = input("Combien du troupes voulez-vous placer sur ce territoire ?")
+            if nb_troupes_a_placer_sur_ce_territoire <=0 : 
+                print("Vous devez avoir des troupes sur chaque territoire !!")
+                nb_troupes_a_placer_sur_ce_territoire = input("Combien du troupes voulez-vous placer sur ce territoire ?")
+            elif nb_troupes_a_placer_sur_ce_territoire > nombre_de_troupes_qu_il_reste_a_placer : 
+                print("Vous ne pouvez pas placer autant de troupes !! ")
+                nb_troupes_a_placer_sur_ce_territoire = input("Combien du troupes voulez-vous placer sur ce territoire ?")
+            elif nb_troupes_a_placer_sur_ce_territoire >0 : 
+                territoire['nommbre_troupes'] = nb_troupes_a_placer_sur_ce_territoire
+                nombre_de_troupes_qu_il_reste_a_placer-=nb_troupes_a_placer_sur_ce_territoire
+
+
+
+        if nombre_de_troupes_qu_il_reste_a_placer == 0 :
+
+            territoire_ou_il_y_a_trop_de_troupes = territoires_occupés_par_le_joueur(input("Choisissez l'indice du territoire ou il y a trop de troupes"))
+            if territoire_ou_il_y_a_trop_de_troupes['nombre_troupes'] == 0 : 
+                print("Vous n'avez pas encore placé de troupes sur ce territoires")
+                territoire_ou_il_y_a_trop_de_troupes = territoires_occupés_par_le_joueur(input("Choisissez l'indice du territoire ou il y a trop de troupes"))
+            elif territoire_ou_il_y_a_trop_de_troupes['nombre_troupes'] == 1 : 
+                print('Il n y a qu une troupe sur ce territoire, vous ne pouvez pas la transférer')
+                territoire_ou_il_y_a_trop_de_troupes = territoires_occupés_par_le_joueur(input("Choisissez l'indice du territoire ou il y a trop de troupes"))
+            elif territoire_ou_il_y_a_trop_de_troupes['nombre_troupes']>=2 : 
+                nb_troupes_a_transferer = input ("Combien de troupes voulez-vous transférer ? ")
+                if nb_troupes_a_transferer >= territoire_ou_il_y_a_trop_de_troupes['nombre_troupes'] :
+                    print("Vous ne pouvez pas transférer autant de troupes, sinon vous laisserez un territoire complètement sans défense")
+                    nb_troupes_a_transferer = input ("Combien de troupes voulez-vous transférer ? ")
+                elif nb_troupes_a_transferer < territoire_ou_il_y_a_trop_de_troupes['nombre_troupes'] : 
+                    transfert_troupes (territoire_ou_il_y_a_trop_de_troupes,territoire,nb_troupes_a_transferer)
+                
+
+
+    # il faut que le joueur tire des territoires au hasard où il placera ses troupes comme il le souhaite avec toujours au minimum une troupe sur chaque territoire occupé

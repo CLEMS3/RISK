@@ -140,8 +140,9 @@ def transfert_troupes (territoire_de_depart,territoire_arrivee,nb_troupes_a_tran
 liste_territoires = ledictionnaireissudefichierjsondeCLEMENT.keys()      # CLEMENT, EST CE QUE TU PEUX ARRANGER CETTE PARTIE ????? Il faut que ce soit la liste 
                                                                         # des territoires qui ne sont pas encore occupés par les autres joueurs au début de la partie
 
+liste_territoires_restant = liste_territoires                        #j'ai un petit bug a ce niveau 
 
-def placement_initial(joueur,nb_troupes_a_placer,nb_territoire_a_occuper): 
+def placement_initial(joueur,nb_troupes_a_placer,nb_territoire_a_occuper, liste_territoires_restant): 
     joueur['nb_troupes']= nb_troupes_a_placer          #depend du nombre de joueurs : l'info sera à mettre sur un fichier json que l'on lira
     i=0
     territoires_occupés_par_le_joueur=[]
@@ -150,8 +151,8 @@ def placement_initial(joueur,nb_troupes_a_placer,nb_territoire_a_occuper):
 
     while i <=nb_territoire_a_occuper : 
         a=random.randint(0,(len(liste_territoires)-1))                      #  On attribue une liste de territoires a occuper par le joueur
-        territoires_occupés_par_le_joueur.append(liste_territoires[a])
-        liste_territoires.remove(liste_territoires[a])
+        territoires_occupés_par_le_joueur.append(liste_territoires_restant[a])
+        liste_territoires_restant.remove(liste_territoires_restant[a])
         i+=1
 
     for territoire in territoires_occupés_par_le_joueur : 

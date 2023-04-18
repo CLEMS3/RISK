@@ -151,41 +151,8 @@ def liste_territoires():
 def placement_de_tous_les_joueurs(liste_joueurs):
     nb_joueurs = len(liste_joueurs)
     liste_territoires_restant = liste_territoires()
-    if nb_joueurs == 2 :
-        for joueur in liste_joueurs : 
-            placement_initial(joueur,40,14, liste_territoires_restant) #il faut ajouter l'armée neutre qui a le meme nombre de territoires
-    elif nb_joueurs ==3 :                                               #et 2 régiments par territoire
-        for joueur in liste_joueurs : 
-            placement_initial(joueur,35,14, liste_territoires_restant)  
-    elif nb_joueurs==4 :
-        for joueur in liste_joueurs : 
-            joueurs_chanceux = joueur_au_hasard(liste_joueurs)                   
-            if liste_joueurs[joueurs_chanceux[0]]==joueur or liste_joueurs[joueurs_chanceux[1]]==joueur :
-                placement_initial(joueur,30,11, liste_territoires_restant) 
-            else : 
-                placement_initial(joueur,30,10, liste_territoires_restant)
-                    
-    elif nb_joueurs==5 :       
-        for joueur in liste_joueurs : 
-            joueurs_chanceux = joueur_au_hasard(liste_joueurs)          
-            if liste_joueurs[joueurs_chanceux[0]]==joueur or liste_joueurs[joueurs_chanceux[1]]==joueur :
-                placement_initial(joueur,25,9, liste_territoires_restant) 
-            else : 
-                placement_initial(joueur,25,8, liste_territoires_restant)
-    else : 
-        for joueur in liste_joueurs : 
-            placement_initial(joueur,20,7, liste_territoires_restant)           
+    
 
-def joueur_au_hasard(liste_joueurs) : 
-    liste_indice_joueurs_selectionnes=[]
-    indice_joueur_selectionne_1 = -1
-    indice_joueur_selectionne_2 = -1
-    while indice_joueur_selectionne_1 == indice_joueur_selectionne_2 : 
-        indice_joueur_selectionne_1 = randint(0,len(liste_joueurs)-1)
-        indice_joueur_selectionne_2 = randint(0,len(liste_joueurs)-1)
-    liste_indice_joueurs_selectionnes.append(indice_joueur_selectionne_1)
-    liste_indice_joueurs_selectionnes.append(indice_joueur_selectionne_2)
-    return liste_indice_joueurs_selectionnes
 
 
 

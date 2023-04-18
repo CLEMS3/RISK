@@ -7,6 +7,7 @@ Created on Tue Mar 28 18:53:04 2023
 """
 from random import randint, random
 import time
+import json
 def des() : 
     x = randint(1,6)
     return x
@@ -112,7 +113,7 @@ def fusion_triee(liste1, liste2):
         if liste1[i] < liste2[j] : 
             resultat.append(liste1[i])
             i+=1
-        else : 
+        else :
             resultat.append(liste2[j])
             j+=1
     resultat.extend(liste1[i:] or liste2[j:])
@@ -136,13 +137,20 @@ def transfert_troupes (territoire_de_depart,territoire_arrivee,nb_troupes_a_tran
 
 
 
+def import_territoire():
+    with open('Fichiers/package.json', 'r', encoding='utf-8') as f:
+        donnees_lues = json.load(f)
+    return donnees_lues #retourne un dictionnaire
 
-liste_territoires = ledictionnaireissudefichierjsondeCLEMENT.keys()      # CLEMENT, EST CE QUE TU PEUX ARRANGER CETTE PARTIE ????? Il faut que ce soit la liste 
-                                                                        # des territoires qui ne sont pas encore occupés par les autres joueurs au début de la partie
+def liste_territoires():
+    li = []
+    for i in import_territoire().values():
+        li.append(i)
+    return li
 
 def placement_de_tous_les_joueurs(liste_joueurs):
     nb_joueurs = len(liste_joueurs)
-    liste_territoires_restant = liste_territoires                        
+    liste_territoires_restant = liste_territoires()
 
 
 

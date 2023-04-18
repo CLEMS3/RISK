@@ -156,16 +156,16 @@ def placement_de_tous_les_joueurs(liste_joueurs):
         for joueur in liste_joueurs:
             placement_initial(joueur, 35, 14, liste_territoires_restant)
     elif nb_joueurs == 4:
+        joueurs_chanceux = joueur_au_hasard(liste_joueurs)
         for joueur in liste_joueurs:
-            joueurs_chanceux = joueur_au_hasard(liste_joueurs)
             if liste_joueurs[joueurs_chanceux[0]] == joueur or liste_joueurs[joueurs_chanceux[1]] == joueur:
                 placement_initial(joueur, 30, 11, liste_territoires_restant)
             else:
                 placement_initial(joueur, 30, 10, liste_territoires_restant)
 
     elif nb_joueurs == 5:
+        joueurs_chanceux = joueur_au_hasard(liste_joueurs)
         for joueur in liste_joueurs:
-            joueurs_chanceux = joueur_au_hasard(liste_joueurs)
             if liste_joueurs[joueurs_chanceux[0]] == joueur or liste_joueurs[joueurs_chanceux[1]] == joueur:
                 placement_initial(joueur, 25, 9, liste_territoires_restant)
             else:

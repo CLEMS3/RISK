@@ -180,7 +180,7 @@ def placement_initial(joueur,nb_troupes_a_placer,nb_territoire_a_occuper, liste_
 
 
         if nombre_de_troupes_qu_il_reste_a_placer == 0 :
-
+            print("Tous vos territoires ne sont pas occupés par des troupes")
             territoire_ou_il_y_a_trop_de_troupes = territoires_occupés_par_le_joueur(input("Choisissez l'indice du territoire ou il y a trop de troupes"))
             if territoire_ou_il_y_a_trop_de_troupes['nombre_troupes'] == 0 : 
                 print("Vous n'avez pas encore placé de troupes sur ce territoires")

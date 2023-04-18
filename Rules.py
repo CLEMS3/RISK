@@ -34,7 +34,7 @@ class troupes ():
         self.territoire = territoire
         
 #Les missions seront en fonction du nombre de joueurs et du temps approximatifs de la partie à laquelle ils veulent jouer
-# exemple : si il  y a 3 joueurs qui veulent jouer 10 minutes : ils doivent conquérir 15 territoires avec au moins 2 troupes par territoires        
+# exemple : si il  y a 3 joueurs qui veulent jouer 10 minutes : ils doivent conquérir 15 territoires avec au moins 2 trouês par territoires        
 class mission () : 
     def __init__(self, zone, joueur, nom, description,nb_territoires_pour_mission,etat,nb_troupes_sur_territoires):
         self.nom = nom
@@ -70,11 +70,11 @@ class territoire ():
 def attaque(territoire_attaquant, territoire_attaque):
     scores_attaquant = []
     scores_attaque = []
-    nb_des_a_comparer = territoire_attaquant['nombre_troupes'] - (territoire_attaque['nombre_troupes']-1)
+    nb_des_a_comparer = territoire_attaquant['nombre_troupes'] - territoire_attaque['nombre_troupes']
     for i in range (territoire_attaquant['nombre_troupes']) : 
         scores_attaquant.append(des())
     
-    for i in range (territoire_attaque['nombre_troupes']-1) : 
+    for i in range (territoire_attaque['nombre_troupes']) : 
         scores_attaque.append(des())
     scores_attaquant = tri_fusion(scores_attaquant)
     scores_attaque = tri_fusion(scores_attaque)

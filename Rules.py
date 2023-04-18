@@ -129,7 +129,7 @@ def transfert_troupes (territoire_de_depart,territoire_arrivee,nb_troupes_a_tran
         territoire_de_depart['nombre_troupes'] = territoire_de_depart['nombre_troupes'] - nb_troupes_a_transferer
         territoire_arrivee['nombre_troupes'] += nb_troupes_a_transferer
     else : 
-        print('Vous ne pouvez pas transférer autant de troupes !!!!')    # il faut rajouter la condition de proximité avec la matrice d'adjacence
+        print('Vous ne pouvez pas transférer autant de troupes !!!!')    # il faut rajouter la condition de proximité lorsque l'on est dans la partie après le placement
 
 
 

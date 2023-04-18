@@ -8,6 +8,7 @@ Created on Tue Mar 28 18:53:04 2023
 from random import randint, random
 import time
 import json
+import csv
 
 
 def des():
@@ -143,10 +144,10 @@ def liste_territoires():
         li.append(i)
     return li
 
-
+liste_territoires_restant = liste_territoires()
 def placement_de_tous_les_joueurs(liste_joueurs):
     nb_joueurs = len(liste_joueurs)
-    liste_territoires_restant = liste_territoires()
+
     if nb_joueurs == 2:
         for joueur in liste_joueurs:
             placement_initial(joueur, 40, 14,
@@ -215,3 +216,17 @@ def placement_initial(joueur, nb_troupes_a_placer, nb_territoire_a_occuper, list
             nombre_de_troupes_qu_il_reste_a_placer -= nombre_de_troupes_a_ajouter
 
     # il faut que le joueur tire des territoires au hasard où il placera ses troupes comme il le souhaite avec toujours au minimum une troupe sur chaque territoire occupé
+
+def import_adjacence():
+    graphe = list(csv.reader(open("Fichiers/adjacences_territoires.csv")))
+    return graphe
+
+graphe = import_adjacence()
+
+def verification_adjacence(territoire1, territoire2):
+    i = liste_territoires().index(territoire1)
+    j = liste_territoires().index(territoire2)
+    if graphe[i+1][j+1] == 1: #vérifier si il y a pas un décallage
+        return True
+    else:
+        return False

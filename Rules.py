@@ -239,7 +239,137 @@ def verification_adjacence(territoire1, territoire2):
         return True
     else:
         return False
-    
+
+class mission:
+    """
+    Différent type de mission qu'un joueur peut être ammené à remplir, dans une variation des règle
+    The missions are:
+
+        capture Europe, Australia and one other continent #type = 1
+        capture Europe, South America and one other continent #type = 2
+        capture North America and Africa #type = 3
+        capture Asia and South America #type = 4
+        capture North America and Australia #type = 5
+        capture 24 territories #type = 6
+        destroy all armies of a named opponent or, in the case of being the named player oneself, to capture 24 territories # type = 7
+        capture 18 territories and occupy each with two troops # type = 8
+    """
+    def __init__(self, type:int, player:str, liste_territoire_obj,aim:str = None):
+        self.type = type
+        self.aim = aim #ne mettre une valeur que pour la mission 7, qui sera alors le joueur nommé
+        self.player = player
+        self.liste_territoire_obj = liste_territoire_obj #liste_territoire_obj est la liste de tout les objet territoire de associé à chacun des territoires de la carte
+
+    def check(self):
+        #Pourquoi il y a pas de switch case en python putain
+        if self.type == 1:
+            return self.check_mission1()
+        elif self.type == 2:
+            return self.check_mission2()
+        elif self.type == 3:
+            return self.check_mission3()
+        elif self.type == 4:
+            return self.check_mission4()
+        elif self.type == 5:
+            return self.check_mission5()
+        elif self.type == 6:
+            return self.check_mission6()
+        elif self.type == 7:
+            return self.check_mission7()
+        elif self.type == 8:
+            return self.check_mission8()
+
+    def check_continent_owner(self, continent:str):
+        """Continent prend les valeurs Europe, Asie, Amérique du Nord, Amérique du Sud, Afrique, Océanie
+        """
+        own_continent = True
+        for i_territoire in self.liste_territoire_obj:
+            if i_territoire.nom_zone == continent and i_territoire.joueur != self.player:
+                own_continent = False
+                break # blc des conventions de codage du fimi
+        return own_continent
+
+    #perspective d'amélioration pour les check_mission : faire une fonction pour regrouper les missions similaires
+    def check_mission1(self):
+        """capture Europe, Australia and one other continent, return true si vérifié"""
+        check = True
+        others = 0
+        if not (self.check_continent_owner("Europe") and self.check_continent_owner("Océanie")):
+            check = False
+            return check
+        for continent in ["Asie", "Amérique du Nord", "Amérique du Sud", "Afrique"]:
+            if self.check_continent_owner(continent):
+                others+=1
+        if others == 0:
+            check = False
+        return check
+
+    def check_mission2(self):
+        """capture Europe, South America and one other continent, return True si vérifié"""
+        check = True
+        others = 0
+        if not (self.check_continent_owner("Europe") and self.check_continent_owner("Amérique du Sud")):
+            check = False
+            return check
+        for continent in ["Asie", "Amérique du Nord", "Océanie", "Afrique"]:
+            if self.check_continent_owner(continent):
+                others += 1
+        if others == 0:
+            check = False
+        return check
+
+    def check_mission3(self):
+        """capture North America and Africa"""
+        check = True
+        if not (self.check_continent_owner("Amérique du Nord") and self.check_continent_owner("Afrique")):
+            check = False
+        return check
+
+    def check_mission4(self):
+        """capture Asia and South America"""
+        check = True
+        if not (self.check_continent_owner("Asie") and self.check_continent_owner("Amérique du Sud")):
+            check = False
+        return check
+
+    def check_mission5(self):
+        """capture North America and Australia"""
+        check = True
+        if not (self.check_continent_owner("Amérique du Nord") and self.check_continent_owner("Océanie")):
+            check = False
+        return check
+
+    def check_mission6(self):
+        """capture 24 territories"""
+        n = 0
+        for i_territoire in self.liste_territoire_obj:
+            if i_territoire.joueur == self.player:
+                n+=1
+        return True if n >= 24 else False
+
+    def check_mission7(self):
+        """destroy all armies of a named opponent or,
+        in the case of being the named player oneself, to capture 24 territories"""
+        check = True
+        if self.aim != self.player:
+            for i_territoire in self.liste_territoire_obj:
+                if i_territoire.joueur == self.aim and i_territoire.nombre_troupes != 0:
+                    check = False
+            return check
+        else:
+            return self.check_mission6()
+
+    def check_mission8(self):
+        """capture 18 territories and occupy each with two troops
+        J'ai un doute sur comment interpreter la mission mais je comprends qu'il faut controler
+        18 territoires avec 2 troupes dessus, mais que si il y en a avec moins de troupes ils comptent
+        juste pas
+        """
+        n = 0
+        for i_territoire in self.liste_territoire_obj:
+            if i_territoire.joueur == self.player and i_territoire.nombre_troupes >= 2:
+                n += 1
+        return True if n >= 18 else False
 
 '''CE qu'il reste a faire : 
     - Mettre en place les différentes missions et détecter lorsque un joueur les a toutes accomplies

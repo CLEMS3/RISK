@@ -83,9 +83,11 @@ def attaque(territoire_attaquant, territoire_attaque):
         while i <= nb_des_a_comparer and gagnant == 0:
             if scores_attaquant[i] <= scores_attaque[i]:
                 territoire_attaquant['nombre_troupes'] -= 1
+                territoire_attaquant['joueur']['nb_troupes']-=1
                 i += 1
             if scores_attaquant[i] > scores_attaque[i]:
                 territoire_attaque['nombre_troupes'] -= 1
+                territoire_attaque['joueur']['nb_troupes']-=1
                 i += 1
             if territoire_attaquant['nombre_troupes'] == 0:
                 territoire_attaquant['joueur']['territoires'].remove(territoire_attaquant)
@@ -196,8 +198,7 @@ def joueur_au_hasard(liste_joueurs):
 
 
 def placement_initial(joueur, nb_troupes_a_placer, nb_territoire_a_occuper, liste_territoires_restant):
-    joueur[
-        'nb_troupes'] = nb_troupes_a_placer  # depend du nombre de joueurs : l'info sera à mettre sur un fichier json que l'on lira
+    joueur['nb_troupes'] = nb_troupes_a_placer  # depend du nombre de joueurs : l'info sera à mettre sur un fichier json que l'on lira
     i = 0
     territoires_occupés_par_le_joueur = []
     nombre_de_troupes_qu_il_reste_a_placer = nb_troupes_a_placer

@@ -68,31 +68,37 @@ class territoire():
 
 
 def attaque(territoire_attaquant, territoire_attaque):
-    scores_attaquant = []
-    scores_attaque = []
-    nb_des_a_comparer = territoire_attaquant['nombre_troupes'] - (territoire_attaque['nombre_troupes'] - 1)
-    for i in range(territoire_attaquant['nombre_troupes']):
-        scores_attaquant.append(des())
+    if verification_adjacence(territoire_attaquant,territoire_attaque) == True : 
+        scores_attaquant = []
+        scores_attaque = []
+        nb_des_a_comparer = territoire_attaquant['nombre_troupes'] - (territoire_attaque['nombre_troupes'] - 1)
+        for i in range(territoire_attaquant['nombre_troupes']):
+            scores_attaquant.append(des())
 
-    for i in range(territoire_attaque['nombre_troupes'] - 1):
-        scores_attaque.append(des())
-    scores_attaquant = tri_fusion(scores_attaquant)
-    scores_attaque = tri_fusion(scores_attaque)
-    gagnant = 0
-    while i <= nb_des_a_comparer and gagnant == 0:
-        if scores_attaquant[i] <= scores_attaque[i]:
-            territoire_attaquant['nombre_troupes'] -= 1
-            i += 1
-        if scores_attaquant[i] > scores_attaque[i]:
-            territoire_attaque['nombre_troupes'] -= 1
-            i += 1
-        if territoire_attaquant['nombre_troupes'] == 0:
-            gagnant = 1
-            print(
-                'Défenseur, vous vous êtes bien défendu, il ne reste plus de troupes à votre ennemi, déplacez vos troupes pour occuper son territoire!')
-        if territoire_attaque['nombre_troupes'] == 0:
-            gagnant = 1
-            print('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
+        for i in range(territoire_attaque['nombre_troupes'] - 1):
+            scores_attaque.append(des())
+        scores_attaquant = tri_fusion(scores_attaquant)
+        scores_attaque = tri_fusion(scores_attaque)
+        gagnant = 0
+        while i <= nb_des_a_comparer and gagnant == 0:
+            if scores_attaquant[i] <= scores_attaque[i]:
+                territoire_attaquant['nombre_troupes'] -= 1
+                i += 1
+            if scores_attaquant[i] > scores_attaque[i]:
+                territoire_attaque['nombre_troupes'] -= 1
+                i += 1
+            if territoire_attaquant['nombre_troupes'] == 0:
+                territoire_attaquant['joueur']['territoires'].remove(territoire_attaquant)
+                territoire_attaque['joueur']['territoires'].append(territoire_attaquant)
+                print('Défenseur, vous vous êtes bien défendu, il ne reste plus de troupes à votre ennemi, déplacez vos troupes pour occuper son territoire!')
+                gagnant = 1
+            if territoire_attaque['nombre_troupes'] == 0:
+                territoire_attaquant['joueur']['territoires'].apppend(territoire_attaque)
+                territoire_attaque['joueur']['territoires'].remove(territoire_attaque)                                                     
+                print('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
+                gagnant = 1
+    else : 
+        print("Vous ne pouvez pas attaquer ce territoire, il n'est pas adjacent. ")
 
 
 def tri_fusion(liste):
@@ -122,15 +128,17 @@ def fusion_triee(liste1, liste2):
 
 
 def transfert_troupes(territoire_de_depart, territoire_arrivee, nb_troupes_a_transferer):
-    if nb_troupes_a_transferer <= 0:
-        print('Veuillez donner un nombre strictement positif de troupes à transférer')
-    if nb_troupes_a_transferer < territoire_de_depart:
-        territoire_de_depart['nombre_troupes'] = territoire_de_depart['nombre_troupes'] - nb_troupes_a_transferer
-        territoire_arrivee['nombre_troupes'] += nb_troupes_a_transferer
-    else:
-        print(
-            'Vous ne pouvez pas transférer autant de troupes !!!!')  # il faut rajouter la condition de proximité avec la matrice d'adjacence
-
+    if verification_adjacence(territoire_de_depart,territoire_arrivee) == True :
+        if nb_troupes_a_transferer <= 0:
+            print('Veuillez donner un nombre strictement positif de troupes à transférer')
+        if nb_troupes_a_transferer < territoire_de_depart:
+            territoire_de_depart['nombre_troupes'] = territoire_de_depart['nombre_troupes'] - nb_troupes_a_transferer
+            territoire_arrivee['nombre_troupes'] += nb_troupes_a_transferer
+        else:
+            print(
+                'Vous ne pouvez pas transférer autant de troupes !!!!')  # il faut rajouter la condition de proximité avec la matrice d'adjacence
+    else : 
+        print("Vos territoires ne sont pas adjacents, vous ne pouvez pas transférer des troupes, sélectionnez un autre territoire")
 
 def import_territoire():
     with open('Fichiers/package.json', 'r', encoding='utf-8') as f:
@@ -200,7 +208,7 @@ def placement_initial(joueur, nb_troupes_a_placer, nb_territoire_a_occuper, list
         territoires_occupés_par_le_joueur.append(liste_territoires_restant[a])
         liste_territoires_restant.remove(liste_territoires_restant[a])
         i += 1
-
+    joueur['territoires'] = territoires_occupés_par_le_joueur
     for territoire in territoires_occupés_par_le_joueur:
         territoire['nombre_troupes'] = 1  # On place une troupe par territoire
         nombre_de_troupes_qu_il_reste_a_placer -= 1
@@ -230,3 +238,16 @@ def verification_adjacence(territoire1, territoire2):
         return True
     else:
         return False
+    
+
+'''CE qu'il reste a faire : 
+    - Mettre en place les différentes missions et détecter lorsque un joueur les a toutes accomplies
+    - Mettre en place les bonus 
+    - Créer une armée neutre pour les parties à 2 joueurs
+    - Créer une classe qui définit ce qu'esst précisément un tour (le temps, les opéraitons effectuées...) 
+    
+    
+    
+    
+    
+    '''

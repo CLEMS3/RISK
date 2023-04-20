@@ -5,7 +5,7 @@ Created on Tue Mar 28 18:53:04 2023
 
 @author: vince
 """
-from random import randint, random
+from random import randint, random, choice
 import time
 import json
 import csv
@@ -34,12 +34,18 @@ class troupes:
         self.territoire = territoire
 
 
-class territoire():
-    def __init__(self, joueur, nombre_troupes, nom_zone, nom_territoire):
+class territoire:
+    def __init__(self, nom_zone, nom_territoire, joueur=None, nombre_troupes = 0):
         self.nom_territoire = nom_territoire
         self.joueur = joueur
         self.nombre_troupes = nombre_troupes
         self.nom_zone = nom_zone  # ce sera pour les bonus
+
+class Player: #voir avec antoine si on peut pas utiliser directement sa classe Joueur
+    def __init__(self, nom):
+        self.nom = nom
+        self.mission = None
+        self.troupe_a_repartir = 0
 
 class Game:
     def __init__(self, liste_joueurs, play_mode):
@@ -54,15 +60,15 @@ class Game:
 
 
         #initialisation de la partie
-        self.initialisation_territoires() #à voir si c'est utile
+        self.li_territoires_obj = self.init_territoires()
         self.placement_initial() #est ce qu'il faut faire le placement de tous les joueurs aussi ?
-
+        self.init_mission()
 
     def attaque(self, territoire_attaquant, territoire_attaque):
         """"
         Fonction qui gère l'attaque d'un territoire par un joueur
         A remodifier car on va pas mettre des prints
-        WTF c'est censé être quoi territoire_attaquant
+        WTF c'est censé être quoi territoire_attaquant et territoire_attaque
         """
         if self.verification_adjacence(territoire_attaquant,territoire_attaque) == True :
             scores_attaquant = []
@@ -116,7 +122,7 @@ class Game:
         if self.verification_adjacence(territoire_de_depart, territoire_arrivee) == True:
             if nb_troupes_a_transferer <= 0:
                 print('Veuillez donner un nombre strictement positif de troupes à transférer')
-            if nb_troupes_a_transferer < territoire_de_depart:
+            if nb_troupes_a_transferer < territoire_de_depart: #on compare un nombre avec un objet ?
                 territoire_de_depart['nombre_troupes'] = territoire_de_depart[
                                                              'nombre_troupes'] - nb_troupes_a_transferer
                 territoire_arrivee['nombre_troupes'] += nb_troupes_a_transferer
@@ -213,9 +219,38 @@ class Game:
         else:
             return False
 
-    def initialisation_territoires(self):
+    def init_territoires(self):
         """
         Initialise tout les objets territoires et renvoie la liste des territoires
+        Il n'y a au début pas de joueur dessus, et 0 troupes, on les ajoutes après
+        """
+        li = []
+        for area, countries_list in self.dict_territoires:
+            for country in countries_list:
+                li.append(territoire(area, country))
+        return li
+
+
+    def bonus_check(self, joueur):
+        """
+        Vérifie si il y a un bonus de troupe à donner à un joueur
+        A verifier à la fin de chaque tour
+        Attention à ne compter les bonus qu'une fois
+        """
+
+    def init_mission(self):
+        for i in self.liste_joueurs:
+            type = randint(1, 8)
+            # il y a peut etre un problème d'organistion la dedans entre les classes
+            if type == 7:
+                aim = choice(self.liste_joueurs)
+                i.mission = Mission(type, i.nom, self.li_territoires_obj, aim=aim )
+            else:
+                i.mission = Mission(type, i.nom, self.li_territoires_obj)
+
+    def init_joueurs(self):
+        """
+        A voir avec Antoine si c'est necessaire, selon si liste_joueur est une liste de texte ou d'objet
         """
 
 #A quoi ça sert ?

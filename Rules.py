@@ -89,8 +89,21 @@ class Game:
     
     def choix_du_nombre_de_regiments_attaquant(self,territoire_qui_attaque) :  
         """Cette fonction permet de définir combien de régiments attaquent"""
-        if territoire_qui_attaque.nombre_troupes == 2 :
+        nombre_de_regiments_attaquant = 0
+        while nombre_de_regiments_attaquant == 0 : 
+            if territoire_qui_attaque.nombre_troupes == 2 :
+                nombre_de_regiments_attaquant = 1
+            if territoire_qui_attaque.nombre_troupes == 3 : 
+                nombre_de_regiments_attaquant = input('Voulez-vous attaquer avec 1 ou 2 regiments')
+                if nombre_de_regiments_attaquant != 2 and nombre_de_regiments_attaquant != 1 : 
+                    print ('Choisissez un nombre de régiments attaquant parmi 2 et 3')
+            if territoire_qui_attaque.nombre_troupes > 3 : 
+                nombre_de_regiments_attaquant = input('Voulez-vous attaquer avec 1,2 ou 3 regiments')
+                if nombre_de_regiments_attaquant != 1 and nombre_de_regiments_attaquant != 2 and nombre_de_regiments_attaquant!=3 : 
+                    print ('Choisissez un nombre de régiments attaquant parmi 1, 2 et 3')
+        return nombre_de_regiments_attaquant
 
+    def nombre_de_des_a_jouer(self,,territoire)
 
     
     def attaque(self, territoire_attaquant, territoire_attaque):
@@ -111,8 +124,7 @@ class Game:
         
         https://www.regledujeu.fr/risk-regle-du-jeu/#des
         """
-        if droit_attaque(territoire_attaquant, territoire_attaque) == True : 
-            if territoire_attaquant.nombre_troupes == 2 : 
+        
                 
         if territoire_attaquant.nombre_troupes > 1 : 
             if self.verification_adjacence(territoire_attaquant,territoire_attaque) == True :
@@ -136,11 +148,6 @@ class Game:
                         territoire_attaque.nombre_troupes -= 1
                         territoire_attaque.joueur.nb_troupes-=1
                         i += 1
-                    if territoire_attaquant.nombre_troupes == 0:
-                        territoire_attaquant.joueur.territoires.remove(territoire_attaquant)
-                        territoire_attaque.joueur.territoires.append(territoire_attaquant)
-                        print('Défenseur, vous vous êtes bien défendu, il ne reste plus de troupes à votre ennemi, déplacez vos troupes pour occuper son territoire!')
-                        gagnant = 1
                     if territoire_attaque.nombre_troupes == 0:
                         territoire_attaquant.joueur.territoires.apppend(territoire_attaque)
                         territoire_attaque.joueur.territoires.remove(territoire_attaque)
@@ -250,7 +257,7 @@ class Game:
             if nombre_de_troupes_a_ajouter > nombre_de_troupes_qu_il_reste_a_placer:  # Le joueur ajoute des troupes sur les territoires qu'il
                 print("Il ne vous reste pas assez de troupes !!")
             else:
-                territoire_ou_il_faut_ajouter_des_troupes['nombre_troupes'] += nombre_de_troupes_a_ajouter
+                territoire_ou_il_faut_ajouter_des_troupes.nombre_troupes += nombre_de_troupes_a_ajouter
                 nombre_de_troupes_qu_il_reste_a_placer -= nombre_de_troupes_a_ajouter
 
         # il faut que le joueur tire des territoires au hasard où il placera ses troupes comme il le souhaite avec toujours au minimum une troupe sur chaque territoire occupé

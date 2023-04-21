@@ -70,7 +70,7 @@ class Game:
         territoire_attaquant et territoire_attaque sont des objets
         on attribue un dé par troupe sur le territoire (avec un malus pour le territoire attaqué qui en a un de moins)
         on classe les scores des dés dans l'ordre décroissant et on compare les résultat les plus hauts des joueurs un par un pour savoir 
-        combien de régiments sont perdus par chacun 
+        combien de régiments sont perdus par chacun. UN JOUEUR NE POSSEDANT QU UN REGIMENT SUR UN TERRITOIRE NE PEUT ATTAQUER AVEC CELUI-CI
 
         IL Y A UNE ERREUR DANS CETTE FONCTION QU IL FAUT CORRIGER / LE NOMBRE DE DES LANCES PAR L ATTAQUANT EST SEULEMENT DE 3 S IL A 4
         REGIMENT OU PLUS ET QU IL CHOISIT D ATTAQUER AVEC 3 REGIMENTS 
@@ -79,41 +79,45 @@ class Game:
         LE NOMBRE DE DES LANCES EST CHOISI PAR LE JOUEUR 
 
 
-        UN JOUEUR NE POSSEDANT QU UN REGIMENT SUR UN TERRITOIRE NE PEUT ATTAQUER AVEC CELUI-CI
+        
+        https://www.regledujeu.fr/risk-regle-du-jeu/#des
         """
-        if self.verification_adjacence(territoire_attaquant,territoire_attaque) == True :
-            scores_attaquant = []
-            scores_attaque = []
-            nb_des_a_comparer = territoire_attaquant.nombre_troupes - (territoire_attaque.nombre_troupes - 1)
-            for i in range(territoire_attaquant.nombre_troupes):
-                scores_attaquant.append(des())
+        if territoire_attaquant.nombre_troupes > 1 : 
+            if self.verification_adjacence(territoire_attaquant,territoire_attaque) == True :
+                scores_attaquant = []
+                scores_attaque = []
+                nb_des_a_comparer = territoire_attaquant.nombre_troupes - (territoire_attaque.nombre_troupes - 1)
+                for i in range(territoire_attaquant.nombre_troupes):
+                    scores_attaquant.append(des())
 
-            for i in range(territoire_attaque.nombre_troupes - 1):
-                scores_attaque.append(des())
-            scores_attaquant = tri_fusion(scores_attaquant)
-            scores_attaque = tri_fusion(scores_attaque)
-            gagnant = 0
-            while i <= nb_des_a_comparer and gagnant == 0:
-                if scores_attaquant[i] <= scores_attaque[i]:
-                    territoire_attaquant.nombre_troupes -= 1
-                    territoire_attaquant.joueur.nb_troupes-=1
-                    i += 1
-                if scores_attaquant[i] > scores_attaque[i]:
-                    territoire_attaque.nombre_troupes -= 1
-                    territoire_attaque.joueur.nb_troupes-=1
-                    i += 1
-                if territoire_attaquant.nombre_troupes == 0:
-                    territoire_attaquant.joueur.territoires.remove(territoire_attaquant)
-                    territoire_attaque.joueur.territoires.append(territoire_attaquant)
-                    print('Défenseur, vous vous êtes bien défendu, il ne reste plus de troupes à votre ennemi, déplacez vos troupes pour occuper son territoire!')
-                    gagnant = 1
-                if territoire_attaque.nombre_troupes == 0:
-                    territoire_attaquant.joueur.territoires.apppend(territoire_attaque)
-                    territoire_attaque.joueur.territoires.remove(territoire_attaque)
-                    print('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
-                    gagnant = 1
-        else :
-            print("Vous ne pouvez pas attaquer ce territoire, il n'est pas adjacent. ")
+                for i in range(territoire_attaque.nombre_troupes - 1):
+                    scores_attaque.append(des())
+                scores_attaquant = tri_fusion(scores_attaquant)
+                scores_attaque = tri_fusion(scores_attaque)
+                gagnant = 0
+                while i <= nb_des_a_comparer and gagnant == 0:
+                    if scores_attaquant[i] <= scores_attaque[i]:
+                        territoire_attaquant.nombre_troupes -= 1
+                        territoire_attaquant.joueur.nb_troupes-=1
+                        i += 1
+                    if scores_attaquant[i] > scores_attaque[i]:
+                        territoire_attaque.nombre_troupes -= 1
+                        territoire_attaque.joueur.nb_troupes-=1
+                        i += 1
+                    if territoire_attaquant.nombre_troupes == 0:
+                        territoire_attaquant.joueur.territoires.remove(territoire_attaquant)
+                        territoire_attaque.joueur.territoires.append(territoire_attaquant)
+                        print('Défenseur, vous vous êtes bien défendu, il ne reste plus de troupes à votre ennemi, déplacez vos troupes pour occuper son territoire!')
+                        gagnant = 1
+                    if territoire_attaque.nombre_troupes == 0:
+                        territoire_attaquant.joueur.territoires.apppend(territoire_attaque)
+                        territoire_attaque.joueur.territoires.remove(territoire_attaque)
+                        print('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
+                        gagnant = 1
+            else :
+                print("Vous ne pouvez pas attaquer ce territoire, il n'est pas adjacent. ")
+        else : 
+            print("Vous n'avez pas assez de troupes sur ce territoires pour attaquer")
 
     def import_territoire(self):
         with open('Fichiers/package.json', 'r', encoding='utf-8') as f:
@@ -201,7 +205,7 @@ class Game:
             territoires_occupés_par_le_joueur.append(liste_territoires_restant[a])
             liste_territoires_restant.remove(liste_territoires_restant[a])
             i += 1
-        joueur['territoires'] = territoires_occupés_par_le_joueur
+        joueur.territoires = territoires_occupés_par_le_joueur
         for territoire in territoires_occupés_par_le_joueur:
             territoire.nombre_troupes = 1  # On place une troupe par territoire
             territoire.joueur = joueur

@@ -113,6 +113,7 @@ class Game:
         """Cette fonction permet au joueur de déterminer avec combien de dés il veut jouer. Evidemment il a intérêt a jouer avec le plus de dés possibles
         mais il peut faire un autre choix ..."""
         nombre_de_des_a_jouer = 0
+        nb_regiments_attaquant = 0
         while nombre_de_des_a_jouer == 0 : 
             if statut == "Attaquant" : 
                 nb_regiments_attaquant = self.choix_du_nombre_de_regiments_attaquant(territoire)
@@ -139,7 +140,7 @@ class Game:
                         print("Vous devez choisir parmi 1 et 2 dés")
                     else : 
                         nombre_de_des_a_jouer = choix
-        return nombre_de_des_a_jouer
+        return nombre_de_des_a_jouer, nb_regiments_attaquant
     
     def attaque(self, territoire_attaquant, territoire_attaque):
         """"
@@ -157,8 +158,9 @@ class Game:
                 scores_attaquant = []
                 scores_attaque = []
                 gagnant = 0
-                nb_des_attaquant = self.nombre_de_des_a_jouer(territoire_attaquant,"Attaquant")
-                nb_des_attaque = self.nombre_de_des_a_jouer(territoire_attaque,"Attaqué")
+                nb_des_attaquant = self.nombre_de_des_a_jouer(territoire_attaquant,"Attaquant")[0]
+                nb_regiments_attaquant = self.nombre_de_des_a_jouer(territoire_attaquant,"Attaquant")[1]
+                nb_des_attaque = self.nombre_de_des_a_jouer(territoire_attaque,"Attaqué")[0]
                 nb_des_a_comparer = nb_des_attaquant - nb_des_attaque
                 for i in range(nb_des_attaquant):
                     scores_attaquant.append(des())
@@ -183,8 +185,8 @@ class Game:
                         territoire_attaque.joueur = territoire_attaquant.joueur
                         print('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
                         nombre_de_troupes_a_transferer = 0 
-                        while nombre_de_troupes_a_transferer <= 0 or nombre_de_troupes_a_transferer > territoire_attaquant.nombre_troupes :
-                            nombre_de_troupes_a_transferer = input("Les troupes attaquante doivent occuper ce territoire, le temps que d'autres renforts arrivent. Combien voulez vous en laisser ? ")
+                        while nombre_de_troupes_a_transferer < nb_regiments_attaquant or nombre_de_troupes_a_transferer > territoire_attaquant.nombre_troupes :
+                            nombre_de_troupes_a_transferer = input("Les troupes attaquante doivent occuper ce territoire, le temps que d'autres renforts arrivent. Combien voulez vous en laisser ( il faut au minimum que vous utilisiez les régiments qui attaquaient? ")
                         self.transfert_troupes(territoire_attaquant, territoire_attaque, nombre_de_troupes_a_transferer)
                         gagnant = 1
         else : 

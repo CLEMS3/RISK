@@ -98,7 +98,7 @@ class Game:
                 while i <= nb_des_a_comparer and gagnant == 0:
                     if scores_attaquant[i] <= scores_attaque[i]:
                         territoire_attaquant.nombre_troupes -= 1
-                        territoire_attaquant.joueur.nb_troupes-=1
+                        territoire_attaquant.joueur.nb_troupes-=1    # Changer : territoire_attaquant.joueur = territoire_attaque.joueur...
                         i += 1
                     if scores_attaquant[i] > scores_attaque[i]:
                         territoire_attaque.nombre_troupes -= 1

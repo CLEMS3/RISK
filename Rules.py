@@ -90,73 +90,105 @@ class Game:
     def choix_du_nombre_de_regiments_attaquant(self,territoire_qui_attaque) :  
         """Cette fonction permet de définir combien de régiments attaquent"""
         nombre_de_regiments_attaquant = 0
+        choix = 0
         while nombre_de_regiments_attaquant == 0 : 
             if territoire_qui_attaque.nombre_troupes == 2 :
                 nombre_de_regiments_attaquant = 1
             if territoire_qui_attaque.nombre_troupes == 3 : 
-                nombre_de_regiments_attaquant = input('Voulez-vous attaquer avec 1 ou 2 regiments')
-                if nombre_de_regiments_attaquant != 2 and nombre_de_regiments_attaquant != 1 : 
+                choix = input('Voulez-vous attaquer avec 1 ou 2 regiments')
+                if choix != 2 and choix != 1 : 
                     print ('Choisissez un nombre de régiments attaquant parmi 2 et 3')
+                else : 
+                    nombre_de_regiments_attaquant = choix
             if territoire_qui_attaque.nombre_troupes > 3 : 
-                nombre_de_regiments_attaquant = input('Voulez-vous attaquer avec 1,2 ou 3 regiments')
-                if nombre_de_regiments_attaquant != 1 and nombre_de_regiments_attaquant != 2 and nombre_de_regiments_attaquant!=3 : 
+                choix = input('Voulez-vous attaquer avec 1,2 ou 3 regiments')
+                if choix != 1 and choix != 2 and choix !=3 : 
                     print ('Choisissez un nombre de régiments attaquant parmi 1, 2 et 3')
+                else : 
+                    nombre_de_regiments_attaquant = choix
+
         return nombre_de_regiments_attaquant
 
-    def nombre_de_des_a_jouer(self,,territoire)
-
+    def nombre_de_des_a_jouer(self,territoire,statut) : 
+        """Cette fonction permet au joueur de déterminer avec combien de dés il veut jouer. Evidemment il a intérêt a jouer avec le plus de dés possibles
+        mais il peut faire un autre choix ..."""
+        nombre_de_des_a_jouer = 0
+        while nombre_de_des_a_jouer == 0 : 
+            if statut == "Attaquant" : 
+                nb_regiments_attaquant = self.choix_du_nombre_de_regiments_attaquant(territoire)
+                if nb_regiments_attaquant == 1 : 
+                    nombre_de_des_a_jouer =  1 
+                if nb_regiments_attaquant == 2 :
+                    choix = input("Vous pouvez utiliser 1 ou 2 dés. Combien en voulez vous ? ")
+                    if choix != 1 and choix != 2 :
+                        print("Vous devez choisir parmi 1 et 2 dés")
+                    else : 
+                        nombre_de_des_a_jouer = choix
+                if nb_regiments_attaquant == 3 :
+                    choix = input("Vous pouvez utiliser 1 ou 2 ou 3 dés. Combien en voulez vous ? ")
+                    if choix != 1 and choix != 2 and choix != 3 :
+                        print("Vous devez choisir parmi 1, 2 et 3 dés")
+                    else : 
+                        nombre_de_des_a_jouer = choix
+            elif statut == "Attaqué" : 
+                if territoire.nombre_troupes == 1 or territoire.nombre_troupe == 2 :
+                    nombre_de_des_a_jouer = 1
+                else : 
+                    choix = input("Vous pouvez utiliser 1 ou 2 dés pour vous défendre. Que choisissez vous ? ")
+                    if choix != 1 and choix != 2 :
+                        print("Vous devez choisir parmi 1 et 2 dés")
+                    else : 
+                        nombre_de_des_a_jouer = choix
+        return nombre_de_des_a_jouer
     
     def attaque(self, territoire_attaquant, territoire_attaque):
         """"
         Fonction qui gère l'attaque d'un territoire par un joueur
         territoire_attaquant et territoire_attaque sont des objets
-        on attribue un dé par troupe sur le territoire (avec un malus pour le territoire attaqué qui en a un de moins)
-        on classe les scores des dés dans l'ordre décroissant et on compare les résultat les plus hauts des joueurs un par un pour savoir 
-        combien de régiments sont perdus par chacun. UN JOUEUR NE POSSEDANT QU UN REGIMENT SUR UN TERRITOIRE NE PEUT ATTAQUER AVEC CELUI-CI
-
-        IL Y A UNE ERREUR DANS CETTE FONCTION QU IL FAUT CORRIGER / LE NOMBRE DE DES LANCES PAR L ATTAQUANT EST SEULEMENT DE 3 S IL A 4
+        LE NOMBRE DE DES LANCES PAR L ATTAQUANT EST SEULEMENT DE 3 S IL A 4
         REGIMENT OU PLUS ET QU IL CHOISIT D ATTAQUER AVEC 3 REGIMENTS 
         LE NOMBRE DE DES LANCES PAR CELUI QUI ATTAQUE EST SEULEMENT DE 2 AU MAXIMUM SI IL A 3 REGIMENTS OU PLUS SUR LE TERRITOIRE
 
         LE NOMBRE DE DES LANCES EST CHOISI PAR LE JOUEUR 
-
-
         
         https://www.regledujeu.fr/risk-regle-du-jeu/#des
-        """
-        
-                
-        if territoire_attaquant.nombre_troupes > 1 : 
-            if self.verification_adjacence(territoire_attaquant,territoire_attaque) == True :
+        """      
+        if self.droit_attaque(territoire_attaquant, territoire_attaque) == True : 
                 scores_attaquant = []
                 scores_attaque = []
-                nb_des_a_comparer = territoire_attaquant.nombre_troupes - (territoire_attaque.nombre_troupes - 1)
-                for i in range(territoire_attaquant.nombre_troupes):
+                gagnant = 0
+                nb_des_attaquant = self.nombre_de_des_a_jouer(territoire_attaquant,"Attaquant")
+                nb_des_attaque = self.nombre_de_des_a_jouer(territoire_attaque,"Attaqué")
+                nb_des_a_comparer = nb_des_attaquant - nb_des_attaque
+                for i in range(nb_des_attaquant):
                     scores_attaquant.append(des())
-
-                for i in range(territoire_attaque.nombre_troupes - 1):
+                for i in range(nb_des_attaque):
                     scores_attaque.append(des())
                 scores_attaquant = tri_fusion(scores_attaquant)
                 scores_attaque = tri_fusion(scores_attaque)
-                gagnant = 0
                 while i <= nb_des_a_comparer and gagnant == 0:
                     if scores_attaquant[i] <= scores_attaque[i]:
                         territoire_attaquant.nombre_troupes -= 1
-                        territoire_attaquant.joueur.nb_troupes-=1    # Changer : territoire_attaquant.joueur = territoire_attaque.joueur...
+                        territoire_attaquant.joueur.nb_troupes-=1    
+                        print("Le territoire attaquant perd une troupe")
                         i += 1
                     if scores_attaquant[i] > scores_attaque[i]:
                         territoire_attaque.nombre_troupes -= 1
                         territoire_attaque.joueur.nb_troupes-=1
+                        print("Le territoire attaqué perd une troupe")
                         i += 1
                     if territoire_attaque.nombre_troupes == 0:
                         territoire_attaquant.joueur.territoires.apppend(territoire_attaque)
                         territoire_attaque.joueur.territoires.remove(territoire_attaque)
+                        territoire_attaque.joueur = territoire_attaquant.joueur
                         print('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
+                        nombre_de_troupes_a_transferer = 0 
+                        while nombre_de_troupes_a_transferer <= 0 or nombre_de_troupes_a_transferer > territoire_attaquant.nombre_troupes :
+                            nombre_de_troupes_a_transferer = input("Les troupes attaquante doivent occuper ce territoire, le temps que d'autres renforts arrivent. Combien voulez vous en laisser ? ")
+                        self.transfert_troupes(territoire_attaquant, territoire_attaque, nombre_de_troupes_a_transferer)
                         gagnant = 1
-            else :
-                print("Vous ne pouvez pas attaquer ce territoire, il n'est pas adjacent. ")
         else : 
-            print("Vous n'avez pas assez de troupes sur ce territoires pour attaquer")
+            print("Vous ne pouvez pas attaquer")
 
     def import_territoire(self):
         with open('Fichiers/package.json', 'r', encoding='utf-8') as f:

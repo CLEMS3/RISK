@@ -67,8 +67,10 @@ class Game:
     def attaque(self, territoire_attaquant, territoire_attaque):
         """"
         Fonction qui gère l'attaque d'un territoire par un joueur
-        A remodifier car on va pas mettre des prints
-        WTF c'est censé être quoi territoire_attaquant et territoire_attaque
+        territoire_attaquant et territoire_attaque sont des objets
+        on attribue un dé par troupe sur le territoire (avec un malus pour le territoire attaqué qui en a un de moins)
+        on classe les scores des dés dans l'ordre décroissant et on compare les résultat les plus hauts des joueurs un par un pour savoir 
+        combien de régiments sont perdus par chacun 
         """
         if self.verification_adjacence(territoire_attaquant,territoire_attaque) == True :
             scores_attaquant = []
@@ -135,6 +137,8 @@ class Game:
 
 
     def placement_de_tous_les_joueurs(self, liste_joueurs):
+        """Cette fonction gère le placement des joueurs en début de partie en fonction du nombre de joueurs
+        Elle fait appel aux fonctions joueurs au hasard et placement_initial pour cela"""
         nb_joueurs = len(liste_joueurs)
 
         if nb_joueurs == 2:
@@ -164,6 +168,7 @@ class Game:
                 self.placement_initial(joueur, 20, 7, self.liste_territoires_restant)
 
     def joueur_au_hasard(self, liste_joueurs):
+        """Permet de retourner 2 indices de joueurs dans la liste des joueurs qui vont avoir un territoire en plus en début de partie"""
         liste_indice_joueurs_selectionnes = []
         indice_joueur_selectionne_1 = -1
         indice_joueur_selectionne_2 = -1
@@ -175,6 +180,8 @@ class Game:
         return liste_indice_joueurs_selectionnes
 
     def placement_initial(self, joueur, nb_troupes_a_placer, nb_territoire_a_occuper, liste_territoires_restant):
+        """Gère le placment d'un joueur (il choisit où placer ses troupes en étant obligé d'avoir une troupe au minimum sur chaque
+        territoire)"""
         joueur.nb_troupes = nb_troupes_a_placer  # depend du nombre de joueurs : l'info sera à mettre sur un fichier json que l'on lira
         i = 0
         territoires_occupés_par_le_joueur = []
@@ -254,6 +261,7 @@ class Game:
 
 #A quoi ça sert ?
 def tri_fusion(liste):
+    """Permet de retourner la liste de scores de dés dans l'ordre décroissant """
     liste_triee = []
     if len(liste) <= 1:
         liste_triee = liste

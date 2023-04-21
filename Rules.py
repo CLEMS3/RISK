@@ -71,6 +71,15 @@ class Game:
         on attribue un dé par troupe sur le territoire (avec un malus pour le territoire attaqué qui en a un de moins)
         on classe les scores des dés dans l'ordre décroissant et on compare les résultat les plus hauts des joueurs un par un pour savoir 
         combien de régiments sont perdus par chacun 
+
+        IL Y A UNE ERREUR DANS CETTE FONCTION QU IL FAUT CORRIGER / LE NOMBRE DE DES LANCES PAR L ATTAQUANT EST SEULEMENT DE 3 S IL A 4
+        REGIMENT OU PLUS ET QU IL CHOISIT D ATTAQUER AVEC 3 REGIMENTS 
+        LE NOMBRE DE DES LANCES PAR CELUI QUI ATTAQUE EST SEULEMENT DE 2 AU MAXIMUM SI IL A 3 REGIMENTS OU PLUS SUR LE TERRITOIRE
+
+        LE NOMBRE DE DES LANCES EST CHOISI PAR LE JOUEUR 
+
+
+        UN JOUEUR NE POSSEDANT QU UN REGIMENT SUR UN TERRITOIRE NE PEUT ATTAQUER AVEC CELUI-CI
         """
         if self.verification_adjacence(territoire_attaquant,territoire_attaque) == True :
             scores_attaquant = []

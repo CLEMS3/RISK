@@ -64,6 +64,35 @@ class Game:
         self.placement_initial() #est ce qu'il faut faire le placement de tous les joueurs aussi ?
         self.init_mission()
 
+
+
+    def droit_attaque(self, territoire_attaquant, territoire_attaque):
+        """Cette fonction repère si l'attaque est autorisée"""
+        adjacence = self.verification_adjacence(territoire_attaquant,territoire_attaque)
+        proprietaires_differents = False
+        troupes_suffisantes = False
+        droit_attaque = False
+        if territoire_attaquant.joueur != territoire_attaque.joueur : 
+            proprietaires_differents = True
+            if territoire_attaquant.nombre_troupes > 1 : 
+                troupes_suffisantes = True
+                if adjacence == True : 
+                    droit_attaque == True
+                else : 
+                    print("Le territoire que vous voulez attaquer n'est pas adjacents à votre territoire attaquant")
+            else : 
+                print ("Vous n'avez pas assez de troupes pour attaquer")
+        else : 
+            print("Vous ne pouvez pas attaquer votre propre territoire !!")        
+        
+        return droit_attaque
+    
+    def choix_du_nombre_de_regiments_attaquant(self,territoire_qui_attaque) :  
+        """Cette fonction permet de définir combien de régiments attaquent"""
+        if territoire_qui_attaque.nombre_troupes == 2 :
+
+
+    
     def attaque(self, territoire_attaquant, territoire_attaque):
         """"
         Fonction qui gère l'attaque d'un territoire par un joueur
@@ -82,6 +111,9 @@ class Game:
         
         https://www.regledujeu.fr/risk-regle-du-jeu/#des
         """
+        if droit_attaque(territoire_attaquant, territoire_attaque) == True : 
+            if territoire_attaquant.nombre_troupes == 2 : 
+                
         if territoire_attaquant.nombre_troupes > 1 : 
             if self.verification_adjacence(territoire_attaquant,territoire_attaque) == True :
                 scores_attaquant = []

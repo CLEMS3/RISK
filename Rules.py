@@ -190,6 +190,7 @@ class Game:
         joueur['territoires'] = territoires_occupés_par_le_joueur
         for territoire in territoires_occupés_par_le_joueur:
             territoire['nombre_troupes'] = 1  # On place une troupe par territoire
+            territoire['joueur'] = joueur
             nombre_de_troupes_qu_il_reste_a_placer -= 1
 
         while nombre_de_troupes_qu_il_reste_a_placer > 0:

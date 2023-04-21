@@ -73,32 +73,32 @@ class Game:
         if self.verification_adjacence(territoire_attaquant,territoire_attaque) == True :
             scores_attaquant = []
             scores_attaque = []
-            nb_des_a_comparer = territoire_attaquant['nombre_troupes'] - (territoire_attaque['nombre_troupes'] - 1)
-            for i in range(territoire_attaquant['nombre_troupes']):
+            nb_des_a_comparer = territoire_attaquant.nombre_troupes - (territoire_attaque.nombre_troupes - 1)
+            for i in range(territoire_attaquant.nombre_troupes):
                 scores_attaquant.append(des())
 
-            for i in range(territoire_attaque['nombre_troupes'] - 1):
+            for i in range(territoire_attaque.nombre_troupes - 1):
                 scores_attaque.append(des())
             scores_attaquant = tri_fusion(scores_attaquant)
             scores_attaque = tri_fusion(scores_attaque)
             gagnant = 0
             while i <= nb_des_a_comparer and gagnant == 0:
                 if scores_attaquant[i] <= scores_attaque[i]:
-                    territoire_attaquant['nombre_troupes'] -= 1
-                    territoire_attaquant['joueur']['nb_troupes']-=1
+                    territoire_attaquant.nombre_troupes -= 1
+                    territoire_attaquant.joueur.nb_troupes-=1
                     i += 1
                 if scores_attaquant[i] > scores_attaque[i]:
-                    territoire_attaque['nombre_troupes'] -= 1
-                    territoire_attaque['joueur']['nb_troupes']-=1
+                    territoire_attaque.nombre_troupes -= 1
+                    territoire_attaque.joueur.nb_troupes-=1
                     i += 1
-                if territoire_attaquant['nombre_troupes'] == 0:
-                    territoire_attaquant['joueur']['territoires'].remove(territoire_attaquant)
-                    territoire_attaque['joueur']['territoires'].append(territoire_attaquant)
+                if territoire_attaquant.nombre_troupes == 0:
+                    territoire_attaquant.joueur.territoires.remove(territoire_attaquant)
+                    territoire_attaque.joueur.territoires.append(territoire_attaquant)
                     print('Défenseur, vous vous êtes bien défendu, il ne reste plus de troupes à votre ennemi, déplacez vos troupes pour occuper son territoire!')
                     gagnant = 1
-                if territoire_attaque['nombre_troupes'] == 0:
-                    territoire_attaquant['joueur']['territoires'].apppend(territoire_attaque)
-                    territoire_attaque['joueur']['territoires'].remove(territoire_attaque)
+                if territoire_attaque.nombre_troupes == 0:
+                    territoire_attaquant.joueur.territoires.apppend(territoire_attaque)
+                    territoire_attaque.joueur.territoires.remove(territoire_attaque)
                     print('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
                     gagnant = 1
         else :
@@ -123,9 +123,8 @@ class Game:
             if nb_troupes_a_transferer <= 0:
                 print('Veuillez donner un nombre strictement positif de troupes à transférer')
             if nb_troupes_a_transferer < territoire_de_depart: #on compare un nombre avec un objet ?
-                territoire_de_depart['nombre_troupes'] = territoire_de_depart[
-                                                             'nombre_troupes'] - nb_troupes_a_transferer
-                territoire_arrivee['nombre_troupes'] += nb_troupes_a_transferer
+                territoire_de_depart.nombre_troupes = territoire_de_depart.nombre_troupes - nb_troupes_a_transferer
+                territoire_arrivee.nombre_troupes += nb_troupes_a_transferer
             else:
                 print(
                     'Vous ne pouvez pas transférer autant de troupes !!!!')  # il faut rajouter la condition de proximité avec la matrice d'adjacence
@@ -176,8 +175,7 @@ class Game:
         return liste_indice_joueurs_selectionnes
 
     def placement_initial(self, joueur, nb_troupes_a_placer, nb_territoire_a_occuper, liste_territoires_restant):
-        joueur[
-            'nb_troupes'] = nb_troupes_a_placer  # depend du nombre de joueurs : l'info sera à mettre sur un fichier json que l'on lira
+        joueur.nb_troupes = nb_troupes_a_placer  # depend du nombre de joueurs : l'info sera à mettre sur un fichier json que l'on lira
         i = 0
         territoires_occupés_par_le_joueur = []
         nombre_de_troupes_qu_il_reste_a_placer = nb_troupes_a_placer
@@ -189,8 +187,8 @@ class Game:
             i += 1
         joueur['territoires'] = territoires_occupés_par_le_joueur
         for territoire in territoires_occupés_par_le_joueur:
-            territoire['nombre_troupes'] = 1  # On place une troupe par territoire
-            territoire['joueur'] = joueur
+            territoire.nombre_troupes = 1  # On place une troupe par territoire
+            territoire.joueur = joueur
             nombre_de_troupes_qu_il_reste_a_placer -= 1
 
         while nombre_de_troupes_qu_il_reste_a_placer > 0:
@@ -264,7 +262,8 @@ def tri_fusion(liste):
         gauche = tri_fusion(liste[:milieu])
         droite = tri_fusion(liste[milieu:])
         liste_triee = fusion_triee(gauche, droite)
-    return liste_triee
+        liste_triee_ordre_decroissant = liste_triee[::-1]
+    return liste_triee_ordre_decroissant
 
 
 def fusion_triee(liste1, liste2):

@@ -55,6 +55,7 @@ class MainMenu :
 
         with open("Fichiers/Regles.txt", 'r') as f1:
             self.textrules = f1.read()
+
         #joueurs
         with open('Fichiers/Joueurs.csv', 'r' ) as f2:
             csv_joueur = csv.reader(f2,delimiter=",")
@@ -72,7 +73,7 @@ class MainMenu :
         self.OUT = [] #liste des joueurs connecté lors du lancement de la partie, sert pour init le jeu
         
 
-            # Police ecriture
+        # Police ecriture
         self.Impact25 = tkinter.font.Font(family='Impact', size=25)
         self.Impact15 = tkinter.font.Font(family='Impact', size=15)
         # placement des widgets
@@ -86,7 +87,7 @@ class MainMenu :
         h = self.img.height()
         self.logo = tk.Canvas(self.root, width=w, height=h, bg='grey', highlightthickness=0)
         self.logo.create_image(w / 2, h / 2, image=self.img)
-        self.logo.pack(pady=50)
+        self.logo.pack(pady=80)
         # Init boutons
         self.boutons_menu()
 
@@ -94,20 +95,23 @@ class MainMenu :
         # New game
         self.NG = tk.Button(self.root, text="NOUVELLE PARTIE", bg='grey', font=self.Impact25,command = self.new_game)
         #self.NG.bind('<Button-1>', self.new_game)
-        self.NG.pack(pady=80)
+        self.NG.pack(pady=30)
+        #classement des joueurs
+        self.classement = tk.Button(self.root, text='CLASSEMENT', bg='grey', font=self.Impact25, command=self.classwin)
+        self.classement.pack(pady=30)
         # Rules
         self.rules = tk.Button(self.root, text='RÈGLES DU JEU', font=self.Impact25, bg='grey', command = self.Rules_info)
-    
         self.rules.pack(pady=30)
 
     def new_game(self):
         '''Nouveaux boutons pour choisir le nombre de joueur et lancer la partie'''
         # remove old buttons
+        self.classement.destroy()
         self.NG.destroy()
         self.rules.destroy()
         # label et scale pour choix
         self.LabelJoueur = tk.Label(self.root, text='NOMBRE DE JOUEURS', font=self.Impact25, bg="grey")
-        self.LabelJoueur.pack(pady=50)
+        self.LabelJoueur.pack(pady=40)
         self.NbrJoueur = tk.DoubleVar()
         self.ChoixJoueur = tk.Scale(self.root, orient='horizontal', from_=2, to=6, resolution=1, tickinterval=1,
                                     length=400, variable=self.NbrJoueur, font=self.Impact25, bg='grey',
@@ -121,8 +125,30 @@ class MainMenu :
         self.BackTitle = tk.Button(self.root, text='Retour', font=self.Impact15, bg='grey',command = self.backmenu)
         self.BackTitle.pack(pady=20)
 
+    def liste_play_classe(self):
+        test= []
+        for player in self.liste_joueurs:
+            test.append(player.win)
+        test.sort(reverse=True)
+        self.liste_classe=[]
+        tempo = list(self.liste_joueurs)
+        print(test)
+        try:
+            for i in range(5):
+                for player in tempo:
+                    if player.win == test[i]:
+                        self.liste_classe.append(player)
+                        tempo.remove(player)
+        except:
+            for i in range(len(tempo)):
+                for player in tempo:
+                    if player.win == test[i]:
+                        self.liste_classe.append(player)
+                        tempo.remove(player)
+        
+
     def backmenu(self):
-        '''retour au menu, affichages de boutons "menu"'''
+        '''retour au menu apres avoir cliqué sur'NOUVELLE PARTIE', affichages de boutons "menu"'''
         # remove all buttons + remmettre anciens
         self.LabelJoueur.destroy()
         self.NbrJoueur = 0
@@ -131,11 +157,42 @@ class MainMenu :
         self.startlogin.destroy()
         self.boutons_menu()
 
+
     def escape(self, event):
         self.root.quit()
 
     def escapeTOP(self):
         self.ruleswin.destroy()
+
+    def escapeTOP2(self):
+        self.TOP2.destroy()
+
+    def playerbutton_enter(self,event,i):
+        self.playername[i].config(text=self.liste_classe[i].win+"  victoires")
+
+    def playerbutton_leave(self,event,i):
+        self.playername[i].config(text=self.liste_classe[i].nom)        
+
+
+    def classwin(self):
+        self.TOP2 = tk.Toplevel()
+        self.TOP2.title("Classement")
+        self.TOP2.attributes('-fullscreen', True)  # plein écran
+        self.TOP2.configure(bg='grey')
+        self.txt2 = tk.Label(self.TOP2, text="Classement des joueurs \n\n TOP 5", font=self.Impact25, bg='grey')
+        self.txt2.pack(pady=50)
+        self.zone = tk.Frame(self.TOP2,bg='grey')
+        self.zone.pack(pady=30)
+        self.liste_play_classe()
+        self.playername = []
+        for i in range(len(self.liste_classe)):
+            self.playername.append(tk.Button(self.zone, text=self.liste_classe[i].nom ,bg='lightgray', font = self.Impact25))
+            self.playername[i].bind('<Enter>',lambda event, i=i : self.playerbutton_enter(event, i))
+            self.playername[i].bind('<Leave>',lambda event, i=i : self.playerbutton_leave(event, i))
+            self.playername[i].grid(column=0, row=i, sticky=tk.N)
+        self.back3 = tk.Button(self.TOP2, text= 'Retour', font=self.Impact15, bg='grey', command=self.escapeTOP2 )
+        self.back3.pack(pady=30)
+            
 
     def Rules_info(self):
         """fenetre d'affichage des regles apres lecture fichier txt contenant les regles"""
@@ -156,6 +213,7 @@ class MainMenu :
         '''fenetre pour boutons de connection et creation de compte'''
         print(f"login {int(self.NbrJoueur.get())} acounts")
         #menage, on enleve les anciens widgets
+       
         self.LabelJoueur.destroy()
         self.ChoixJoueur.destroy()
         self.BackTitle.destroy()
@@ -164,7 +222,7 @@ class MainMenu :
         self.text = tk.Label(self.root, text =f'{int(self.NbrJoueur.get())} comptes à connecter', font = self.Impact25, bg='grey')
         self.text.pack()
         self.box = tk.Frame(bg='grey', width= 100)
-        self.box.pack(pady=50)
+        self.box.pack(pady=30)
         #rangée de boutons pour chaque connection
         self.buttonPlayer = []
         for i in range(int(self.NbrJoueur.get())):
@@ -175,7 +233,7 @@ class MainMenu :
         self.launch_game.pack(pady=20)
         #creer un compte
         self.create_acc = tk.Button(self.root, text = 'Créer un compte', bg = 'grey', font = self.Impact15, command = self.NewAccount)
-        self.create_acc.pack(pady=30)
+        self.create_acc.pack(pady=20)
        
         #Bouton Retour
         self.back_button = tk.Button(self.root, text = 'Retour', font = self.Impact15, bg='grey', command = self.back)
@@ -332,6 +390,8 @@ class MainMenu :
             self.errorlabel2 = tk.Label(self.TL, text = "Pseudo non conforme", font = self.Impact15, fg='red', bg='grey')
             self.errorlabel2.pack(pady=10)
     
+    
+
 class Joueur():
 
     def __init__(self,nom,MDP,GameWin):

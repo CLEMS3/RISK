@@ -352,10 +352,47 @@ class Game:
         """
         for player in self.liste_joueurs:
             bonus = 0
+
+            #bonus territoires
             n_territoire = self.count_player_territories(player)
             if 12 <= n_territoire <= 14:
                 bonus+=1
-            #A continuer je dois aller en cours
+            if 15 <= n_territoire <= 17:
+                bonus+=2
+            if 18 <= n_territoire <= 20:
+                bonus+=3
+            if 21 <= n_territoire <= 23:
+                bonus+=4
+            if 24 <= n_territoire <= 26:
+                bonus+=5
+            if 27 <= n_territoire <= 29:
+                bonus+=6
+            if 30 <= n_territoire <= 32:
+                bonus+=7
+            if 33 <= n_territoire <= 35:
+                bonus+=8
+            if 36 <= n_territoire <= 39:
+                bonus+=9
+            if 40 <= n_territoire <= 42:
+                bonus+=10
+
+            #bonus continent
+            if self.check_continent_owner("Amérique du Nord", player):
+                bonus+=5
+            if self.check_continent_owner("Amérique du Sud", player):
+                bonus+=2
+            if self.check_continent_owner("Europe", player):
+                bonus+=5
+            if self.check_continent_owner("Afrique", player):
+                bonus+=3
+            if self.check_continent_owner("Asie", player): #Asinsa meilleur filière
+                bonus+=7
+            if self.check_continent_owner("Océanie", player):
+                bonus+=2
+
+        player.troupe_a_repartir += bonus
+
+
 
 
     def init_mission(self):

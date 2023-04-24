@@ -50,7 +50,7 @@ class Player: #voir avec antoine si on peut pas utiliser directement sa classe J
 class Game:
     def __init__(self, liste_joueurs, play_mode):
         #initialisation des variables et chargement des données
-        self.liste_joueurs = liste_joueurs
+        self.liste_joueurs = liste_joueurs #liste d'objet
         self.play_mode = play_mode
         self.graphe = self.import_adjacence()
         self.dict_territoires = self.import_territoire()
@@ -326,13 +326,37 @@ class Game:
                 li.append(territoire(area, country))
         return li
 
+    def check_continent_owner(self, continent: str, player):
+        """Continent prend les valeurs Europe, Asie, Amérique du Nord, Amérique du Sud, Afrique, Océanie
+        """
+        own_continent = True
+        for i_territoire in self.liste_territoire_obj:
+            if i_territoire.nom_zone == continent and i_territoire.joueur != player:
+                own_continent = False
+                break  # blc des conventions de codage du fimi
+        return own_continent
 
-    def bonus_check(self, joueur):
+    def count_player_territories(self, player):
+        n_territoire = 0
+        for i_territoire in self.li_territoires_obj:
+            if i_territoire.joueur == player: #verifier si il faut verifier l'objet ou le nom
+                n_territoire +=i_territoire.nombre_troupes
+        return n_territoire
+
+    def bonus(self):
         """
-        Vérifie si il y a un bonus de troupe à donner à un joueur
-        A verifier à la fin de chaque tour
-        Attention à ne compter les bonus qu'une fois
+        Le bonus de troupe est octroyé à chaque tour à tout le monde, le nombre variant selon différent critère.
+        Bonus pour le contrôle de territoire : 12-14 -> 1 régiment par territoire, 15-17 -> 2, 18-20 -> 3, 21-23 ->4,
+        24-26 -> 5, 27-29 -> 6, 30-32 -> 7, 33-35 -> 8, 36-39-> 9, 40-42 -> 10
+        Bonus pour le contrôle de continent : NA -> 5, SA -> 2, EU -> 5, AF -> 3, AS -> 7, OC -> 2
         """
+        for player in self.liste_joueurs:
+            bonus = 0
+            n_territoire = self.count_player_territories(player)
+            if 12 <= n_territoire <= 14:
+                bonus+=1
+            #A continuer je dois aller en cours
+
 
     def init_mission(self):
         for i in self.liste_joueurs:

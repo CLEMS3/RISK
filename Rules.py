@@ -9,6 +9,7 @@ from random import randint, random, choice
 import time
 import json
 import csv
+from typing import Self
 
 
 def des():
@@ -282,23 +283,26 @@ class Game:
             territoires_occupés_par_le_joueur.append(liste_territoires_restant[a])
             liste_territoires_restant.remove(liste_territoires_restant[a])
             i += 1
-        joueur.territoires = territoires_occupés_par_le_joueur
         for territoire in territoires_occupés_par_le_joueur:
             territoire.nombre_troupes = 1  # On place une troupe par territoire
             territoire.joueur = joueur
             nombre_de_troupes_qu_il_reste_a_placer -= 1
 
         while nombre_de_troupes_qu_il_reste_a_placer > 0:
-            territoire_ou_il_faut_ajouter_des_troupes = territoires_occupés_par_le_joueur[
-                (input("Choisissez l'indice du territoire ou il y a trop de troupes"))]
-            nombre_de_troupes_a_ajouter = input("Combien de troupes voulez-vous ajouter a ce territoire ?")
-            if nombre_de_troupes_a_ajouter > nombre_de_troupes_qu_il_reste_a_placer:  # Le joueur ajoute des troupes sur les territoires qu'il
-                print("Il ne vous reste pas assez de troupes !!")
-            else:
-                territoire_ou_il_faut_ajouter_des_troupes.nombre_troupes += nombre_de_troupes_a_ajouter
-                nombre_de_troupes_qu_il_reste_a_placer -= nombre_de_troupes_a_ajouter
+            nombre_de_troupes_qu_il_reste_a_placer = self.ajout_de_troupes_sur_terrioires(joueur, nombre_de_troupes_qu_il_reste_a_placer)
+            
 
         # il faut que le joueur tire des territoires au hasard où il placera ses troupes comme il le souhaite avec toujours au minimum une troupe sur chaque territoire occupé
+    def ajout_de_troupes_sur_territoires(self, joueur, nombre_de_troupes_qu_il_reste_a_placer):
+        liste_territoires_joueurs = self.liste_territoires_joueur(joueur) 
+        territoire_ou_il_faut_ajouter_des_troupes = liste_territoires_joueurs[(input("Choisissez l'indice du territoire ou il n'y a pas assez de troupes"))]
+        nombre_de_troupes_a_ajouter = input("Combien de troupes voulez-vous ajouter a ce territoire ?")
+        if nombre_de_troupes_a_ajouter > nombre_de_troupes_qu_il_reste_a_placer:  # Le joueur ajoute des troupes sur les territoires qu'il
+            print("Il ne vous reste pas assez de troupes !!")
+        else:
+            territoire_ou_il_faut_ajouter_des_troupes.nombre_troupes += nombre_de_troupes_a_ajouter
+            nombre_de_troupes_qu_il_reste_a_placer -= nombre_de_troupes_a_ajouter
+        return nombre_de_troupes_qu_il_reste_a_placer 
 
     def import_adjacence(self):
         graphe = list(csv.reader(open("Fichiers/adjacences_territoires.csv")))
@@ -335,6 +339,14 @@ class Game:
                 own_continent = False
                 break  # blc des conventions de codage du fimi
         return own_continent
+    
+    def liste_territoires_joueur(self, joueur):
+            liste_territoires = []
+            for i_territoire in self.li_territoires_obj:
+                if i_territoire.joueur == joueur: #verifier si il faut verifier l'objet ou le nom
+                    liste_territoires.append(i_territoire)
+            return liste_territoires
+    
 
     def count_player_territories(self, player):
         n_territoire = 0

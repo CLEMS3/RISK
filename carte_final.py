@@ -1,17 +1,20 @@
+import random
+
 import pygame
 from pygame.locals import *
 import glob
-from random import randint
+from random import randint, choice
 import time
 
-
+import Rules
 
 
 class PygameWindow(pygame.Surface):
-    def __init__(self, size):
+    def __init__(self, size, liste_joueurs_obj):
         super().__init__(size) #sert à éviter un problème d'héritage de classe
         pygame.init()
         self.size = size
+        self.liste_joueurs_obj = liste_joueurs_obj
         self.window = pygame.display.set_mode(size)
         pygame.display.set_caption("Risk - Game")
         # Dossier des images de pays
@@ -19,18 +22,37 @@ class PygameWindow(pygame.Surface):
         # Taille de l'écran
         self.fen_width, self.fen_height = pygame.display.get_surface().get_size()
         self.liste_surface_pays = []
+        self.view = 0 #Renforcement : 0, attaque : 1, déplacement de troupe : 2, win : 3, mission : 4
+
+        #initialisation
         self.charger_carte()
+        self.game = Rules.Game(self.liste_joueurs_obj)
+        self.a_qui_le_tour = choice(self.liste_joueurs_obj) #celui qui commence
 
     def main_loop(self):
         running = True
         while running:
             for event in pygame.event.get():
-                self.afficher_carte()
+
+                #fermeture de la fenêtre
                 if event.type == pygame.QUIT:
                     running = False
 
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.window.fill((randint(0,255), randint(0,255), randint(0,255)))
+                #différentes vus
+                elif self.view == 0: #renforcement
+                    self.afficher_carte()
+
+                elif self.view == 1: #attaque
+                    self.afficher_carte()
+
+                elif self.view == 2: #déplacement
+                    self.afficher_carte()
+
+                elif self.view == 3: #win
+                    self.afficher_carte()
+
+                elif self.view == 4: #mission
+                    self.afficher_carte()
 
             # update the window
             pygame.display.update()

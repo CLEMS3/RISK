@@ -49,10 +49,9 @@ class Player: #voir avec antoine si on peut pas utiliser directement sa classe J
         self.troupe_a_repartir = 0
 
 class Game:
-    def __init__(self, liste_joueurs, play_mode):
+    def __init__(self, liste_joueurs):
         #initialisation des variables et chargement des données
         self.liste_joueurs = liste_joueurs #liste d'objet
-        self.play_mode = play_mode
         self.graphe = self.import_adjacence()
         self.dict_territoires = self.import_territoire()
         self.li_territoires = self.liste_territoires()

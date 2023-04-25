@@ -15,7 +15,7 @@ from typing import Self
 def des():
     x = randint(1, 6)
     return x
-
+#Fais une fonction qui renvoie des chiffres au hasard pour imiter le comportement d'un dés
 
 class Timer:
 

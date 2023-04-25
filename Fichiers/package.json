@@ -1,0 +1,8 @@
+{
+  "Europe": ["Grande-Bretagne", "Islande", "Europe du Nord", "Scandinavie", "Europe du Sud", "Ukraine", "Europe occidentale"],
+  "Asie": ["Afghanistan", "Chine", "Inde", "Tchita", "Japon", "Kamchatka", "Moyen-Orient", "Mongolie", "Siam", "Sibérie", "Oural", "Yakoutie"],
+  "Amérique du Nord": ["Alaska", "Alberta", "Amérique centrale", "Etats de l'Est", "Groenland", "Territoires du Nord-Ouest", "Ontario", "Québec", "Etats de l'Ouest"],
+  "Amérique du Sud": ["Argentine", "Brésil", "Pérou", "Venezuela"],
+  "Afrique": ["Congo", "Afrique de l'Est", "Egypte", "Madagascar", "Afrique du Nord", "Afrique du Sud"],
+  "Océanie": ["Australie Orientale", "Indonésie", "Nouvelle-Guinée", "Australie Occidentale"]
+}

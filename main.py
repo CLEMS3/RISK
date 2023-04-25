@@ -35,7 +35,7 @@ class MainMenu :
         with open("Fichiers/Regles.txt", 'r') as f1:
             self.textrules = f1.read()
         #joueurs
-        with open('Fichiers/Joueurs.csv', 'r' ) as f2:
+        with open('Fichiers/Joueurs.csv', 'r', encoding='windows-1252' ) as f2:
             csv_joueur = csv.reader(f2,delimiter=",")
             csv_joueur.__next__()
             self.liste_joueurs = []

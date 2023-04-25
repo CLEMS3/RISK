@@ -9,7 +9,6 @@ from random import randint, random, choice
 import time
 import json
 import csv
-from typing import Self
 
 
 def des():
@@ -324,7 +323,7 @@ class Game:
         Il n'y a au début pas de joueur dessus, et 0 troupes, on les ajoutes après
         """
         li = []
-        for area, countries_list in self.dict_territoires:
+        for area, countries_list in self.dict_territoires.items():
             for country in countries_list:
                 li.append(territoire(area, country))
         return li

@@ -6,15 +6,6 @@ import time
 
 
 
-class LutinPays():
-    """
-    Classe des pays affichés sur la carte
-    (lutin = sprite en français)
-    """
-    def __init__(self, surface, fichier_id):
-        self.carte = surface
-        self.id = fichier_id
-
 
 class PygameWindow(pygame.Surface):
     def __init__(self, size):
@@ -53,7 +44,6 @@ class PygameWindow(pygame.Surface):
         for cptr, pays in enumerate(pays_liste):
             image = pygame.image.load(pays).convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
             image = pygame.transform.scale(image, (int(self.fen_width), int(self.fen_height)))
-            lutin = LutinPays(image, int(cptr + 1))
             self.liste_surface_pays.append(image)
         self.bg = pygame.image.load("Images/ocean_texture.jpg").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
         self.bg = pygame.transform.scale(self.bg, (int(self.fen_width), int(self.fen_height)))

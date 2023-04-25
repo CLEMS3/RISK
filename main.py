@@ -243,7 +243,6 @@ class MainMenu :
         self.box.destroy()
         self.back_button.destroy()
         self.launch_game.destroy()
-        self
         self.new_game()
         self.loged_in = []     
         self.OUT = []   

@@ -303,7 +303,7 @@ class Game:
             territoire_ou_il_faut_ajouter_des_troupes.nombre_troupes += nombre_de_troupes_a_ajouter
             nombre_de_troupes_qu_il_reste_a_placer -= nombre_de_troupes_a_ajouter
         return nombre_de_troupes_qu_il_reste_a_placer 
-
+    
     def import_adjacence(self):
         graphe = list(csv.reader(open("Fichiers/adjacences_territoires.csv")))
         return graphe

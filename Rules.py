@@ -60,7 +60,7 @@ class Game:
 
         #initialisation de la partie
         self.li_territoires_obj = self.init_territoires()
-        self.placement_initial() #est ce qu'il faut faire le placement de tous les joueurs aussi ?
+        self.placement_de_tous_les_joueurs(liste_joueurs)
         self.init_mission()
 
 
@@ -277,7 +277,7 @@ class Game:
         nombre_de_troupes_qu_il_reste_a_placer = nb_troupes_a_placer
 
         while i <= nb_territoire_a_occuper:
-            a = random.randint(0,(len(self.li_territoires) - 1))  # On attribue une liste de territoires a occuper par le joueur
+            a = randint(0,(len(self.li_territoires) - 1))  # On attribue une liste de territoires a occuper par le joueur
             territoires_occupés_par_le_joueur.append(liste_territoires_restant[a])
             liste_territoires_restant.remove(liste_territoires_restant[a])
             i += 1

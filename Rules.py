@@ -9,6 +9,7 @@ from random import randint, random, choice
 import time
 import json
 import csv
+import pygame
 
 
 def des():
@@ -35,11 +36,13 @@ class troupes:
 
 
 class territoire:
-    def __init__(self, nom_zone, nom_territoire, joueur=None, nombre_troupes = 0):
+    def __init__(self, nom_zone, nom_territoire, mask, surface, joueur=None, nombre_troupes = 0):
         self.nom_territoire = nom_territoire
         self.joueur = joueur
         self.nombre_troupes = nombre_troupes
         self.nom_zone = nom_zone  # ce sera pour les bonus
+        self.mask = mask
+        self.surface = surface
 
 class Player: #voir avec antoine si on peut pas utiliser directement sa classe Joueur
     def __init__(self, nom):
@@ -48,7 +51,7 @@ class Player: #voir avec antoine si on peut pas utiliser directement sa classe J
         self.troupe_a_repartir = 0
 
 class Game:
-    def __init__(self, liste_joueurs):
+    def __init__(self, liste_joueurs, fen_width, fen_height):
         #initialisation des variables et chargement des données
         self.liste_joueurs = liste_joueurs #liste d'objet
         self.graphe = self.import_adjacence()
@@ -56,11 +59,13 @@ class Game:
         self.li_territoires = self.liste_territoires()
         self.liste_territoires_restant = self.li_territoires
         self.tps_debut = time.time()
+        self.fen_width = fen_width
+        self.fen_height = fen_height
 
 
         #initialisation de la partie
         self.li_territoires_obj = self.init_territoires()
-        self.placement_de_tous_les_joueurs(liste_joueurs)
+        #self.placement_de_tous_les_joueurs(liste_joueurs) #ne marche pas
         self.init_mission()
 
 
@@ -325,7 +330,10 @@ class Game:
         li = []
         for area, countries_list in self.dict_territoires.items():
             for country in countries_list:
-                li.append(territoire(area, country))
+                image = pygame.image.load(f"Pictures/Maps/{country}.png").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
+                image = pygame.transform.scale(image, (int(self.fen_width), int(self.fen_height)))
+                mask = pygame.mask.from_surface(image)
+                li.append(territoire(area, country, mask, image))
         return li
 
     def check_continent_owner(self, continent: str, player):

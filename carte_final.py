@@ -5,6 +5,7 @@ from pygame.locals import *
 import glob
 from random import randint, choice
 import time
+import json
 
 import Rules
 
@@ -17,6 +18,7 @@ class PygameWindow(pygame.Surface):
         self.liste_joueurs_obj = liste_joueurs_obj
         self.window = pygame.display.set_mode(size)
         pygame.display.set_caption("Risk - Game")
+        self.coords = self.charger_coord_texte()
 
         # Taille de l'écran
         self.fen_width, self.fen_height = pygame.display.get_surface().get_size()
@@ -26,6 +28,7 @@ class PygameWindow(pygame.Surface):
         self.charger_images()
         self.game = Rules.Game(self.liste_joueurs_obj, self.fen_width, self.fen_height)
         self.a_qui_le_tour = choice(self.liste_joueurs_obj) #celui qui commence
+        self.text_font = pygame.font.Font("Fonts/ARLRDBD.TTF", 20)
 
     def main_loop(self):
         running = True
@@ -43,7 +46,7 @@ class PygameWindow(pygame.Surface):
                         for country in self.game.li_territoires_obj:
                             try:
                                 if country.mask.get_at((event.pos[0], event.pos[1])):
-                                    print(country.nom_territoire) #pays sélectionné
+                                    print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                             except IndexError:
                                 pass
 
@@ -70,6 +73,10 @@ class PygameWindow(pygame.Surface):
         self.bg = pygame.image.load("Images/ocean_texture.jpg").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
         self.bg = pygame.transform.scale(self.bg, (int(self.fen_width), int(self.fen_height)))
 
+    def charger_coord_texte(self):
+        with open('Fichiers/coords.json', 'r', encoding='utf-8') as f:
+            donnees_lues = json.load(f)
+        return donnees_lues
 
     def afficher_carte(self):
         """
@@ -78,6 +85,8 @@ class PygameWindow(pygame.Surface):
         self.window.blit(self.bg, (0, 0))
         for country in self.game.li_territoires_obj:
             self.window.blit(country.surface, (0,0))
+        for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
+            self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (255, 255, 255)),tuple(self.coords[country.nom_territoire]))#{country.nombre_troupes}
 
 
     def changer_couleur(self, surface, color):

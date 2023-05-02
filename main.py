@@ -81,6 +81,9 @@ class MainMenu :
         # Rules
         self.rules = tk.Button(self.root, text='RÈGLES DU JEU', font=self.Impact25, bg='grey', command = self.Rules_info)
         self.rules.pack(pady=30)
+        #lancer debug carte
+        self.debug = tk.Button(self.root, text='LANCER LA CARTE', font=self.Impact25, bg='grey', command =self.debug)
+        self.debug.pack(pady=30)
 
     def new_game(self):
         '''Nouveaux boutons pour choisir le nombre de joueur et lancer la partie'''
@@ -125,7 +128,6 @@ class MainMenu :
                         self.liste_classe.append(player)
                         tempo.remove(player)
         
-
     def backmenu(self):
         '''retour au menu apres avoir cliqué sur'NOUVELLE PARTIE', affichages de boutons "menu"'''
         # remove all buttons + remmettre anciens
@@ -367,8 +369,12 @@ class MainMenu :
         else:
             self.errorlabel2 = tk.Label(self.TL, text = "Pseudo non conforme", font = self.Impact15, fg='red', bg='grey')
             self.errorlabel2.pack(pady=10)
-    
-    
+
+    def debug(self) :
+        window_pg = carte_final.PygameWindow((self.WIDTH, self.HEIGHT), self.liste_joueurs)
+        # run the main loop
+        window_pg.main_loop()
+        pygame.quit()
 
 class Joueur():
 

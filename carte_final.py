@@ -21,7 +21,7 @@ class PygameWindow(pygame.Surface):
         self.coords = self.charger_coord_texte()
 
         # Taille de l'écran
-        self.fen_width, self.fen_height = pygame.display.get_surface().get_size()
+        self.fen_width, self.fen_height = pygame.display.get_surface().get_size() #640, 480
         self.view = 0 #Renforcement : 0, attaque : 1, déplacement de troupe : 2, win : 3, mission : 4
 
         #initialisation
@@ -29,12 +29,14 @@ class PygameWindow(pygame.Surface):
         self.game = Rules.Game(self.liste_joueurs_obj, self.fen_width, self.fen_height)
         self.a_qui_le_tour = choice(self.liste_joueurs_obj) #celui qui commence
         self.text_font = pygame.font.Font("Fonts/ARLRDBD.TTF", 20)
+        self.select = []
+        self.t = 0 #permet de revenir à la bonne vu après les missions
 
     def main_loop(self):
         running = True
         while running:
             for event in pygame.event.get():
-
+                print(self.view)
                 #fermeture de la fenêtre
                 if event.type == pygame.QUIT:
                     running = False
@@ -42,26 +44,51 @@ class PygameWindow(pygame.Surface):
                 #différentes vus
                 elif self.view == 0: #renforcement
                     self.afficher_carte()
+                    self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(400, 440))
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         for country in self.game.li_territoires_obj:
                             try:
                                 if country.mask.get_at((event.pos[0], event.pos[1])):
                                     print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
+                                    self.select_deux_surface(country)
+                                    print(self.select)
                             except IndexError:
                                 pass
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_m:
+                            self.t = 0
+                            self.view = 4
 
 
                 elif self.view == 1: #attaque
                     self.afficher_carte()
+                    self.window.blit(self.text_font.render(f"Phase d'attaque", True, (255, 255, 255)), (400, 440))
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_m:
+                            self.t = 1
+                            self.view = 4
 
                 elif self.view == 2: #déplacement
                     self.afficher_carte()
+                    self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (400, 440))
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_m:
+                            self.t = 2
+                            self.view = 4
 
                 elif self.view == 3: #win
                     self.afficher_carte()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_m:
+                            self.t = 3
+                            self.view = 4
 
                 elif self.view == 4: #mission
                     self.afficher_carte()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_m:
+                            self.view = self.t
+
 
             # update the window
             pygame.display.update()
@@ -97,3 +124,17 @@ class PygameWindow(pygame.Surface):
             for y in range(height):
                 a = surface.get_at((x, y))[3]  # obtient la valeur de la couleur de ce pixel, et le [3] prend donc le 4ème élement, ce qui correspond à la valeur de transparence du pixel
                 surface.set_at((x, y), pygame.Color(r, g, b,a))  # défini la couleur du pixel selon les valeurs de rgb donné en paramètre, et avec la valeur de transparence initiale
+
+    def select_deux_surface(self, country):
+        """
+        permet la sélection de deux territoires en les ajoutant à la liste select.
+        On peut aussi supprimer le territoire selectionné en reclickant dessus.
+        """
+        select = self.select
+        if select== [] or (len(select) == 1 and country != select[0]):
+            select.append(country)
+        elif len(select) == 2 and country == select[1]:
+            select = select [:-1]
+        elif len(select)==1 and country == select[0]:
+            select = []
+        self.select = select

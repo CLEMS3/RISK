@@ -82,8 +82,8 @@ class MainMenu :
         self.rules = tk.Button(self.root, text='RÈGLES DU JEU', font=self.Impact25, bg='grey', command = self.Rules_info)
         self.rules.pack(pady=30)
         #lancer debug carte
-        self.debug = tk.Button(self.root, text='LANCER LA CARTE', font=self.Impact25, bg='grey', command =self.debug)
-        self.debug.pack(pady=30)
+        self.debugbutton = tk.Button(self.root, text='LANCER LA CARTE', font=self.Impact25, bg='grey', command =self.debug)
+        self.debugbutton.pack(pady=30) 
 
     def new_game(self):
         '''Nouveaux boutons pour choisir le nombre de joueur et lancer la partie'''
@@ -91,6 +91,7 @@ class MainMenu :
         self.classement.destroy()
         self.NG.destroy()
         self.rules.destroy()
+        self.debugbutton.destroy() 
         # label et scale pour choix
         self.LabelJoueur = tk.Label(self.root, text='NOMBRE DE JOUEURS', font=self.Impact25, bg="grey")
         self.LabelJoueur.pack(pady=40)

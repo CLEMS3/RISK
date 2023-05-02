@@ -21,7 +21,7 @@ class PygameWindow(pygame.Surface):
         self.coords = self.charger_coord_texte()
 
         # Taille de l'écran
-        self.fen_width, self.fen_height = pygame.display.get_surface().get_size() #640, 480
+        self.fen_width, self.fen_height = pygame.display.get_surface().get_size() 
         self.view = 0 #Renforcement : 0, attaque : 1, déplacement de troupe : 2, win : 3, mission : 4
 
         #initialisation

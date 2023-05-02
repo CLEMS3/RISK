@@ -311,7 +311,7 @@ class MainMenu :
             print(self.OUT)
             if len(self.OUT) == int(self.NbrJoueur.get()):
                 # create the window
-                window_pg = carte_final.PygameWindow((640, 480), self.liste_joueurs)
+                window_pg = carte_final.PygameWindow((self.WIDTH, self.HEIGHT), self.liste_joueurs)
 
                 # run the main loop
                 window_pg.main_loop()

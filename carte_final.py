@@ -41,7 +41,7 @@ class PygameWindow(pygame.Surface):
                 if event.type == pygame.QUIT:
                     running = False
 
-                #différentes vus
+                #différentes vues
                 elif self.view == 0: #renforcement
                     self.afficher_carte()
                     self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(400, 440))

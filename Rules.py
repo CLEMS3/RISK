@@ -65,7 +65,7 @@ class Game:
 
         #initialisation de la partie
         self.li_territoires_obj = self.init_territoires()
-        #self.placement_de_tous_les_joueurs(liste_joueurs) #ne marche pas
+        self.placement_de_tous_les_joueurs() #ne marche pas
         self.init_mission()
 
 
@@ -230,36 +230,35 @@ class Game:
 
 
 
-    def placement_de_tous_les_joueurs(self, liste_joueurs):
+    def placement_de_tous_les_joueurs(self):
         """Cette fonction gère le placement des joueurs en début de partie en fonction du nombre de joueurs
         Elle fait appel aux fonctions joueurs au hasard et placement_initial pour cela"""
-        nb_joueurs = len(liste_joueurs)
-
+        nb_joueurs = len(self.liste_joueurs)
+        self.liste_territoires_restant = self.li_territoires_obj
         if nb_joueurs == 2:
-            for joueur in liste_joueurs:
-                self.placement_initial(joueur, 40, 14,
-                                  self.liste_territoires_restant)  # il faut ajouter l'armée neutre qui a le meme nombre de territoires
+            for joueur in self.liste_joueurs:
+                self.placement_initial(joueur, 40, 14)  # il faut ajouter l'armée neutre qui a le meme nombre de territoires
         elif nb_joueurs == 3:  # et 2 régiments par territoire
-            for joueur in liste_joueurs:
-                self.placement_initial(joueur, 35, 14, self.liste_territoires_restant)
+            for joueur in self.liste_joueurs:
+                self.placement_initial(joueur, 35, 14)
         elif nb_joueurs == 4:
-            joueurs_chanceux = self.joueur_au_hasard(liste_joueurs)
-            for joueur in liste_joueurs:
-                if liste_joueurs[joueurs_chanceux[0]] == joueur or liste_joueurs[joueurs_chanceux[1]] == joueur:
+            joueurs_chanceux = self.joueur_au_hasard(self.liste_joueurs)
+            for joueur in self.liste_joueurs:
+                if self.liste_joueurs[joueurs_chanceux[0]] == joueur or self.liste_joueurs[joueurs_chanceux[1]] == joueur:
                     self.placement_initial(joueur, 30, 11, self.liste_territoires_restant)
                 else:
-                    self.placement_initial(joueur, 30, 10, self.liste_territoires_restant)
+                    self.placement_initial(joueur, 30, 10)
 
         elif nb_joueurs == 5:
-            joueurs_chanceux = self.joueur_au_hasard(liste_joueurs)
-            for joueur in liste_joueurs:
-                if liste_joueurs[joueurs_chanceux[0]] == joueur or liste_joueurs[joueurs_chanceux[1]] == joueur:
-                    self.placement_initial(joueur, 25, 9, self.liste_territoires_restant)
+            joueurs_chanceux = self.joueur_au_hasard(self.liste_joueurs)
+            for joueur in sef.liste_joueurs:
+                if self.liste_joueurs[joueurs_chanceux[0]] == joueur or self.liste_joueurs[joueurs_chanceux[1]] == joueur:
+                    self.placement_initial(joueur, 25, 9)
                 else:
-                    self.placement_initial(joueur, 25, 8, self.liste_territoires_restant)
+                    self.placement_initial(joueur, 25, 8)
         else:
-            for joueur in liste_joueurs:
-                self.placement_initial(joueur, 20, 7, self.liste_territoires_restant)
+            for joueur in self.liste_joueurs:
+                self.placement_initial(joueur, 20, 7)
 
     def joueur_au_hasard(self, liste_joueurs):
         """Permet de retourner 2 indices de joueurs dans la liste des joueurs qui vont avoir un territoire en plus en début de partie"""
@@ -273,26 +272,31 @@ class Game:
         liste_indice_joueurs_selectionnes.append(indice_joueur_selectionne_2)
         return liste_indice_joueurs_selectionnes
 
-    def placement_initial(self, joueur, nb_troupes_a_placer, nb_territoire_a_occuper, liste_territoires_restant):
+    def placement_initial(self, joueur, nb_troupes_a_placer, nb_territoire_a_occuper):
         """Gère le placment d'un joueur (il choisit où placer ses troupes en étant obligé d'avoir une troupe au minimum sur chaque
         territoire)"""
         joueur.nb_troupes = nb_troupes_a_placer  # depend du nombre de joueurs : l'info sera à mettre sur un fichier json que l'on lira
         i = 0
         territoires_occupés_par_le_joueur = []
         nombre_de_troupes_qu_il_reste_a_placer = nb_troupes_a_placer
-
-        while i <= nb_territoire_a_occuper:
-            a = randint(0,(len(self.li_territoires) - 1))  # On attribue une liste de territoires a occuper par le joueur
-            territoires_occupés_par_le_joueur.append(liste_territoires_restant[a])
-            liste_territoires_restant.remove(liste_territoires_restant[a])
+        a=1
+        while i <= nb_territoire_a_occuper or len(self.liste_territoires_restant)!=0:
+            if len(self.liste_territoires_restant)>=1 : 
+                a = randint(0,(len(self.liste_territoires_restant))-1) 
+            else: 
+                print(len(self.liste_territoires_restant)-1)
+                a = randint(0,(len(self.liste_territoires_restant))-1)  # On attribue une liste de territoires a occuper par le joueur
+            territoires_occupés_par_le_joueur.append(self.liste_territoires_restant[a])
+            self.liste_territoires_restant.remove(self.liste_territoires_restant[a])
             i += 1
         for territoire in territoires_occupés_par_le_joueur:
             territoire.nombre_troupes = 1  # On place une troupe par territoire
             territoire.joueur = joueur
             nombre_de_troupes_qu_il_reste_a_placer -= 1
-
-        while nombre_de_troupes_qu_il_reste_a_placer > 0:
-            nombre_de_troupes_qu_il_reste_a_placer = self.ajout_de_troupes_sur_terrioires(joueur, nombre_de_troupes_qu_il_reste_a_placer)
+            joueur.troupe_a_repartir = nombre_de_troupes_qu_il_reste_a_placer
+        
+        #while nombre_de_troupes_qu_il_reste_a_placer > 0:
+            #nombre_de_troupes_qu_il_reste_a_placer = self.ajout_de_troupes_sur_territoires(joueur)
             
 
         # il faut que le joueur tire des territoires au hasard où il placera ses troupes comme il le souhaite avec toujours au minimum une troupe sur chaque territoire occupé

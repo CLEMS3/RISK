@@ -138,3 +138,13 @@ class PygameWindow(pygame.Surface):
         elif len(select)==1 and country == select[0]:
             select = []
         self.select = select
+        
+if __name__ == "__main__":
+    import main
+    temp = main.MainMenu()
+
+    window_pg = PygameWindow((temp.WIDTH, temp.HEIGHT), temp.liste_joueurs)
+
+    # run the main loop
+    window_pg.main_loop()
+    pygame.quit()

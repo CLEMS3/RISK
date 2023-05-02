@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 import csv
 import time
-from random import randint
 import tkinter.font
 from tkinter.scrolledtext import ScrolledText
 #importation de pygame, et installation du module si il n'est pas déjà installé
@@ -14,28 +13,8 @@ except:
     subprocess.check_call([sys.executable, "-m", "pip", "install", 'pygame'])
     import pygame
 import hashlib
+import carte_final
 
-
-class PygameWindow(pygame.Surface):
-    def __init__(self, size):
-        super().__init__(size) #sert à éviter un problème d'héritage de classe
-        pygame.init()
-        self.size = size
-        self.window = pygame.display.set_mode(size)
-        pygame.display.set_caption("Risk - Game")
-
-    def main_loop(self):
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.window.fill((randint(0,255), randint(0,255), randint(0,255)))
-
-            # update the window
-            pygame.display.update()
 #Menu principal
 class MainMenu :
 
@@ -57,7 +36,7 @@ class MainMenu :
             self.textrules = f1.read()
 
         #joueurs
-        with open('Fichiers/Joueurs.csv', 'r' ) as f2:
+        with open('Fichiers/Joueurs.csv', 'r', encoding='windows-1252' ) as f2:
             csv_joueur = csv.reader(f2,delimiter=",")
             csv_joueur.__next__()
             self.liste_joueurs = []
@@ -322,7 +301,6 @@ class MainMenu :
         self.box.destroy()
         self.back_button.destroy()
         self.launch_game.destroy()
-        self
         self.new_game()
         self.loged_in = []     
         self.OUT = []   
@@ -333,7 +311,7 @@ class MainMenu :
             print(self.OUT)
             if len(self.OUT) == int(self.NbrJoueur.get()):
                 # create the window
-                window_pg = PygameWindow((640, 480))
+                window_pg = carte_final.PygameWindow((640, 480), self.liste_joueurs)
 
                 # run the main loop
                 window_pg.main_loop()

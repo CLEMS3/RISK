@@ -236,6 +236,7 @@ class MainMenu :
         self.label2.pack(pady=50)
         self.mdpentry = tk.Entry(self.login_page,show="*", font = self.Impact25)
         self.mdpentry.pack()
+        self.login_page.bind("<Return>", lambda event :self.checkmdp(i,self.choix_joueur.get()))
         self.validation = tk.Button(self.login_page, text = 'Valider', command = lambda :self.checkmdp(i,self.choix_joueur.get()), font = self.Impact25, bg='grey')
         self.validation.pack(pady=30)
         

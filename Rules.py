@@ -280,14 +280,14 @@ class Game:
         territoires_occupés_par_le_joueur = []
         nombre_de_troupes_qu_il_reste_a_placer = nb_troupes_a_placer
         a=1
-        while i <= nb_territoire_a_occuper or len(self.liste_territoires_restant)!=0:
-            if len(self.liste_territoires_restant)>=1 : 
+        fin = False
+        while i < nb_territoire_a_occuper and fin == False:
+            if len(territoires_occupés_par_le_joueur)<nb_territoire_a_occuper : 
                 a = randint(0,(len(self.liste_territoires_restant))-1) 
-            else: 
-                print(len(self.liste_territoires_restant)-1)
-                a = randint(0,(len(self.liste_territoires_restant))-1)  # On attribue une liste de territoires a occuper par le joueur
-            territoires_occupés_par_le_joueur.append(self.liste_territoires_restant[a])
-            self.liste_territoires_restant.remove(self.liste_territoires_restant[a])
+                territoires_occupés_par_le_joueur.append(self.liste_territoires_restant[a])
+                self.liste_territoires_restant.remove(self.liste_territoires_restant[a])
+                if len(self.liste_territoires_restant)==0 : 
+                    fin = True
             i += 1
         for territoire in territoires_occupés_par_le_joueur:
             territoire.nombre_troupes = 1  # On place une troupe par territoire

@@ -222,11 +222,9 @@ class Game:
                 territoire_de_depart.nombre_troupes = territoire_de_depart.nombre_troupes - nb_troupes_a_transferer
                 territoire_arrivee.nombre_troupes += nb_troupes_a_transferer
             else:
-                print(
-                    'Vous ne pouvez pas transférer autant de troupes !!!!')  # il faut rajouter la condition de proximité avec la matrice d'adjacence
+                print('Vous ne pouvez pas transférer autant de troupes !!!!')  # il faut rajouter la condition de proximité avec la matrice d'adjacence
         else:
-            print(
-                "Vos territoires ne sont pas adjacents, vous ne pouvez pas transférer des troupes, sélectionnez un autre territoire")
+            print("Vos territoires ne sont pas adjacents, vous ne pouvez pas transférer des troupes, sélectionnez un autre territoire")
 
 
 
@@ -251,7 +249,7 @@ class Game:
 
         elif nb_joueurs == 5:
             joueurs_chanceux = self.joueur_au_hasard(self.liste_joueurs)
-            for joueur in sef.liste_joueurs:
+            for joueur in self.liste_joueurs:
                 if self.liste_joueurs[joueurs_chanceux[0]] == joueur or self.liste_joueurs[joueurs_chanceux[1]] == joueur:
                     self.placement_initial(joueur, 25, 9)
                 else:

@@ -239,6 +239,7 @@ class MainMenu :
         self.label2.pack(pady=50)
         self.mdpentry = tk.Entry(self.login_page,show="*", font = self.Impact25)
         self.mdpentry.pack()
+        self.login_page.bind("<Return>", lambda event :self.checkmdp(i,self.choix_joueur.get()))
         self.validation = tk.Button(self.login_page, text = 'Valider', command = lambda :self.checkmdp(i,self.choix_joueur.get()), font = self.Impact25, bg='grey')
         self.validation.pack(pady=30)
         
@@ -314,7 +315,8 @@ class MainMenu :
             print(self.OUT)
             if len(self.OUT) == int(self.NbrJoueur.get()):
                 # create the window
-                window_pg = carte_final.PygameWindow((self.WIDTH, self.HEIGHT), self.liste_joueurs)
+
+                window_pg = carte_final.PygameWindow((self.WIDTH, self.HEIGHT), self.OUT)
 
                 # run the main loop
                 window_pg.main_loop()

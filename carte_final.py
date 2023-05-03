@@ -45,7 +45,7 @@ class PygameWindow(pygame.Surface):
                 #différentes vues
                 elif self.view == 0: #renforcement
                     self.afficher_carte()
-                    self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(400, 440))
+                    self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(0.625*self.fen_width, 0.917*self.fen_height))
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         for country in self.game.li_territoires_obj:
                             try:

@@ -16,12 +16,13 @@ class PygameWindow(pygame.Surface):
         pygame.init()
         self.size = size
         self.liste_joueurs_obj = liste_joueurs_obj
-        self.window = pygame.display.set_mode(size)
+        self.window = pygame.display.set_mode(size, pygame.FULLSCREEN)      # Plein écran
         pygame.display.set_caption("Risk - Game")
         self.coords = self.charger_coord_texte()
 
         # Taille de l'écran
-        self.fen_width, self.fen_height = pygame.display.get_surface().get_size() 
+        self.fen_width, self.fen_height = pygame.display.get_surface().get_size() #640, 480
+
         self.view = 0 #Renforcement : 0, attaque : 1, déplacement de troupe : 2, win : 3, mission : 4
 
         #initialisation
@@ -113,7 +114,7 @@ class PygameWindow(pygame.Surface):
         for country in self.game.li_territoires_obj:
             self.window.blit(country.surface, (0,0))
         for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
-            self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (255, 255, 255)),tuple(self.coords[country.nom_territoire]))#{country.nombre_troupes}
+            self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (255, 255, 255)),(self.coords[country.nom_territoire][0]*self.fen_width, self.coords[country.nom_territoire][1]*self.fen_height))#{country.nombre_troupes}
 
 
     def changer_couleur(self, surface, color):

@@ -65,6 +65,7 @@ class Game:
 
         #initialisation de la partie
         self.li_territoires_obj = self.init_territoires()
+        print(len(self.li_territoires_obj))
         self.placement_de_tous_les_joueurs() #ne marche pas
         self.init_mission()
 
@@ -218,7 +219,7 @@ class Game:
         if self.verification_adjacence(territoire_de_depart, territoire_arrivee) == True:
             if nb_troupes_a_transferer <= 0:
                 print('Veuillez donner un nombre strictement positif de troupes à transférer')
-            if nb_troupes_a_transferer < territoire_de_depart: #on compare un nombre avec un objet ?
+            if nb_troupes_a_transferer < territoire_de_depart.nombre_troupes:
                 territoire_de_depart.nombre_troupes = territoire_de_depart.nombre_troupes - nb_troupes_a_transferer
                 territoire_arrivee.nombre_troupes += nb_troupes_a_transferer
             else:
@@ -232,7 +233,7 @@ class Game:
         """Cette fonction gère le placement des joueurs en début de partie en fonction du nombre de joueurs
         Elle fait appel aux fonctions joueurs au hasard et placement_initial pour cela"""
         nb_joueurs = len(self.liste_joueurs)
-        self.liste_territoires_restant = self.li_territoires_obj
+        self.liste_territoires_restant = self.li_territoires_obj.copy()
         if nb_joueurs == 2:
             for joueur in self.liste_joueurs:
                 self.placement_initial(joueur, 40, 14)  # il faut ajouter l'armée neutre qui a le meme nombre de territoires
@@ -310,19 +311,24 @@ class Game:
         return nombre_de_troupes_qu_il_reste_a_placer 
     
     def import_adjacence(self):
-        graphe = list(csv.reader(open("Fichiers/adjacences_territoires.csv")))
-        return graphe
+        with open('Fichiers/adjacences_territoires.csv', newline='') as csvfile:
+            reader = csv.reader(csvfile, delimiter=';', quotechar='"')
+            graphe = []
+            for row in reader:
+                graphe.append(row)
+            return graphe
 
     def verification_adjacence(self, territoire1, territoire2):
         """
         Vérifie si deux territoires sont adjacents
+        ⚠ l'indice dans la liste est pas le même que dans le graphe
         """
-        i = self.li_territoires.index(territoire1)
-        j = self.li_territoires.index(territoire2)
-        if self.graphe[i + 1][j + 1] == 1:  # vérifier si il y a pas un décallage
-            return True
-        else:
-            return False
+        graphe = self.graphe
+        index1 = graphe[0].index(territoire1.nom_territoire)+1
+        index2 = graphe[0].index(territoire2.nom_territoire)
+        print(graphe[index1][0])
+        print(graphe[0][index2])
+        return graphe[index1][index2] == str(1)
 
     def init_territoires(self):
         """

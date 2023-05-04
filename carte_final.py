@@ -16,17 +16,19 @@ class PygameWindow(pygame.Surface):
         pygame.init()
         self.size = size
         self.liste_joueurs_obj = liste_joueurs_obj
-        self.window = pygame.display.set_mode(size)
+        self.window = pygame.display.set_mode(size, pygame.FULLSCREEN)      # Plein écran
         pygame.display.set_caption("Risk - Game")
         self.coords = self.charger_coord_texte()
 
         # Taille de l'écran
         self.fen_width, self.fen_height = pygame.display.get_surface().get_size() #640, 480
+
         self.view = 0 #Renforcement : 0, attaque : 1, déplacement de troupe : 2, win : 3, mission : 4
 
         #initialisation
         self.charger_images()
         self.game = Rules.Game(self.liste_joueurs_obj, self.fen_width, self.fen_height)
+        print(len(self.game.li_territoires_obj))
         self.a_qui_le_tour = choice(self.liste_joueurs_obj) #celui qui commence
         self.text_font = pygame.font.Font("Fonts/ARLRDBD.TTF", 20)
         self.select = []
@@ -36,24 +38,33 @@ class PygameWindow(pygame.Surface):
         running = True
         while running:
             for event in pygame.event.get():
-                print(self.view)
                 #fermeture de la fenêtre
                 if event.type == pygame.QUIT:
                     running = False
 
-                #différentes vus
+                #différentes vues
                 elif self.view == 0: #renforcement
                     self.afficher_carte()
-                    self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(400, 440))
+                    self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(0.625*self.fen_width, 0.917*self.fen_height))
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         for country in self.game.li_territoires_obj:
                             try:
                                 if country.mask.get_at((event.pos[0], event.pos[1])):
                                     print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
-                                    self.select_deux_surface(country)
+                                    self.select_deux_surface(country.nom_territoire)
                                     print(self.select)
+
                             except IndexError:
                                 pass
+                    if event.type == pygame.KEYDOWN and len(self.select) == 2:
+                        if event.key == pygame.K_p:
+                            #self.game.ajout_de_troupes_sur_territoires()
+                            pass
+                        elif event.key == pygame.K_t:
+                            self.game.transfert_troupes(self.get_obj(self.select[0]), self.get_obj(self.select[1]), 1) #on pourra changer apres le nombre de troupe à transferer
+                            #on peut bouger les troupes des autres non ?
+
+
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_m:
                             self.t = 0
@@ -109,11 +120,14 @@ class PygameWindow(pygame.Surface):
         """
         Affiche les pays sur la surface de la fenêtre
         """
+        #arrière plan
         self.window.blit(self.bg, (0, 0))
+        #territoires
         for country in self.game.li_territoires_obj:
             self.window.blit(country.surface, (0,0))
+        #nombre de régiment
         for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
-            self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (255, 255, 255)),tuple(self.coords[country.nom_territoire]))#{country.nombre_troupes}
+            self.window.blit(self.text_font.render(f"{self.get_obj(country.nom_territoire).nombre_troupes}", True, (255, 255, 255)),(self.coords[country.nom_territoire][0]*self.fen_width, self.coords[country.nom_territoire][1]*self.fen_height))#{country.nombre_troupes}
 
 
     def changer_couleur(self, surface, color):
@@ -129,6 +143,7 @@ class PygameWindow(pygame.Surface):
         """
         permet la sélection de deux territoires en les ajoutant à la liste select.
         On peut aussi supprimer le territoire selectionné en reclickant dessus.
+        Les territoires sont stocker sous forme de str à cause d'un bug inexplicable
         """
         select = self.select
         if select== [] or (len(select) == 1 and country != select[0]):
@@ -138,7 +153,16 @@ class PygameWindow(pygame.Surface):
         elif len(select)==1 and country == select[0]:
             select = []
         self.select = select
-        
+
+    def get_obj(self, str_country):
+        """
+        permet de récuperer l'objet territoire à partir de son nom
+        """
+        for country in self.game.li_territoires_obj:
+            if country.nom_territoire == str_country:
+                return country
+
+
 if __name__ == "__main__":
     import main
     temp = main.MainMenu()

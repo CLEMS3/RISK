@@ -58,12 +58,17 @@ class PygameWindow(pygame.Surface):
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         for country in self.game.li_territoires_obj:
                             try:
-                                if country.mask.get_at((event.pos[0], event.pos[1])):
+                                #print(event.pos)
+                                scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
+                                if country.mask.get_at(scaled_pos):
+                                    print("test")
                                     print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                                     self.select_deux_surface(country)
                                     print(self.select)
                             except IndexError:
                                 pass
+
+        
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_m:
                             self.t = 0
@@ -165,7 +170,7 @@ class PygameWindow(pygame.Surface):
     
     def add_borders(self):
         #bordure autour de la map
-        pygame.draw.rect(self.window, (0,0,0), (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc)),int(self.fen_width/(self.fac_reduc)-5),int(self.fen_height/(self.fac_reduc))),3)
+        #pygame.draw.rect(self.window, (0,0,0), (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc)),int(self.fen_width/(self.fac_reduc)-5),int(self.fen_height/(self.fac_reduc))),3)
         #bordure quitter
         #bordure controles
         pygame.draw.rect(self.window, (0,0,0),(5,5, int(2*self.fen_width/(self.pos_reduc)-10),int(self.fen_height - 10)),4)

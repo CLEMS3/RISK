@@ -61,6 +61,7 @@ class Game:
         self.tps_debut = time.time()
         self.fen_width = fen_width
         self.fen_height = fen_height
+        self.fac_reduc = 1.5 ###SETUP MANUEL POUR LA CARTE
 
 
         #initialisation de la partie
@@ -331,7 +332,7 @@ class Game:
         for area, countries_list in self.dict_territoires.items():
             for country in countries_list:
                 image = pygame.image.load(f"Pictures/Maps/{country}.png").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
-                image = pygame.transform.scale(image, (int(self.fen_width), int(self.fen_height)))
+                image = pygame.transform.scale(image, (int(self.fen_width/self.fac_reduc), int(self.fen_height/self.fac_reduc)))
                 mask = pygame.mask.from_surface(image)
                 li.append(territoire(area, country, mask, image))
         return li

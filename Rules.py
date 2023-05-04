@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-
 Created on Tue Mar 28 18:53:04 2023
-
 @author: vince
 """
 from random import randint, random, choice
@@ -61,6 +59,7 @@ class Game:
         self.tps_debut = time.time()
         self.fen_width = fen_width
         self.fen_height = fen_height
+        self.fac_reduc = 1.5 ###SETUP MANUEL POUR LA CARTE
 
 
         #initialisation de la partie
@@ -153,7 +152,6 @@ class Game:
         LE NOMBRE DE DES LANCES PAR L ATTAQUANT EST SEULEMENT DE 3 S IL A 4
         REGIMENT OU PLUS ET QU IL CHOISIT D ATTAQUER AVEC 3 REGIMENTS 
         LE NOMBRE DE DES LANCES PAR CELUI QUI ATTAQUE EST SEULEMENT DE 2 AU MAXIMUM SI IL A 3 REGIMENTS OU PLUS SUR LE TERRITOIRE
-
         LE NOMBRE DE DES LANCES EST CHOISI PAR LE JOUEUR 
         
         https://www.regledujeu.fr/risk-regle-du-jeu/#des
@@ -331,7 +329,7 @@ class Game:
         for area, countries_list in self.dict_territoires.items():
             for country in countries_list:
                 image = pygame.image.load(f"Pictures/Maps/{country}.png").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
-                image = pygame.transform.scale(image, (int(self.fen_width), int(self.fen_height)))
+                image = pygame.transform.scale(image, (int(self.fen_width/self.fac_reduc), int(self.fen_height/self.fac_reduc)))
                 mask = pygame.mask.from_surface(image)
                 li.append(territoire(area, country, mask, image))
         return li
@@ -460,7 +458,6 @@ class Mission:
     """
     Différent type de mission qu'un joueur peut être ammené à remplir, dans une variation des règle
     The missions are:
-
         capture Europe, Australia and one other continent #type = 1
         capture Europe, South America and one other continent #type = 2
         capture North America and Africa #type = 3

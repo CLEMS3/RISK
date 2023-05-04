@@ -299,15 +299,15 @@ class Game:
             
 
         # il faut que le joueur tire des territoires au hasard où il placera ses troupes comme il le souhaite avec toujours au minimum une troupe sur chaque territoire occupé
-    def ajout_de_troupes_sur_territoires(self, joueur, nombre_de_troupes_qu_il_reste_a_placer):
-        liste_territoires_joueurs = self.liste_territoires_joueur(joueur) 
-        territoire_ou_il_faut_ajouter_des_troupes = liste_territoires_joueurs[(input("Choisissez l'indice du territoire ou il n'y a pas assez de troupes"))]
-        nombre_de_troupes_a_ajouter = input("Combien de troupes voulez-vous ajouter a ce territoire ?")
-        if nombre_de_troupes_a_ajouter > nombre_de_troupes_qu_il_reste_a_placer:  # Le joueur ajoute des troupes sur les territoires qu'il
+    def ajout_de_troupes_sur_territoires(self, joueur, territoire, nombre):
+        nombre_de_troupes_qu_il_reste_a_placer = joueur.troupe_a_repartir
+        liste_territoires_joueurs = self.liste_territoires_joueur(joueur)
+        if nombre > nombre_de_troupes_qu_il_reste_a_placer:  # Le joueur ajoute des troupes sur les territoires qu'il
             print("Il ne vous reste pas assez de troupes !!")
         else:
-            territoire_ou_il_faut_ajouter_des_troupes.nombre_troupes += nombre_de_troupes_a_ajouter
-            nombre_de_troupes_qu_il_reste_a_placer -= nombre_de_troupes_a_ajouter
+            territoire.nombre_troupes += nombre
+            nombre_de_troupes_qu_il_reste_a_placer -= nombre
+        joueur.troupe_a_repartir = nombre_de_troupes_qu_il_reste_a_placer
         return nombre_de_troupes_qu_il_reste_a_placer 
     
     def import_adjacence(self):

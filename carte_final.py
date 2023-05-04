@@ -56,11 +56,11 @@ class PygameWindow(pygame.Surface):
 
                             except IndexError:
                                 pass
-                    if event.type == pygame.KEYDOWN and len(self.select) == 2:
-                        if event.key == pygame.K_p:
-                            #self.game.ajout_de_troupes_sur_territoires()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_p and len(self.select) == 1:
+                            self.game.ajout_de_troupes_sur_territoires(self.a_qui_le_tour, self.get_obj(self.select[0]), 1)
                             pass
-                        elif event.key == pygame.K_t:
+                        elif event.key == pygame.K_t  and len(self.select) == 2:
                             self.game.transfert_troupes(self.get_obj(self.select[0]), self.get_obj(self.select[1]), 1) #on pourra changer apres le nombre de troupe à transferer
                             #on peut bouger les troupes des autres non ?
 

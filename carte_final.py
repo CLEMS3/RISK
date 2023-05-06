@@ -33,6 +33,7 @@ class PygameWindow(pygame.Surface):
         self.text_font = pygame.font.Font("Fonts/ARLRDBD.TTF", 20)
         self.select = []
         self.t = 0 #permet de revenir à la bonne vu après les missions
+        self.deplacement = True
 
     def main_loop(self):
         running = True
@@ -54,13 +55,12 @@ class PygameWindow(pygame.Surface):
                                     self.select_deux_surface(country.nom_territoire)
                                     print(self.select)
 
+
                             except IndexError:
                                 pass
                     if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_p and len(self.select) == 1:
-                            self.game.ajout_de_troupes_sur_territoires(self.a_qui_le_tour, self.get_obj(self.select[0]), 1)
-                            pass
-                        elif event.key == pygame.K_t  and len(self.select) == 2:
+
+                        if event.key == pygame.K_t  and len(self.select) == 2:
                             self.game.transfert_troupes(self.get_obj(self.select[0]), self.get_obj(self.select[1]), 1) #on pourra changer apres le nombre de troupe à transferer
                             #on peut bouger les troupes des autres non ?
 
@@ -78,6 +78,8 @@ class PygameWindow(pygame.Surface):
                         if event.key == pygame.K_m:
                             self.t = 1
                             self.view = 4
+                        if event.type == pygame.K_a and len(self.select) == 2:
+                            self.game.attaque(self.get_obj(self.select[0]), self.get_obj(self.select[1]))
 
                 elif self.view == 2: #déplacement
                     self.afficher_carte()
@@ -86,6 +88,12 @@ class PygameWindow(pygame.Surface):
                         if event.key == pygame.K_m:
                             self.t = 2
                             self.view = 4
+                        if event.key == pygame.K_p and len(self.select) == 1:
+                            self.game.ajout_de_troupes_sur_territoires(self.a_qui_le_tour, self.get_obj(self.select[0]), 1)
+                            self.deplacement = False
+                        #reverifier si le déplacement est facultatif
+                        if event.key == pygame.K_BACKSPACE:
+                            self.end_turn()
 
                 elif self.view == 3: #win
                     self.afficher_carte()
@@ -161,6 +169,20 @@ class PygameWindow(pygame.Surface):
         for country in self.game.li_territoires_obj:
             if country.nom_territoire == str_country:
                 return country
+
+    def end_turn(self):
+        """
+        On vérifie si le joueur a gagné, si oui, on affiche la victoire, sinon on passe au joueur suivant
+        """
+        if self.a_qui_le_tour.mission.check():
+            self.view == 3
+        elif self.liste_joueurs_obj[-1] == self.a_qui_le_tour:
+            self.a_qui_le_tour == self.liste_joueurs_obj[0]
+        else :
+            self.a_qui_le_tour == self.liste_joueurs_obj[self.liste_joueurs_obj.index(self.a_qui_le_tour)+1]
+
+        self.deplacement = True
+        self.view = 0
 
 
 if __name__ == "__main__":

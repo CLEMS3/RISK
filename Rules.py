@@ -65,8 +65,7 @@ class Game:
 
         #initialisation de la partie
         self.li_territoires_obj = self.init_territoires()
-        print(len(self.li_territoires_obj))
-        self.placement_de_tous_les_joueurs() #ne marche pas
+        self.placement_de_tous_les_joueurs()
         self.init_mission()
 
 
@@ -192,6 +191,7 @@ class Game:
                         territoire_attaquant.joueur.territoires.apppend(territoire_attaque)
                         territoire_attaque.joueur.territoires.remove(territoire_attaque)
                         territoire_attaque.joueur = territoire_attaquant.joueur
+                        self.changer_couleur(territoire_attaque)
                         print('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
                         nombre_de_troupes_a_transferer = 0 
                         while nombre_de_troupes_a_transferer < nb_regiments_attaquant or nombre_de_troupes_a_transferer > territoire_attaquant.nombre_troupes :
@@ -293,6 +293,7 @@ class Game:
             territoire.joueur = joueur
             nombre_de_troupes_qu_il_reste_a_placer -= 1
             joueur.troupe_a_repartir = nombre_de_troupes_qu_il_reste_a_placer
+            self.changer_couleur(territoire)
         
         #while nombre_de_troupes_qu_il_reste_a_placer > 0:
             #nombre_de_troupes_qu_il_reste_a_placer = self.ajout_de_troupes_sur_territoires(joueur)
@@ -431,10 +432,22 @@ class Game:
             else:
                 i.mission = Mission(type, i.nom, self.li_territoires_obj)
 
-    def init_joueurs(self):
-        """
-        A voir avec Antoine si c'est necessaire, selon si liste_joueur est une liste de texte ou d'objet
-        """
+    def get_player(self, str):
+        for player in self.liste_joueurs:
+            if player.nom == str:
+                return player
+        return "Joueur non trouvé"
+
+    def changer_couleur(self, country):
+        """Remplace tous les pixels de la surface avec color, garde la transparence"""
+        color = self.get_player(country.joueur).couleur
+        width, height = country.surface.get_size()
+        r, g, b = color
+        for x in range(width):
+            for y in range(height):
+                a = country.surface.get_at((x, y))[3]  # obtient la valeur de la couleur de ce pixel, et le [3] prend donc le 4ème élement, ce qui correspond à la valeur de transparence du pixel
+                country.surface.set_at((x, y), pygame.Color(r, g, b,a))  # défini la couleur du pixel selon les valeurs de rgb donné en paramètre, et avec la valeur de transparence initiale
+
 
 #A quoi ça sert ?
 def tri_fusion(liste):

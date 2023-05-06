@@ -137,16 +137,6 @@ class PygameWindow(pygame.Surface):
         for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
             self.window.blit(self.text_font.render(f"{self.get_obj(country.nom_territoire).nombre_troupes}", True, (255, 255, 255)),(self.coords[country.nom_territoire][0]*self.fen_width, self.coords[country.nom_territoire][1]*self.fen_height))#{country.nombre_troupes}
 
-
-    def changer_couleur(self, surface, color):
-        """Remplace tous les pixels de la surface avec color, garde la transparence"""
-        width, height = surface.get_size()
-        r, g, b = color
-        for x in range(width):
-            for y in range(height):
-                a = surface.get_at((x, y))[3]  # obtient la valeur de la couleur de ce pixel, et le [3] prend donc le 4ème élement, ce qui correspond à la valeur de transparence du pixel
-                surface.set_at((x, y), pygame.Color(r, g, b,a))  # défini la couleur du pixel selon les valeurs de rgb donné en paramètre, et avec la valeur de transparence initiale
-
     def select_deux_surface(self, country):
         """
         permet la sélection de deux territoires en les ajoutant à la liste select.

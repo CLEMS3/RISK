@@ -14,6 +14,7 @@ except:
     import pygame
 import hashlib
 import carte_final
+import random
 
 #Menu principal
 class MainMenu :
@@ -377,6 +378,8 @@ class Joueur():
         self.nom = nom
         self.mdp = MDP
         self.win = GameWin
+        #peut être ajouter un choix de la couleur
+        self.couleur = (random.randint(0, 255),random.randint(0,255),random.randint(0,255))
 
     #def __str__(self):
         #return(f'le nom du joueur {str(self.ID)} est {str(self.nom)}, il a gangé {str(self.win)} parties')

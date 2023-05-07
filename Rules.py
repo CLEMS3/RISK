@@ -443,10 +443,6 @@ class Game:
     def changer_couleur(self, country):
         """Remplace tous les pixels de la surface avec color, garde la transparence"""
         player = country.joueur
-        """print(f"player est de type {type(player)}")
-        print(f"Il a pour valeur {player}")
-        print("Ses attributs sont :")
-        print(dir(player))"""
         color = player.couleur
         width, height = country.surface.get_size()
         r, g, b = color

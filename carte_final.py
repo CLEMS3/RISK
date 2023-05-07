@@ -75,11 +75,21 @@ class PygameWindow(pygame.Surface):
                 elif self.view == 1: #attaque
                     self.afficher_carte()
                     self.window.blit(self.text_font.render(f"Phase d'attaque", True, (255, 255, 255)), (400, 440))
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        for country in self.game.li_territoires_obj:
+                            try:
+                                if country.mask.get_at((event.pos[0], event.pos[1])):
+                                    print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
+                                    self.select_deux_surface(country.nom_territoire)
+                                    print(self.select)
+
+                            except IndexError:
+                                pass
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_m:
                             self.t = 1
                             self.view = 4
-                        if event.type == pygame.K_a and len(self.select) == 2:
+                        if event.type == 768 and len(self.select) == 2:
                             self.game.attaque(self.get_obj(self.select[0]), self.get_obj(self.select[1]))
                         if event.key == pygame.K_RETURN:
                             self.view = 2

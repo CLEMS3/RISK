@@ -68,6 +68,8 @@ class PygameWindow(pygame.Surface):
                         if event.key == pygame.K_m:
                             self.t = 0
                             self.view = 4
+                        if event.key == pygame.K_BACKSPACE:
+                            self.view = 1
 
 
                 elif self.view == 1: #attaque

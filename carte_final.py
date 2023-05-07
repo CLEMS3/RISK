@@ -81,6 +81,8 @@ class PygameWindow(pygame.Surface):
                             self.view = 4
                         if event.type == pygame.K_a and len(self.select) == 2:
                             self.game.attaque(self.get_obj(self.select[0]), self.get_obj(self.select[1]))
+                        if event.key == pygame.K_BACKSPACE:
+                            self.view = 2
 
                 elif self.view == 2: #déplacement
                     self.afficher_carte()
@@ -137,6 +139,9 @@ class PygameWindow(pygame.Surface):
         #nombre de régiment
         for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
             self.window.blit(self.text_font.render(f"{self.get_obj(country.nom_territoire).nombre_troupes}", True, (255, 255, 255)),(self.coords[country.nom_territoire][0]*self.fen_width, self.coords[country.nom_territoire][1]*self.fen_height))#{country.nombre_troupes}
+        #joueur
+        self.window.blit(
+            self.text_font.render(f"{self.a_qui_le_tour}", True, (255, 255, 255)), (0.05 * self.fen_width, 0.9 * self.fen_height))
 
     def select_deux_surface(self, country):
         """

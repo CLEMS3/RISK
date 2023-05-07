@@ -1,5 +1,5 @@
 import random
-
+import asyncio
 import pygame
 from pygame.locals import *
 import glob
@@ -27,7 +27,7 @@ class PygameWindow(pygame.Surface):
         self.view = 0 #Renforcement : 0, attaque : 1, déplacement de troupe : 2, win : 3, mission : 4
 
         #facteur de reduction
-        self.fac_reduc = 1.5 ###PENSER A MODIFIER DANS FICHIER RULES 
+        self.fac_reduc = 1.4 ###PENSER A MODIFIER DANS FICHIER RULES 
         self.pos_reduc = (4*self.fac_reduc)/(2*self.fac_reduc -2)
 
         #initialisation
@@ -37,7 +37,8 @@ class PygameWindow(pygame.Surface):
         self.text_font = pygame.font.Font("Fonts/ARLRDBD.TTF", 20)
         self.select = []
         self.t = 0 #permet de revenir à la bonne vu après les missions
-
+        #liste couleurs
+        self.colors = [(0,255,0),(255,0,0),(0,0,255),(255,255,0),(255,0,255)]
 
     def main_loop(self):
         running = True
@@ -49,7 +50,7 @@ class PygameWindow(pygame.Surface):
                     running = False
 
                 elif event.type == pygame.MOUSEBUTTONDOWN and self.closebutton_rect.collidepoint(pygame.mouse.get_pos()):
-                    running = False
+                    self.init_couleurs()
 
                 #différentes vues
                 elif self.view == 0: #renforcement
@@ -65,6 +66,7 @@ class PygameWindow(pygame.Surface):
                                     print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                                     self.select_deux_surface(country)
                                     print(self.select)
+                                    
                             except IndexError:
                                 pass
 
@@ -123,7 +125,6 @@ class PygameWindow(pygame.Surface):
         self.adios = pygame.image.load("Images/adios.png").convert_alpha()
         self.adios = pygame.transform.scale(self.adios,(int(self.fen_height/(self.pos_reduc)-10),int(self.fen_height/(self.pos_reduc)-10)))
 
-
     def charger_coord_texte(self):
         with open('Fichiers/coords.json', 'r', encoding='utf-8') as f:
             donnees_lues = json.load(f)
@@ -143,14 +144,55 @@ class PygameWindow(pygame.Surface):
             self.window.blit(country.surface, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
             self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (255, 255, 255)),(self.coords[country.nom_territoire][0]*self.fen_width/(self.fac_reduc)+2*int(self.fen_width/(self.pos_reduc)), self.coords[country.nom_territoire][1]*self.fen_height/(self.fac_reduc)+int(self.fen_height/(self.pos_reduc))))#{country.nombre_troupes}
+        
+    def init_couleurs(self):
+       '''initialise la couleur des territoires en début de partie'''
+       for country in self.game.li_territoires_obj:
+            surface = country.surface
+            width, height = surface.get_size()
+        
+            for i in range(len(self.liste_joueurs_obj)):
+                if country.joueur == self.liste_joueurs_obj[i]:
+                    color = self.colors[i]
 
-    def changer_couleur(self, surface, color):
-        """Remplace tous les pixels de la surface avec color, garde la transparence"""
+            for x in range(width):
+                for y in range(height):
+                    if surface.get_at((x,y))!=(0,0,0):
+				    
+
+
+                        a = surface.get_at((x, y))[3]  # obtient la valeur de la couleur de ce pixel, et le [3] prend donc le 4ème élement, ce qui correspond à la valeur de transparence du pixel
+                        r = color[0]
+                        g = color[1]
+                        b = color[2]
+                    
+                        surface.set_at((x, y), pygame.Color(r, g, b,a)) # défini la couleur du pixel selon les valeurs de rgb données, et avec la valeur de transparence initiale
+       
+    def changer_lumi(self, country):
+        """Assombri un territoire quand il est selectionné"""
+        surface = country.surface
         width, height = surface.get_size()
-        r, g, b = color
+        light = country.selec
+        print(light)
         for x in range(width):
             for y in range(height):
                 a = surface.get_at((x, y))[3]  # obtient la valeur de la couleur de ce pixel, et le [3] prend donc le 4ème élement, ce qui correspond à la valeur de transparence du pixel
+                r = surface.get_at((x, y))[0]
+                g = surface.get_at((x, y))[1]
+                b = surface.get_at((x, y))[2]
+                
+                if light == 0: #on veut assombrir l'image
+                    country.selec = 1
+                    #print(country.selec)
+                    r = int(r/1.5)
+                    g = int(g/1.5)
+                    b = int(b/1.5)
+                else: #on veut eclaircir l'image
+                    country.selec = 0
+                    r = int(r*1.5)
+                    g = int(g*1.5)
+                    b = int(b*1.5)
+                
                 surface.set_at((x, y), pygame.Color(r, g, b,a))  # défini la couleur du pixel selon les valeurs de rgb donné en paramètre, et avec la valeur de transparence initiale
 
     def select_deux_surface(self, country):
@@ -161,17 +203,18 @@ class PygameWindow(pygame.Surface):
         select = self.select
         if select== [] or (len(select) == 1 and country != select[0]):
             select.append(country)
-        elif len(select) == 2 and country == select[1]:
+            self.changer_lumi(country)
+        elif len(select) == 2 and country== select[1]:
             select = select [:-1]
-        elif len(select)==1 and country == select[0]:
+            self.changer_lumi(country)
+        elif len(select)==1 and country== select[0]:
             select = []
+            self.changer_lumi(country)
         self.select = select
 
-    
     def add_borders(self):
         #bordure autour de la map
-        #pygame.draw.rect(self.window, (0,0,0), (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc)),int(self.fen_width/(self.fac_reduc)-5),int(self.fen_height/(self.fac_reduc))),3)
-        #bordure quitter
+        pygame.draw.rect(self.window, (0,0,0), (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc)),int(self.fen_width/(self.fac_reduc)-5),int(self.fen_height/(self.fac_reduc))),3)
         #bordure controles
         pygame.draw.rect(self.window, (0,0,0),(5,5, int(2*self.fen_width/(self.pos_reduc)-10),int(self.fen_height - 10)),4)
         #bordure info succes    
@@ -182,9 +225,15 @@ class PygameWindow(pygame.Surface):
 
 if __name__ == "__main__":
     import main
-    temp = main.MainMenu()
+    menu = main.MainMenu()
+    temp = menu.liste_joueurs
+    out = []
+    out.append(temp[0])
+    out.append(temp[1])
+    out.append(temp[2])
+    print(out)
 
-    window_pg = PygameWindow((temp.WIDTH, temp.HEIGHT), temp.liste_joueurs)
+    window_pg = PygameWindow((menu.WIDTH, menu.HEIGHT), out)
 
     # run the main loop
     window_pg.main_loop()

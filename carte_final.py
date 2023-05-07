@@ -97,12 +97,22 @@ class PygameWindow(pygame.Surface):
                 elif self.view == 2: #déplacement
                     self.afficher_carte()
                     self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (400, 440))
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        for country in self.game.li_territoires_obj:
+                            try:
+                                if country.mask.get_at((event.pos[0], event.pos[1])):
+                                    print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
+                                    self.select_deux_surface(country.nom_territoire)
+                                    print(self.select)
+
+                            except IndexError:
+                                pass
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_m:
                             self.t = 2
                             self.view = 4
-                        if event.key == pygame.K_p and len(self.select) == 1:
-                            self.game.ajout_de_troupes_sur_territoires(self.a_qui_le_tour, self.get_obj(self.select[0]), 1)
+                        if event.key == pygame.K_t and len(self.select) == 2:
+                            self.game.transfert_troupes(self.get_obj(self.select[0]), self.get_obj(self.select[1]), 1)
                             self.deplacement = False
                         #reverifier si le déplacement est facultatif
                         if event.key == pygame.K_RETURN and self.a_qui_le_tour.troupe_a_repartir == 0:

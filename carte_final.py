@@ -60,10 +60,8 @@ class PygameWindow(pygame.Surface):
                             except IndexError:
                                 pass
                     if event.type == pygame.KEYDOWN:
-
-                        if event.key == pygame.K_t  and len(self.select) == 2:
-                            self.game.transfert_troupes(self.get_obj(self.select[0]), self.get_obj(self.select[1]), 1) #on pourra changer apres le nombre de troupe à transferer
-                            #on peut bouger les troupes des autres non ?
+                        if event.key == pygame.K_p and len(self.select) == 1:
+                            self.game.ajout_de_troupes_sur_territoires(self.a_qui_le_tour, self.get_obj(self.select[0]), 1)
 
 
                     if event.type == pygame.KEYDOWN:
@@ -141,7 +139,7 @@ class PygameWindow(pygame.Surface):
             self.window.blit(self.text_font.render(f"{self.get_obj(country.nom_territoire).nombre_troupes}", True, (255, 255, 255)),(self.coords[country.nom_territoire][0]*self.fen_width, self.coords[country.nom_territoire][1]*self.fen_height))#{country.nombre_troupes}
         #joueur
         self.window.blit(
-            self.text_font.render(f"{self.a_qui_le_tour}", True, (255, 255, 255)), (0.05 * self.fen_width, 0.9 * self.fen_height))
+            self.text_font.render(f"{self.a_qui_le_tour}", True, self.a_qui_le_tour.couleur), (0.05 * self.fen_width, 0.9 * self.fen_height))
 
     def select_deux_surface(self, country):
         """

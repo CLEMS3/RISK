@@ -29,6 +29,7 @@ class PygameWindow(pygame.Surface):
         self.charger_images()
         self.game = Rules.Game(self.liste_joueurs_obj, self.fen_width, self.fen_height)
         print(len(self.game.li_territoires_obj))
+        print(type(self.liste_joueurs_obj))
         self.a_qui_le_tour = choice(self.liste_joueurs_obj) #celui qui commence
         self.text_font = pygame.font.Font("Fonts/ARLRDBD.TTF", 20)
         self.select = []
@@ -179,7 +180,7 @@ if __name__ == "__main__":
     import main
     temp = main.MainMenu()
 
-    window_pg = PygameWindow((temp.WIDTH, temp.HEIGHT), temp.liste_joueurs)
+    window_pg = PygameWindow((temp.WIDTH, temp.HEIGHT), temp.OUT)
 
     # run the main loop
     window_pg.main_loop()

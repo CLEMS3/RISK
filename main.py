@@ -312,7 +312,8 @@ class MainMenu :
             print(self.OUT)
             if len(self.OUT) == int(self.NbrJoueur.get()):
                 # create the window
-                window_pg = carte_final.PygameWindow((640, 480), self.liste_joueurs)
+                print(self.OUT)
+                window_pg = carte_final.PygameWindow((640, 480), self.OUT) #devrait être une liste d'objet
 
                 # run the main loop
                 window_pg.main_loop()
@@ -380,6 +381,8 @@ class Joueur():
         self.win = GameWin
         #peut être ajouter un choix de la couleur
         self.couleur = (random.randint(0, 255),random.randint(0,255),random.randint(0,255))
+        self.mission = None
+        self.troupe_a_repartir = 0
 
     #def __str__(self):
         #return(f'le nom du joueur {str(self.ID)} est {str(self.nom)}, il a gangé {str(self.win)} parties')

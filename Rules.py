@@ -47,8 +47,6 @@ class territoire:
 class Player: #voir avec antoine si on peut pas utiliser directement sa classe Joueur
     def __init__(self, nom):
         self.nom = nom
-        self.mission = None
-        self.troupe_a_repartir = 0
 
 class Game:
     def __init__(self, liste_joueurs, fen_width, fen_height):
@@ -293,6 +291,7 @@ class Game:
             territoire.joueur = joueur
             nombre_de_troupes_qu_il_reste_a_placer -= 1
             joueur.troupe_a_repartir = nombre_de_troupes_qu_il_reste_a_placer
+            print(territoire.nom_territoire)
             self.changer_couleur(territoire)
         
         #while nombre_de_troupes_qu_il_reste_a_placer > 0:
@@ -434,13 +433,21 @@ class Game:
 
     def get_player(self, str):
         for player in self.liste_joueurs:
-            if player.nom == str:
+            print(f"Dans get_player, le type de player est {type(player)}")
+            print(f"{player.nom} / {str}")
+            print(f"le type de player.nom est {type(player.nom)} et celui de str {type(str)}")
+            if (player.nom) == (str):
                 return player
         return "Joueur non trouvé"
 
     def changer_couleur(self, country):
         """Remplace tous les pixels de la surface avec color, garde la transparence"""
-        color = self.get_player(country.joueur).couleur
+        player = country.joueur
+        """print(f"player est de type {type(player)}")
+        print(f"Il a pour valeur {player}")
+        print("Ses attributs sont :")
+        print(dir(player))"""
+        color = player.couleur
         width, height = country.surface.get_size()
         r, g, b = color
         for x in range(width):

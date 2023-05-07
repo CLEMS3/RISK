@@ -68,7 +68,7 @@ class PygameWindow(pygame.Surface):
                         if event.key == pygame.K_m:
                             self.t = 0
                             self.view = 4
-                        if event.key == pygame.K_BACKSPACE:
+                        if event.key == pygame.K_RETURN:
                             self.view = 1
 
 
@@ -81,7 +81,7 @@ class PygameWindow(pygame.Surface):
                             self.view = 4
                         if event.type == pygame.K_a and len(self.select) == 2:
                             self.game.attaque(self.get_obj(self.select[0]), self.get_obj(self.select[1]))
-                        if event.key == pygame.K_BACKSPACE:
+                        if event.key == pygame.K_RETURN:
                             self.view = 2
 
                 elif self.view == 2: #déplacement
@@ -95,7 +95,7 @@ class PygameWindow(pygame.Surface):
                             self.game.ajout_de_troupes_sur_territoires(self.a_qui_le_tour, self.get_obj(self.select[0]), 1)
                             self.deplacement = False
                         #reverifier si le déplacement est facultatif
-                        if event.key == pygame.K_BACKSPACE:
+                        if event.key == pygame.K_RETURN and self.a_qui_le_tour.troupe_a_repartir == 0:
                             self.end_turn()
 
                 elif self.view == 3: #win

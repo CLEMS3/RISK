@@ -156,6 +156,7 @@ class Game:
         
         https://www.regledujeu.fr/risk-regle-du-jeu/#des
         """      
+        self.droit_attaque(territoire_attaquant, territoire_attaque)
         if self.droit_attaque(territoire_attaquant, territoire_attaque) == True : 
                 scores_attaquant = []
                 scores_attaque = []

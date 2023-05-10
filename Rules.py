@@ -171,8 +171,10 @@ class Game:
                     nb_des_a_comparer = nb_des_attaquant
                 for i in range(nb_des_attaquant):
                     scores_attaquant.append(des())
+                    print(scores_attaquant)
                 for i in range(nb_des_attaque):
                     scores_attaque.append(des())
+                    print(scores_attaque)
                 scores_attaquant = tri_fusion(scores_attaquant)
                 scores_attaque = tri_fusion(scores_attaque)
                 i=0

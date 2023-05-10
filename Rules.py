@@ -185,12 +185,10 @@ class Game:
                         territoire_attaquant.nombre_troupes -= 1
                         territoire_attaquant.joueur.nb_troupes-=1    
                         print("Le territoire attaquant perd une troupe")
-                        i += 1
                     if scores_attaquant[i] > scores_attaque[i]:
                         territoire_attaque.nombre_troupes -= 1
                         territoire_attaque.joueur.nb_troupes-=1
                         print("Le territoire attaqué perd une troupe")
-                        i += 1
                     if territoire_attaque.nombre_troupes == 0:
                         territoire_attaque.joueur = territoire_attaquant.joueur
                         self.changer_couleur(territoire_attaque)
@@ -200,6 +198,7 @@ class Game:
                             nombre_de_troupes_a_transferer = int(input("Les troupes attaquante doivent occuper ce territoire, le temps que d'autres renforts arrivent. Combien voulez vous en laisser ( il faut au minimum que vous utilisiez les régiments qui attaquaient? "))
                         self.transfert_troupes(territoire_attaquant, territoire_attaque, nombre_de_troupes_a_transferer)
                         gagnant = 1
+                    i+=1
         else : 
             print("Vous ne pouvez pas attaquer")
 

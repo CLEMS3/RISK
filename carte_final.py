@@ -112,7 +112,7 @@ class PygameWindow(pygame.Surface):
                             self.t = 2
                             self.view = 4
                         if event.key == pygame.K_t and len(self.select) == 2:
-                            self.game.transfert_troupes(self.get_obj(self.select[0]), self.get_obj(self.select[1]))
+                            self.game.transfert_troupes(self.get_obj(self.select[0]), self.get_obj(self.select[1]),1)
                             self.deplacement = False
                         #reverifier si le déplacement est facultatif
                         if event.key == pygame.K_RETURN and self.a_qui_le_tour.troupe_a_repartir == 0:

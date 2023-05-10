@@ -176,7 +176,7 @@ class Game:
                 scores_attaquant = tri_fusion(scores_attaquant)
                 scores_attaque = tri_fusion(scores_attaque)
                 i=0
-                while i <= nb_des_a_comparer and gagnant == 0:
+                while i < nb_des_a_comparer and gagnant == 0:
                     if scores_attaquant[i] <= scores_attaque[i]:
                         territoire_attaquant.nombre_troupes -= 1
                         territoire_attaquant.joueur.nb_troupes-=1    

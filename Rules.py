@@ -214,12 +214,13 @@ class Game:
             li.append(i)
         return li
 
-    def transfert_troupes(self, territoire_de_depart, territoire_arrivee):
+    def transfert_troupes(self, territoire_de_depart, territoire_arrivee,nombre_de_troupes_a_transferer):
         """
-        Fonction qui gère le transfère de troupe d'un territoire à l'autre
+        Fonction qui gère le transfèrt de troupe d'un territoire à l'autre
         """
         if self.verification_adjacence(territoire_de_depart, territoire_arrivee) == True:
-            nb_troupes_a_transferer = int(input("Nombre de troupes à transférer ?"))
+            while nombre_de_troupes_a_transferer == 0 :
+                nb_troupes_a_transferer = int(input("Nombre de troupes à transférer ?"))
             if nb_troupes_a_transferer <= 0:
                 print('Veuillez donner un nombre strictement positif de troupes à transférer')
             if nb_troupes_a_transferer < territoire_de_depart.nombre_troupes:

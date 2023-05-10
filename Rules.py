@@ -97,13 +97,13 @@ class Game:
             if territoire_qui_attaque.nombre_troupes == 2 :
                 nombre_de_regiments_attaquant = 1
             if territoire_qui_attaque.nombre_troupes == 3 : 
-                choix = input('Voulez-vous attaquer avec 1 ou 2 regiments')
+                choix = int(input('Voulez-vous attaquer avec 1 ou 2 regiments'))
                 if choix != 2 and choix != 1 : 
                     print ('Choisissez un nombre de régiments attaquant parmi 2 et 3')
                 else : 
                     nombre_de_regiments_attaquant = choix
             if territoire_qui_attaque.nombre_troupes > 3 : 
-                choix = input('Voulez-vous attaquer avec 1,2 ou 3 regiments')
+                choix = int(input('Voulez-vous attaquer avec 1,2 ou 3 regiments'))
                 if choix != 1 and choix != 2 and choix !=3 : 
                     print ('Choisissez un nombre de régiments attaquant parmi 1, 2 et 3')
                 else : 

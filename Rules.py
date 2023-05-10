@@ -177,6 +177,8 @@ class Game:
                 scores_attaque = tri_fusion(scores_attaque)
                 i=0
                 while i < nb_des_a_comparer and gagnant == 0:
+                    print(scores_attaquant)
+                    print(scores_attaque)
                     if scores_attaquant[i] <= scores_attaque[i]:
                         territoire_attaquant.nombre_troupes -= 1
                         territoire_attaquant.joueur.nb_troupes-=1    
@@ -460,7 +462,7 @@ def tri_fusion(liste):
     """Permet de retourner la liste de scores de dés dans l'ordre décroissant """
     liste_triee = []
     liste_triee_ordre_decroissant = []
-    if len(liste) <= 1:
+    if len(liste) == 1:
         liste_triee = liste
     else:
         milieu = len(liste) // 2

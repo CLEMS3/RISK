@@ -116,28 +116,29 @@ class Game:
         mais il peut faire un autre choix ..."""
         nombre_de_des_a_jouer = 0
         nb_regiments_attaquant = 0
-        while nombre_de_des_a_jouer == 0 : 
-            if statut == "Attaquant" : 
-                nb_regiments_attaquant = self.choix_du_nombre_de_regiments_attaquant(territoire)
+        if statut == "Attaquant" : 
+            while nombre_de_des_a_jouer == 0 : 
+                nb_regiments_attaquant = self.choix_du_nombre_de_regiments_attaquant(territoire)    
                 if nb_regiments_attaquant == 1 : 
                     nombre_de_des_a_jouer =  1 
                 if nb_regiments_attaquant == 2 :
-                    choix = input("Vous pouvez utiliser 1 ou 2 dés. Combien en voulez vous ? ")
+                    choix = int(input("Vous pouvez utiliser 1 ou 2 dés. Combien en voulez vous ? "))
                     if choix != 1 and choix != 2 :
                         print("Vous devez choisir parmi 1 et 2 dés")
                     else : 
                         nombre_de_des_a_jouer = choix
                 if nb_regiments_attaquant == 3 :
-                    choix = input("Vous pouvez utiliser 1 ou 2 ou 3 dés. Combien en voulez vous ? ")
+                    choix = int(input("Vous pouvez utiliser 1 ou 2 ou 3 dés. Combien en voulez vous ? "))
                     if choix != 1 and choix != 2 and choix != 3 :
                         print("Vous devez choisir parmi 1, 2 et 3 dés")
                     else : 
                         nombre_de_des_a_jouer = choix
-            elif statut == "Attaqué" : 
+        elif statut == "Attaqué" : 
+            while nombre_de_des_a_jouer == 0 : 
                 if territoire.nombre_troupes == 1 or territoire.nombre_troupe == 2 :
                     nombre_de_des_a_jouer = 1
                 else : 
-                    choix = input("Vous pouvez utiliser 1 ou 2 dés pour vous défendre. Que choisissez vous ? ")
+                    choix = int(input("Vous pouvez utiliser 1 ou 2 dés pour vous défendre. Que choisissez vous ? "))
                     if choix != 1 and choix != 2 :
                         print("Vous devez choisir parmi 1 et 2 dés")
                     else : 

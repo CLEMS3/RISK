@@ -212,11 +212,12 @@ class Game:
             li.append(i)
         return li
 
-    def transfert_troupes(self, territoire_de_depart, territoire_arrivee, nb_troupes_a_transferer):
+    def transfert_troupes(self, territoire_de_depart, territoire_arrivee):
         """
         Fonction qui gère le transfère de troupe d'un territoire à l'autre
         """
         if self.verification_adjacence(territoire_de_depart, territoire_arrivee) == True:
+            nb_troupes_a_transferer = int(input("Nombre de troupes à transférer ?"))
             if nb_troupes_a_transferer <= 0:
                 print('Veuillez donner un nombre strictement positif de troupes à transférer')
             if nb_troupes_a_transferer < territoire_de_depart.nombre_troupes:
@@ -458,6 +459,7 @@ class Game:
 def tri_fusion(liste):
     """Permet de retourner la liste de scores de dés dans l'ordre décroissant """
     liste_triee = []
+    liste_triee_ordre_decroissant = []
     if len(liste) <= 1:
         liste_triee = liste
     else:

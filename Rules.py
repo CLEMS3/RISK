@@ -471,7 +471,7 @@ def tri_fusion(liste):
         gauche = tri_fusion(liste[:milieu])
         droite = tri_fusion(liste[milieu:])
         liste_triee = fusion_triee(gauche, droite)
-        liste_triee_ordre_decroissant = liste_triee[::-1]
+    liste_triee_ordre_decroissant = liste_triee[::-1]
     return liste_triee_ordre_decroissant
 
 

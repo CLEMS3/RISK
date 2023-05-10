@@ -163,8 +163,7 @@ class Game:
                 scores_attaque = []
                 gagnant = 0
                 nb_des_a_comparer = 0 
-                nb_des_attaquant = self.nombre_de_des_a_jouer(territoire_attaquant,"Attaquant")[0]
-                nb_regiments_attaquant = self.nombre_de_des_a_jouer(territoire_attaquant,"Attaquant")[1]
+                nb_des_attaquant, nb_regiments_attaquant  = self.nombre_de_des_a_jouer(territoire_attaquant,"Attaquant")
                 nb_des_attaque = self.nombre_de_des_a_jouer(territoire_attaque,"Attaqué")[0]
                 if nb_des_attaquant > nb_des_attaque : 
                     nb_des_a_comparer = nb_des_attaque
@@ -176,6 +175,7 @@ class Game:
                     scores_attaque.append(des())
                 scores_attaquant = tri_fusion(scores_attaquant)
                 scores_attaque = tri_fusion(scores_attaque)
+                i=0
                 while i <= nb_des_a_comparer and gagnant == 0:
                     if scores_attaquant[i] <= scores_attaque[i]:
                         territoire_attaquant.nombre_troupes -= 1

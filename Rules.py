@@ -79,7 +79,7 @@ class Game:
             if territoire_attaquant.nombre_troupes > 1 : 
                 troupes_suffisantes = True
                 if adjacence == True : 
-                    droit_attaque == True
+                    droit_attaque = True
                 else : 
                     print("Le territoire que vous voulez attaquer n'est pas adjacents à votre territoire attaquant")
             else : 

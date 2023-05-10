@@ -192,8 +192,6 @@ class Game:
                         print("Le territoire attaqué perd une troupe")
                         i += 1
                     if territoire_attaque.nombre_troupes == 0:
-                        territoire_attaquant.joueur.territoires.apppend(territoire_attaque)
-                        territoire_attaque.joueur.territoires.remove(territoire_attaque)
                         territoire_attaque.joueur = territoire_attaquant.joueur
                         self.changer_couleur(territoire_attaque)
                         print('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')

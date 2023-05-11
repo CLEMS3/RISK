@@ -7,7 +7,7 @@ from random import randint, choice
 import time
 import json
 import Rules
-
+import widgets
 
 
 class PygameWindow(pygame.Surface):
@@ -40,6 +40,9 @@ class PygameWindow(pygame.Surface):
         #liste couleurs
         self.colors = [(0,255,0),(255,0,0),(0,0,255),(255,255,0),(255,0,255)]
 
+        # Sélecteur de nombres
+        self.selnbr = widgets.selectNB((15, 200), 3, 2, 5)
+
     def main_loop(self):
         running = True
         while running:
@@ -57,6 +60,11 @@ class PygameWindow(pygame.Surface):
                     self.afficher_fenetre()
                     self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(0.625*self.fen_width, 0.917*self.fen_height))
                     if event.type == pygame.MOUSEBUTTONDOWN:
+
+                        # Clic sur le sélecteur ?
+                        self.selnbr(pygame.mouse.get_pos())
+                        self.selnbr.draw(self.window)
+
                         for country in self.game.li_territoires_obj:
                             try:
                                 #print(event.pos)
@@ -142,6 +150,7 @@ class PygameWindow(pygame.Surface):
         self.window.blit(self.lines, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         self.window.blit(self.adios,(int(self.fen_width-self.adios.get_size()[0]-5),5))
         self.add_borders()
+        self.selnbr.draw(self.window)   # Dessiner le sélecteur
 
         
         for country in self.game.li_territoires_obj:
@@ -225,6 +234,7 @@ class PygameWindow(pygame.Surface):
         pygame.draw.rect(self.window, (0,0,0),(int(2*self.fen_width/(self.pos_reduc)),5,int(self.fen_width/(self.fac_reduc)-int(self.fen_height/(self.pos_reduc))),int(self.fen_height/(self.pos_reduc)-10)),4)
         #bordure adios
         self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
+
 
 
 if __name__ == "__main__":

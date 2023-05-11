@@ -358,8 +358,12 @@ class MainMenu :
             self.errorlabel6.destroy() 
         except: None
 
-        if name not in self.liste_pseudo and len(name) >= 1:
-            if len(password) > 5 :
+        if name not in self.liste_pseudo and len(name) >= 1 :
+            if len(name) > 9:
+                self.errorlabel2 = tk.Label(self.TL, text = "Pseudo non conforme \n Il doit être entre 1 et 9 caractères", font = self.Impact15, fg='red', bg='grey')
+                self.errorlabel2.pack(pady=10)
+
+            elif len(password) > 5 :
                 hashed_mdp = hashlib.sha256(password.encode('UTF-8')).hexdigest() #encode le mot de passe pour le stockage
                 with open('Fichiers/Joueurs.csv', 'a', newline='') as f3:
                     writer = csv.writer(f3)
@@ -370,11 +374,11 @@ class MainMenu :
                     f3.close()
                     self.TL.destroy()
             else:
-                self.errorlabel6 = tk.Label(self.TL, text = "Votre mot de passe doit être plus long", font = self.Impact15, fg='red', bg='grey')
-                self.errorlabel6.pack(pady=10)
+                    self.errorlabel6 = tk.Label(self.TL, text = "Votre mot de passe doit être plus long", font = self.Impact15, fg='red', bg='grey')
+                    self.errorlabel6.pack(pady=10)
                             
         else:
-            self.errorlabel2 = tk.Label(self.TL, text = "Pseudo non conforme", font = self.Impact15, fg='red', bg='grey')
+            self.errorlabel2 = tk.Label(self.TL, text = "Pseudo non conforme \n Il doit être entre 1 et 9 caractères", font = self.Impact15, fg='red', bg='grey')
             self.errorlabel2.pack(pady=10)
 
     def debug(self) : ###TEMPORAIRE###

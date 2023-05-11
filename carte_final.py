@@ -37,6 +37,7 @@ class PygameWindow(pygame.Surface):
         self.game = Rules.Game(self.liste_joueurs_obj, self.fen_width, self.fen_height)
         self.a_qui_le_tour = choice(self.liste_joueurs_obj) #celui qui commence
         self.text_font = pygame.font.Font("Fonts/ARLRDBD.TTF", 20)
+        self.text_font_big = pygame.font.Font("Fonts/ARLRDBD.TTF", 50)
         self.select = []
         self.t = 0 #permet de revenir à la bonne vu après les missions
         #liste couleurs
@@ -45,7 +46,7 @@ class PygameWindow(pygame.Surface):
         # Sélecteur de nombres
         self.selnbr_regi = widgets.selectNB((15, 200), 3, 2, 5) #nombre de regiment
         self.selnbr_troupes = widgets.selectNB((15, 300), 1, 1, 5) #max variable => à modifier
-        self.selnbr_des = widgets.selectNB((15, 500), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection
+        self.selnbr_des = widgets.selectNB((15, 450), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection
 
     def main_loop(self):
         running = True
@@ -179,22 +180,24 @@ class PygameWindow(pygame.Surface):
         self.window.blit(self.water, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         self.window.blit(self.lines, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         self.window.blit(self.adios,(int(self.fen_width-self.adios.get_size()[0]-5),5))
-        self.add_borders()
+        self.add_borders() #ajoute les bordures noires
+        self.add_texts() #ajoute les texts
         self.selnbr_regi.draw(self.window)   # Dessiner le sélecteur du nombre de regiment
         self.selnbr_des.draw(self.window)   # Dessiner le sélecteur du nombre de dés
         self.selnbr_troupes.draw(self.window)   # Dessiner le sélecteur du nombre de troupes
-        self.affiche_des(self.selnbr_des.etat)
+        self.affiche_des(self.selnbr_des.etat) # met à jour les dés
 
         for country in self.game.li_territoires_obj:
             self.window.blit(country.surface, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
-            self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (255, 255, 255)),(self.coords[country.nom_territoire][0]*self.fen_width/(self.fac_reduc)+2*int(self.fen_width/(self.pos_reduc)), self.coords[country.nom_territoire][1]*self.fen_height/(self.fac_reduc)+int(self.fen_height/(self.pos_reduc))))#{country.nombre_troupes}
+            self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (0, 0, 0)),(self.coords[country.nom_territoire][0]*self.fen_width/(self.fac_reduc)+2*int(self.fen_width/(self.pos_reduc)), self.coords[country.nom_territoire][1]*self.fen_height/(self.fac_reduc)+int(self.fen_height/(self.pos_reduc))))#{country.nombre_troupes}
         
 
     def affiche_des(self, valeur):
+        '''affiche le nombre de dés nécésaires selon le choix du joueur, affiche une valeur aléatoire'''
         if self.display_dice :
-            x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 150
-            pos = [(x,600),(x+120, 600),(x+240,600)]
+            x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 150 #pour centrer les 3 dés
+            pos = [(x,550),(x+120, 550),(x+240,550)] #écart de 120pixel entre les x (60 entre chaque dés)
             for i in range(valeur):
                 self.window.blit(self.dice[self.dice_list[i]],pos[i]) #affiche une face du dé aléatoire
 
@@ -211,9 +214,7 @@ class PygameWindow(pygame.Surface):
             for x in range(width):
                 for y in range(height):
                     if surface.get_at((x,y))!=(0,0,0):
-				    
-
-
+				
                         a = surface.get_at((x, y))[3]  # obtient la valeur de la couleur de ce pixel, et le [3] prend donc le 4ème élement, ce qui correspond à la valeur de transparence du pixel
                         r = color[0]
                         g = color[1]
@@ -275,7 +276,46 @@ class PygameWindow(pygame.Surface):
         #bordure adios
         self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
         #bordure dés
-        pygame.draw.rect (self.window, (0,0,0), (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 180, 570, 360, 120),4)
+        pygame.draw.rect (self.window, (0,0,0), (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 180, 520, 360, 120),4)
+
+    def add_texts(self):
+        '''ajoute tous les textes necessaires durant la partie'''
+        #Nom du joueur en haut de la partie controle
+        nom_joueur = self.a_qui_le_tour.nom #va chercher à qui le tour
+        i = self.liste_joueurs_obj.index(self.a_qui_le_tour)
+        color = self.colors[i] #recupere la couleur associée au joueur
+        len_name = len(nom_joueur)
+        xpos = int((2*self.fen_width/(self.pos_reduc)/2))-14*len_name # calcul pour centrer le nom en fonction du nombre de lettre (c'est manuel mais.. pas d'autre methode)
+        self.window.blit(self.text_font_big.render(f"{nom_joueur}", True, color), (xpos,40)) #couleur à changer en fonction du joueur et de la couleur de son pays
+
+        #choix nbr troupes
+        text1 = "Combien de Régiments ?"
+        text2 = "Combien de Troupes ?"
+        text3 = "Combien de Dés ?"
+        self.window.blit(self.text_font.render(text1, True, (255, 255, 255)), (120,218))
+        self.window.blit(self.text_font.render(text2, True, (255, 255, 255)), (120,318))
+        self.window.blit(self.text_font.render(text3, True, (255, 255, 255)), (120,468))
+
+        #Affiche les pays selectionnés et le joueur associé
+        text4 = "Pays selectionnés :"
+        self.window.blit(self.text_font.render(text4, True, (255, 255, 255)), (35,670))
+        select = self.select
+        select_name = []
+        select_player = []
+        if select != []: #si un joueur selectionne un pays
+            pos = [(35,710),(35,750),(250,710),(250,750)] 
+            for country in select:
+                select_name.append(country.nom_territoire)
+                select_player.append(country.joueur.nom)
+            for i in range(len(select)):
+                self.window.blit(self.text_font.render(select_name[i]+", appartient à "+select_player[i], True, (255, 255, 255)), pos[i]) #place le nom du pays + propriétaire
+                
+
+
+
+            
+
+
 
 
 if __name__ == "__main__":
@@ -285,7 +325,7 @@ if __name__ == "__main__":
     out = []
     out.append(temp[0])
     out.append(temp[1])
-    out.append(temp[2])
+    out.append(temp[4])
     print(out)
 
     window_pg = PygameWindow((menu.WIDTH, menu.HEIGHT), out)

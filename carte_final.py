@@ -121,6 +121,9 @@ class PygameWindow(pygame.Surface):
         #fond de la map
         self.water = pygame.image.load("Images/ocean_texture.jpg").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
         self.water = pygame.transform.scale(self.water, (int(self.fen_width/(self.fac_reduc)-5), int(self.fen_height/(self.fac_reduc))))
+        #lines adjacent + nom
+        self.lines = pygame.image.load("Pictures/Risk_lines.png").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
+        self.lines = pygame.transform.scale(self.lines, (int(self.fen_width/(self.fac_reduc)-5), int(self.fen_height/(self.fac_reduc))))
         #adios - bouton quitter
         self.adios = pygame.image.load("Images/adios.png").convert_alpha()
         self.adios = pygame.transform.scale(self.adios,(int(self.fen_height/(self.pos_reduc)-10),int(self.fen_height/(self.pos_reduc)-10)))
@@ -136,6 +139,7 @@ class PygameWindow(pygame.Surface):
         """
         self.window.blit(self.bg,(0,0))
         self.window.blit(self.water, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
+        self.window.blit(self.lines, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         self.window.blit(self.adios,(int(self.fen_width-self.adios.get_size()[0]-5),5))
         self.add_borders()
 

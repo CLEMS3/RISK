@@ -68,6 +68,6 @@ class selectNB:
             if btnRect.collidepoint(position):
                 # L'indice 0 correspond au bouton du haut
                 if idx == 0:
-                    self.increment()
+                    return 0
                 else:
-                    self.decrement()
+                    return 1

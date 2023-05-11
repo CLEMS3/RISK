@@ -3,7 +3,7 @@ import asyncio
 import pygame
 from pygame.locals import *
 import glob
-from random import randint, choice
+from random import randint, choice, shuffle
 import time
 import json
 import Rules
@@ -32,6 +32,8 @@ class PygameWindow(pygame.Surface):
 
         #initialisation
         self.charger_images()
+        self.display_dice = True
+        self.dice_list = [0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5] #pour l'affichage random des dés, plusieurs fois 1-6 pour avoir plus de variété
         self.game = Rules.Game(self.liste_joueurs_obj, self.fen_width, self.fen_height)
         self.a_qui_le_tour = choice(self.liste_joueurs_obj) #celui qui commence
         self.text_font = pygame.font.Font("Fonts/ARLRDBD.TTF", 20)
@@ -41,11 +43,14 @@ class PygameWindow(pygame.Surface):
         self.colors = [(0,255,0),(255,0,0),(0,0,255),(255,255,0),(255,0,255)]
 
         # Sélecteur de nombres
-        self.selnbr = widgets.selectNB((15, 200), 3, 2, 5)
+        self.selnbr_regi = widgets.selectNB((15, 200), 3, 2, 5) #nombre de regiment
+        self.selnbr_troupes = widgets.selectNB((15, 300), 1, 1, 5) #max variable => à modifier
+        self.selnbr_des = widgets.selectNB((15, 500), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection
 
     def main_loop(self):
         running = True
         while running:
+            
             for event in pygame.event.get():
                 #print(self.view)
                 #fermeture de la fenêtre
@@ -62,8 +67,27 @@ class PygameWindow(pygame.Surface):
                     if event.type == pygame.MOUSEBUTTONDOWN:
 
                         # Clic sur le sélecteur ?
-                        self.selnbr(pygame.mouse.get_pos())
-                        self.selnbr.draw(self.window)
+                        
+                        if self.selnbr_regi(pygame.mouse.get_pos()) == 0:
+                            self.selnbr_regi.increment()
+                        elif self.selnbr_regi(pygame.mouse.get_pos()) == 1:
+                            self.selnbr_regi.decrement()
+                        self.selnbr_regi.draw(self.window)
+
+                        if self.selnbr_troupes(pygame.mouse.get_pos()) == 0:
+                            self.selnbr_troupes.increment()
+                        elif self.selnbr_troupes(pygame.mouse.get_pos()) == 1:
+                            self.selnbr_troupes.decrement()
+                        self.selnbr_troupes.draw(self.window)
+
+                        if self.selnbr_des(pygame.mouse.get_pos()) == 0:
+                            self.selnbr_des.increment()
+                            shuffle(self.dice_list) #change les faces de dés affichées
+                        elif self.selnbr_des(pygame.mouse.get_pos()) == 1:
+                            self.selnbr_des.decrement()
+                            shuffle(self.dice_list) #change les faces de dés affichées
+                        self.selnbr_des.draw(self.window)
+
 
                         for country in self.game.li_territoires_obj:
                             try:
@@ -135,6 +159,12 @@ class PygameWindow(pygame.Surface):
         #adios - bouton quitter
         self.adios = pygame.image.load("Images/adios.png").convert_alpha()
         self.adios = pygame.transform.scale(self.adios,(int(self.fen_height/(self.pos_reduc)-10),int(self.fen_height/(self.pos_reduc)-10)))
+        self.dice = []
+        for i in range(1,7):
+            dice = pygame.image.load(f"Pictures/Dice/{i}.png")
+            dice = pygame.transform.scale(dice, (60, 60))
+            self.dice.append(dice)
+
 
     def charger_coord_texte(self):
         with open('Fichiers/coords.json', 'r', encoding='utf-8') as f:
@@ -150,14 +180,24 @@ class PygameWindow(pygame.Surface):
         self.window.blit(self.lines, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         self.window.blit(self.adios,(int(self.fen_width-self.adios.get_size()[0]-5),5))
         self.add_borders()
-        self.selnbr.draw(self.window)   # Dessiner le sélecteur
+        self.selnbr_regi.draw(self.window)   # Dessiner le sélecteur du nombre de regiment
+        self.selnbr_des.draw(self.window)   # Dessiner le sélecteur du nombre de dés
+        self.selnbr_troupes.draw(self.window)   # Dessiner le sélecteur du nombre de troupes
+        self.affiche_des(self.selnbr_des.etat)
 
-        
         for country in self.game.li_territoires_obj:
             self.window.blit(country.surface, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
             self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (255, 255, 255)),(self.coords[country.nom_territoire][0]*self.fen_width/(self.fac_reduc)+2*int(self.fen_width/(self.pos_reduc)), self.coords[country.nom_territoire][1]*self.fen_height/(self.fac_reduc)+int(self.fen_height/(self.pos_reduc))))#{country.nombre_troupes}
         
+
+    def affiche_des(self, valeur):
+        if self.display_dice :
+            x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 150
+            pos = [(x,600),(x+120, 600),(x+240,600)]
+            for i in range(valeur):
+                self.window.blit(self.dice[self.dice_list[i]],pos[i]) #affiche une face du dé aléatoire
+
     def init_couleurs(self):
        '''initialise la couleur des territoires en début de partie'''
        for country in self.game.li_territoires_obj:
@@ -234,7 +274,8 @@ class PygameWindow(pygame.Surface):
         pygame.draw.rect(self.window, (0,0,0),(int(2*self.fen_width/(self.pos_reduc)),5,int(self.fen_width/(self.fac_reduc)-int(self.fen_height/(self.pos_reduc))),int(self.fen_height/(self.pos_reduc)-10)),4)
         #bordure adios
         self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
-
+        #bordure dés
+        pygame.draw.rect (self.window, (0,0,0), (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 180, 570, 360, 120),4)
 
 
 if __name__ == "__main__":

@@ -303,15 +303,18 @@ class Game:
 
         # il faut que le joueur tire des territoires au hasard où il placera ses troupes comme il le souhaite avec toujours au minimum une troupe sur chaque territoire occupé
     def ajout_de_troupes_sur_territoires(self, joueur, territoire, nombre):
-        nombre_de_troupes_qu_il_reste_a_placer = joueur.troupe_a_repartir
-        liste_territoires_joueurs = self.liste_territoires_joueur(joueur)
-        if nombre > nombre_de_troupes_qu_il_reste_a_placer:  # Le joueur ajoute des troupes sur les territoires qu'il
-            print("Il ne vous reste pas assez de troupes !!")
-        else:
-            territoire.nombre_troupes += nombre
-            nombre_de_troupes_qu_il_reste_a_placer -= nombre
-        joueur.troupe_a_repartir = nombre_de_troupes_qu_il_reste_a_placer
-        return nombre_de_troupes_qu_il_reste_a_placer 
+        if territoire.joueur == joueur : 
+            nombre_de_troupes_qu_il_reste_a_placer = joueur.troupe_a_repartir
+            liste_territoires_joueurs = self.liste_territoires_joueur(joueur)
+            if nombre > nombre_de_troupes_qu_il_reste_a_placer:  # Le joueur ajoute des troupes sur les territoires qu'il
+                print("Il ne vous reste pas assez de troupes !!")
+            else:
+                territoire.nombre_troupes += nombre
+                nombre_de_troupes_qu_il_reste_a_placer -= nombre
+            joueur.troupe_a_repartir = nombre_de_troupes_qu_il_reste_a_placer
+            return nombre_de_troupes_qu_il_reste_a_placer 
+        else : 
+            print("Vous ne pouvez pas ajouter de troupes sur un territoires qui ne vous appartient pas ! ")
     
     def import_adjacence(self):
         with open('Fichiers/adjacences_territoires.csv', newline='') as csvfile:

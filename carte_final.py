@@ -191,11 +191,11 @@ class PygameWindow(pygame.Surface):
         On vérifie si le joueur a gagné, si oui, on affiche la victoire, sinon on passe au joueur suivant
         """
         if self.a_qui_le_tour.mission.check():
-            self.view == 3
+            self.view = 3
         elif self.liste_joueurs_obj[-1] == self.a_qui_le_tour:
-            self.a_qui_le_tour == self.liste_joueurs_obj[0]
+            self.a_qui_le_tour = self.liste_joueurs_obj[0]
         else :
-            self.a_qui_le_tour == self.liste_joueurs_obj[self.liste_joueurs_obj.index(self.a_qui_le_tour)+1]
+            self.a_qui_le_tour = self.liste_joueurs_obj[self.liste_joueurs_obj.index(self.a_qui_le_tour)+1]
 
         self.deplacement = True
         self.view = 0

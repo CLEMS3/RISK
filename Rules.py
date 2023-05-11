@@ -227,8 +227,6 @@ class Game:
             print(
                 "Vos territoires ne sont pas adjacents, vous ne pouvez pas transférer des troupes, sélectionnez un autre territoire")
 
-
-
     def placement_de_tous_les_joueurs(self):
         """Cette fonction gère le placement des joueurs en début de partie en fonction du nombre de joueurs
         Elle fait appel aux fonctions joueurs au hasard et placement_initial pour cela"""
@@ -315,7 +313,6 @@ class Game:
             for row in reader:
                 graphe.append(row)
             return graphe
-    
 
 
     def verification_adjacence(self, territoire1, territoire2):

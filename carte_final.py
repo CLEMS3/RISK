@@ -203,6 +203,7 @@ class PygameWindow(pygame.Surface):
             self.a_qui_le_tour = self.liste_joueurs_obj[self.liste_joueurs_obj.index(self.a_qui_le_tour)+1]
         self.deplacement = True
         self.view = 0
+        self.select=[]
 
 
 if __name__ == "__main__":

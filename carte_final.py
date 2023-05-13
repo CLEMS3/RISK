@@ -98,6 +98,7 @@ class PygameWindow(pygame.Surface):
                             self.game.attaque(self.get_obj(self.select[0]), self.get_obj(self.select[1]))
                         if event.key == pygame.K_RETURN:
                             self.view = 2
+                            self.select=[]
 
                 elif self.view == 2: #déplacement
                     self.afficher_carte()

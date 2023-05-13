@@ -329,11 +329,13 @@ class Game:
         Vérifie si deux territoires sont adjacents
         ⚠ l'indice dans la liste est pas le même que dans le graphe
         """
+        print("vérification de l'adjacence")
         graphe = self.graphe
         index1 = graphe[0].index(territoire1.nom_territoire)+1
         index2 = graphe[0].index(territoire2.nom_territoire)
         print(graphe[index1][0])
         print(graphe[0][index2])
+        print(graphe[index1][index2])
         return graphe[index1][index2] == str(1)
 
     def init_territoires(self):
@@ -354,7 +356,7 @@ class Game:
         """Continent prend les valeurs Europe, Asie, Amérique du Nord, Amérique du Sud, Afrique, Océanie
         """
         own_continent = True
-        for i_territoire in self.liste_territoire_obj:
+        for i_territoire in self.li_territoires_obj:
             if i_territoire.nom_zone == continent and i_territoire.joueur != player:
                 own_continent = False
                 break  # blc des conventions de codage du fimi
@@ -375,52 +377,51 @@ class Game:
                 n_territoire +=i_territoire.nombre_troupes
         return n_territoire
 
-    def bonus(self):
+    def bonus(self, player):
         """
         Le bonus de troupe est octroyé à chaque tour à tout le monde, le nombre variant selon différent critère.
         Bonus pour le contrôle de territoire : 12-14 -> 1 régiment par territoire, 15-17 -> 2, 18-20 -> 3, 21-23 ->4,
         24-26 -> 5, 27-29 -> 6, 30-32 -> 7, 33-35 -> 8, 36-39-> 9, 40-42 -> 10
         Bonus pour le contrôle de continent : NA -> 5, SA -> 2, EU -> 5, AF -> 3, AS -> 7, OC -> 2
         """
-        for player in self.liste_joueurs:
-            bonus = 0
+        bonus = 0
 
-            #bonus territoires
-            n_territoire = self.count_player_territories(player)
-            if 12 <= n_territoire <= 14:
-                bonus+=1
-            if 15 <= n_territoire <= 17:
-                bonus+=2
-            if 18 <= n_territoire <= 20:
-                bonus+=3
-            if 21 <= n_territoire <= 23:
-                bonus+=4
-            if 24 <= n_territoire <= 26:
-                bonus+=5
-            if 27 <= n_territoire <= 29:
-                bonus+=6
-            if 30 <= n_territoire <= 32:
-                bonus+=7
-            if 33 <= n_territoire <= 35:
-                bonus+=8
-            if 36 <= n_territoire <= 39:
-                bonus+=9
-            if 40 <= n_territoire <= 42:
-                bonus+=10
+        #bonus territoires
+        n_territoire = self.count_player_territories(player)
+        if 12 <= n_territoire <= 14:
+            bonus+=1
+        if 15 <= n_territoire <= 17:
+            bonus+=2
+        if 18 <= n_territoire <= 20:
+            bonus+=3
+        if 21 <= n_territoire <= 23:
+            bonus+=4
+        if 24 <= n_territoire <= 26:
+            bonus+=5
+        if 27 <= n_territoire <= 29:
+            bonus+=6
+        if 30 <= n_territoire <= 32:
+            bonus+=7
+        if 33 <= n_territoire <= 35:
+            bonus+=8
+        if 36 <= n_territoire <= 39:
+            bonus+=9
+        if 40 <= n_territoire <= 42:
+            bonus+=10
 
-            #bonus continent
-            if self.check_continent_owner("Amérique du Nord", player):
-                bonus+=5
-            if self.check_continent_owner("Amérique du Sud", player):
-                bonus+=2
-            if self.check_continent_owner("Europe", player):
-                bonus+=5
-            if self.check_continent_owner("Afrique", player):
-                bonus+=3
-            if self.check_continent_owner("Asie", player): #Asinsa meilleur filière
-                bonus+=7
-            if self.check_continent_owner("Océanie", player):
-                bonus+=2
+        #bonus continent
+        if self.check_continent_owner("Amérique du Nord", player):
+            bonus+=5
+        if self.check_continent_owner("Amérique du Sud", player):
+            bonus+=2
+        if self.check_continent_owner("Europe", player):
+            bonus+=5
+        if self.check_continent_owner("Afrique", player):
+            bonus+=3
+        if self.check_continent_owner("Asie", player): #Asinsa meilleur filière
+            bonus+=7
+        if self.check_continent_owner("Océanie", player):
+            bonus+=2
 
         player.troupe_a_repartir += bonus
 

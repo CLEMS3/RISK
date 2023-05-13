@@ -35,6 +35,7 @@ class PygameWindow(pygame.Surface):
         self.select = []
         self.t = 0 #permet de revenir à la bonne vu après les missions
         self.deplacement = True
+        self.played_at_least_once = []
 
     def main_loop(self):
         running = True
@@ -68,11 +69,19 @@ class PygameWindow(pygame.Surface):
                         if event.key == pygame.K_m:
                             self.t = 0
                             self.view = 4
-                        if event.key == pygame.K_RETURN and self.a_qui_le_tour.troupe_a_repartir == 0:
-                            self.view = 1
-                            self.select=[]
-                        elif event.key == pygame.K_RETURN and self.a_qui_le_tour.troupe_a_repartir > 0 :
-                            print("Il vous reste encore des troupes à répartir")
+                        if event.key == pygame.K_RETURN :
+                            print(self.played_at_least_once)
+                            print(f"len(self.played_at_least_once) = {len(self.played_at_least_once)}")
+                            print(f"len(self.liste_joueurs_obj) = {len(self.liste_joueurs_obj)}")
+                            if self.a_qui_le_tour.troupe_a_repartir == 0:
+                                self.select=[]
+                                if len(self.played_at_least_once) >= len(self.liste_joueurs_obj)-1:
+                                    self.view = 1
+                                else:
+                                    self.played_at_least_once.append(self.a_qui_le_tour)
+                                    self.next_player()
+                            else:
+                                print("Il vous reste encore des troupes à répartir")
 
 
                 elif self.view == 1: #attaque
@@ -196,15 +205,20 @@ class PygameWindow(pygame.Surface):
         """
         On vérifie si le joueur a gagné, si oui, on affiche la victoire, sinon on passe au joueur suivant
         """
+        self.game.bonus(self.a_qui_le_tour)
         if self.a_qui_le_tour.mission.check():
             self.view = 3
-        elif self.liste_joueurs_obj[-1] == self.a_qui_le_tour:
-            self.a_qui_le_tour = self.liste_joueurs_obj[0]
-        else :
-            self.a_qui_le_tour = self.liste_joueurs_obj[self.liste_joueurs_obj.index(self.a_qui_le_tour)+1]
+        else:
+            self.next_player()
         self.deplacement = True
         self.view = 0
         self.select=[]
+
+    def next_player(self):
+        if self.liste_joueurs_obj[-1] == self.a_qui_le_tour:
+            self.a_qui_le_tour = self.liste_joueurs_obj[0]
+        else:
+            self.a_qui_le_tour = self.liste_joueurs_obj[self.liste_joueurs_obj.index(self.a_qui_le_tour) + 1]
 
 
 if __name__ == "__main__":

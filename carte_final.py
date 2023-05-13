@@ -38,9 +38,6 @@ class PygameWindow(pygame.Surface):
 
     def main_loop(self):
         running = True
-        i=0
-        j=0
-        h=0
         while running:
             for event in pygame.event.get():
                 #fermeture de la fenêtre
@@ -49,9 +46,6 @@ class PygameWindow(pygame.Surface):
 
                 #différentes vues
                 elif self.view == 0: #renforcement
-                    if h ==0 : 
-                        self.select=[]
-                        h+=1
                     self.afficher_carte()
                     self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(0.625*self.fen_width, 0.917*self.fen_height))
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -74,14 +68,14 @@ class PygameWindow(pygame.Surface):
                         if event.key == pygame.K_m:
                             self.t = 0
                             self.view = 4
-                        if event.key == pygame.K_RETURN:
+                        if event.key == pygame.K_RETURN and self.a_qui_le_tour.troupe_a_repartir == 0:
                             self.view = 1
+                            self.select=[]
+                        elif event.key == pygame.K_RETURN and self.a_qui_le_tour.troupe_a_repartir > 0 :
+                            print("Il vous reste encore des troupes à répartir")
 
 
                 elif self.view == 1: #attaque
-                    if i ==0 : 
-                        self.select=[]
-                        i+=1
                     self.afficher_carte()
                     self.window.blit(self.text_font.render(f"Phase d'attaque", True, (255, 255, 255)), (400, 440))
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -106,9 +100,6 @@ class PygameWindow(pygame.Surface):
                             self.view = 2
 
                 elif self.view == 2: #déplacement
-                    if j ==0 : 
-                        self.select=[]
-                        j+=1
                     self.afficher_carte()
                     self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (400, 440))
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -129,7 +120,7 @@ class PygameWindow(pygame.Surface):
                             self.game.transfert_troupes(self.get_obj(self.select[0]), self.get_obj(self.select[1]),1)
                             self.deplacement = False
                         #reverifier si le déplacement est facultatif
-                        if event.key == pygame.K_RETURN and self.a_qui_le_tour.troupe_a_repartir == 0:
+                        if event.key == pygame.K_RETURN :
                             self.end_turn()
 
                 elif self.view == 3: #win
@@ -210,7 +201,6 @@ class PygameWindow(pygame.Surface):
             self.a_qui_le_tour = self.liste_joueurs_obj[0]
         else :
             self.a_qui_le_tour = self.liste_joueurs_obj[self.liste_joueurs_obj.index(self.a_qui_le_tour)+1]
-
         self.deplacement = True
         self.view = 0
 
@@ -224,3 +214,6 @@ if __name__ == "__main__":
     # run the main loop
     window_pg.main_loop()
     pygame.quit()
+
+
+

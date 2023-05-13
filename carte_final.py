@@ -40,6 +40,7 @@ class PygameWindow(pygame.Surface):
         running = True
         i=0
         j=0
+        h=0
         while running:
             for event in pygame.event.get():
                 #fermeture de la fenêtre
@@ -48,6 +49,9 @@ class PygameWindow(pygame.Surface):
 
                 #différentes vues
                 elif self.view == 0: #renforcement
+                    if h ==0 : 
+                        self.select=[]
+                        h+=1
                     self.afficher_carte()
                     self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(0.625*self.fen_width, 0.917*self.fen_height))
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -104,7 +108,7 @@ class PygameWindow(pygame.Surface):
                 elif self.view == 2: #déplacement
                     if j ==0 : 
                         self.select=[]
-                        i+=1
+                        j+=1
                     self.afficher_carte()
                     self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (400, 440))
                     if event.type == pygame.MOUSEBUTTONDOWN:

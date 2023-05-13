@@ -38,6 +38,8 @@ class PygameWindow(pygame.Surface):
 
     def main_loop(self):
         running = True
+        i=0
+        j=0
         while running:
             for event in pygame.event.get():
                 #fermeture de la fenêtre
@@ -73,6 +75,9 @@ class PygameWindow(pygame.Surface):
 
 
                 elif self.view == 1: #attaque
+                    if i ==0 : 
+                        self.select=[]
+                        i+=1
                     self.afficher_carte()
                     self.window.blit(self.text_font.render(f"Phase d'attaque", True, (255, 255, 255)), (400, 440))
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -86,6 +91,8 @@ class PygameWindow(pygame.Surface):
                             except IndexError:
                                 pass
                     if event.type == pygame.KEYDOWN:
+                        #if self.get_obj(self.select[0]).joueur != self.a_qui_le_tour :
+                                #self.select.remove(self.select[0])
                         if event.key == pygame.K_m:
                             self.t = 1
                             self.view = 4
@@ -95,6 +102,9 @@ class PygameWindow(pygame.Surface):
                             self.view = 2
 
                 elif self.view == 2: #déplacement
+                    if j ==0 : 
+                        self.select=[]
+                        i+=1
                     self.afficher_carte()
                     self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (400, 440))
                     if event.type == pygame.MOUSEBUTTONDOWN:

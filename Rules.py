@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-
 Created on Tue Mar 28 18:53:04 2023
-
 @author: vince
 """
 from random import randint, random, choice
@@ -36,13 +34,15 @@ class troupes:
 
 
 class territoire:
-    def __init__(self, nom_zone, nom_territoire, mask, surface, joueur=None, nombre_troupes = 0):
+    def __init__(self, nom_zone, nom_territoire, mask, surface, joueur=None, nombre_troupes = 0,color=None):
         self.nom_territoire = nom_territoire
         self.joueur = joueur
         self.nombre_troupes = nombre_troupes
         self.nom_zone = nom_zone  # ce sera pour les bonus
         self.mask = mask
         self.surface = surface
+        self.selec = 0
+        self.collor = color
 
 class Player: #voir avec antoine si on peut pas utiliser directement sa classe Joueur
     def __init__(self, nom):
@@ -59,11 +59,13 @@ class Game:
         self.tps_debut = time.time()
         self.fen_width = fen_width
         self.fen_height = fen_height
+        self.fac_reduc = 1.4 ###SETUP MANUEL POUR LA CARTE
 
 
         #initialisation de la partie
         self.li_territoires_obj = self.init_territoires()
         self.placement_de_tous_les_joueurs()
+
         self.init_mission()
 
 
@@ -152,7 +154,6 @@ class Game:
         LE NOMBRE DE DES LANCES PAR L ATTAQUANT EST SEULEMENT DE 3 S IL A 4
         REGIMENT OU PLUS ET QU IL CHOISIT D ATTAQUER AVEC 3 REGIMENTS 
         LE NOMBRE DE DES LANCES PAR CELUI QUI ATTAQUE EST SEULEMENT DE 2 AU MAXIMUM SI IL A 3 REGIMENTS OU PLUS SUR LE TERRITOIRE
-
         LE NOMBRE DE DES LANCES EST CHOISI PAR LE JOUEUR 
         
         https://www.regledujeu.fr/risk-regle-du-jeu/#des
@@ -227,7 +228,6 @@ class Game:
                 print('Vous ne pouvez pas transférer autant de troupes !!!!')  # il faut rajouter la condition de proximité avec la matrice d'adjacence
         else:
             print("Vos territoires ne sont pas adjacents, vous ne pouvez pas transférer des troupes, sélectionnez un autre territoire")
-
 
 
     def placement_de_tous_les_joueurs(self):
@@ -319,10 +319,12 @@ class Game:
     def import_adjacence(self):
         with open('Fichiers/adjacences_territoires.csv', newline='') as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+
             graphe = []
             for row in reader:
                 graphe.append(row)
             return graphe
+
 
     def verification_adjacence(self, territoire1, territoire2):
         """
@@ -347,7 +349,7 @@ class Game:
         for area, countries_list in self.dict_territoires.items():
             for country in countries_list:
                 image = pygame.image.load(f"Pictures/Maps/{country}.png").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
-                image = pygame.transform.scale(image, (int(self.fen_width), int(self.fen_height)))
+                image = pygame.transform.scale(image, (int(self.fen_width/self.fac_reduc), int(self.fen_height/self.fac_reduc)))
                 mask = pygame.mask.from_surface(image)
                 li.append(territoire(area, country, mask, image))
         return li
@@ -492,7 +494,6 @@ class Mission:
     """
     Différent type de mission qu'un joueur peut être ammené à remplir, dans une variation des règle
     The missions are:
-
         capture Europe, Australia and one other continent #type = 1
         capture Europe, South America and one other continent #type = 2
         capture North America and Africa #type = 3

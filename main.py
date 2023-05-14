@@ -14,6 +14,7 @@ except:
     import pygame
 import hashlib
 import carte_final
+import random
 
 #Menu principal
 class MainMenu :
@@ -319,7 +320,6 @@ class MainMenu :
             print(self.OUT)
             if len(self.OUT) == int(self.NbrJoueur.get()):
                 # create the window
-
                 window_pg = carte_final.PygameWindow((self.WIDTH, self.HEIGHT), self.OUT)
 
                 # run the main loop
@@ -401,6 +401,11 @@ class Joueur():
         self.nom = nom
         self.mdp = MDP
         self.win = GameWin
+
+        #peut être ajouter un choix de la couleur
+        self.couleur = (random.randint(0, 255),random.randint(0,255),random.randint(0,255)) #sert pour le changement de couleur dans attaque #TODO
+        self.mission = None
+        self.troupe_a_repartir = 0
         
     def __repr__(self):
         return(f'{str(self.nom)}')

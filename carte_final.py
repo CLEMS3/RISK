@@ -168,7 +168,6 @@ class PygameWindow(pygame.Surface):
             dice = pygame.transform.scale(dice, (60, 60))
             self.dice.append(dice)
 
-
     def charger_coord_texte(self):
         with open('Fichiers/coords.json', 'r', encoding='utf-8') as f:
             donnees_lues = json.load(f)
@@ -194,7 +193,6 @@ class PygameWindow(pygame.Surface):
         for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
             self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (0, 0, 0)),(self.coords[country.nom_territoire][0]*self.fen_width/(self.fac_reduc)+2*int(self.fen_width/(self.pos_reduc)), self.coords[country.nom_territoire][1]*self.fen_height/(self.fac_reduc)+int(self.fen_height/(self.pos_reduc))))#{country.nombre_troupes}
         
-
     def affiche_des(self, valeur):
         '''affiche le nombre de dés nécésaires selon le choix du joueur, affiche une valeur aléatoire'''
         if self.display_dice :
@@ -202,8 +200,6 @@ class PygameWindow(pygame.Surface):
             pos = [(x,550),(x+120, 550),(x+240,550)] #écart de 120pixel entre les x (60 entre chaque dés)
             for i in range(valeur):
                 self.window.blit(self.dice[self.dice_list[i]],pos[i]) #affiche une face du dé aléatoire
-
-
 
     def init_couleurs(self):
        '''
@@ -227,13 +223,7 @@ class PygameWindow(pygame.Surface):
 
 
             country.surface = new_surface
-
-
-
-            
-
-            
-       
+  
     def changer_lumi(self, country):
         """
         Assombri un territoire quand il est selectionné

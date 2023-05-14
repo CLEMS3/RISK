@@ -318,7 +318,7 @@ class Game:
     
     def import_adjacence(self):
         with open('Fichiers/adjacences_territoires.csv', newline='') as csvfile:
-            reader = csv.reader(csvfile, delimiter=';', quotechar='"')
+            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
             graphe = []
             for row in reader:
                 graphe.append(row)
@@ -331,7 +331,7 @@ class Game:
         """
         print("vérification de l'adjacence")
         graphe = self.graphe
-        index1 = graphe[0].index(territoire1.nom_territoire)+1
+        index1 = graphe[0].index(territoire1.nom_territoire)
         index2 = graphe[0].index(territoire2.nom_territoire)
         print(graphe[index1][0])
         print(graphe[0][index2])

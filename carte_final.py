@@ -10,6 +10,7 @@ import Rules
 import widgets
 
 
+
 class PygameWindow(pygame.Surface):
     def __init__(self, size, liste_joueurs_obj):
         super().__init__(size) #sert à éviter un problème d'héritage de classe
@@ -27,7 +28,8 @@ class PygameWindow(pygame.Surface):
         self.view = 0 #Renforcement : 0, attaque : 1, déplacement de troupe : 2, win : 3, mission : 4
 
         #facteur de reduction
-        self.fac_reduc = 1.4 ###PENSER A MODIFIER DANS FICHIER RULES 
+        self.fac_reduc = 1.5 ###PENSER A MODIFIER DANS FICHIER RULES 
+
         self.pos_reduc = (4*self.fac_reduc)/(2*self.fac_reduc -2)
 
         #initialisation
@@ -56,6 +58,7 @@ class PygameWindow(pygame.Surface):
         self.selnbr_des = widgets.selectNB((15, 450), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection
 
 
+
     def main_loop(self):
         running = True
         while running:
@@ -67,13 +70,11 @@ class PygameWindow(pygame.Surface):
 
 
                 elif event.type == pygame.MOUSEBUTTONDOWN and self.closebutton_rect.collidepoint(pygame.mouse.get_pos()):
-                    
                     running = False
 
                 #différentes vues
                 elif self.view == 0: #renforcement
                     self.afficher_fenetre()
-
                     self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(0.625*self.fen_width, 0.917*self.fen_height))
                     if event.type == pygame.MOUSEBUTTONDOWN:
 
@@ -240,6 +241,7 @@ class PygameWindow(pygame.Surface):
             self.dice.append(dice)
 
 
+
     def charger_coord_texte(self):
         with open('Fichiers/coords.json', 'r', encoding='utf-8') as f:
             donnees_lues = json.load(f)
@@ -249,6 +251,7 @@ class PygameWindow(pygame.Surface):
         """
         Affiche les pays sur la surface de la fenêtre
         """
+
         #bg
         self.window.blit(self.bg,(0,0))
         self.window.blit(self.water, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
@@ -276,6 +279,7 @@ class PygameWindow(pygame.Surface):
             pos = [(x,550),(x+120, 550),(x+240,550)] #écart de 120pixel entre les x (60 entre chaque dés)
             for i in range(valeur):
                 self.window.blit(self.dice[self.dice_list[i]],pos[i]) #affiche une face du dé aléatoire
+
 
 
 
@@ -365,6 +369,18 @@ class PygameWindow(pygame.Surface):
             select = []
             self.changer_lumi(country)
         self.select = select
+
+    
+    def add_borders(self):
+        #bordure autour de la map
+        pygame.draw.rect(self.window, (0,0,0), (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc)),int(self.fen_width/(self.fac_reduc)-5),int(self.fen_height/(self.fac_reduc))),3)
+        #bordure quitter
+        #bordure controles
+        pygame.draw.rect(self.window, (0,0,0),(5,5, int(2*self.fen_width/(self.pos_reduc)-10),int(self.fen_height - 10)),4)
+        #bordure info succes    
+        pygame.draw.rect(self.window, (0,0,0),(int(2*self.fen_width/(self.pos_reduc)),5,int(self.fen_width/(self.fac_reduc)-int(self.fen_height/(self.pos_reduc))),int(self.fen_height/(self.pos_reduc)-10)),4)
+        #bordure adios
+        self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
 
 
     def get_obj(self, str_country):

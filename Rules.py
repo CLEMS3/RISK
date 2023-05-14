@@ -59,7 +59,8 @@ class Game:
         self.tps_debut = time.time()
         self.fen_width = fen_width
         self.fen_height = fen_height
-        self.fac_reduc = 1.4 ###SETUP MANUEL POUR LA CARTE
+        self.fac_reduc = 1.5 ###SETUP MANUEL POUR LA CARTE
+
 
 
         #initialisation de la partie

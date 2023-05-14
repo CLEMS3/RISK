@@ -135,7 +135,7 @@ class Game:
                         nombre_de_des_a_jouer = choix
         elif statut == "Attaqué" : 
             while nombre_de_des_a_jouer == 0 : 
-                if territoire.nombre_troupes == 1 or territoire.nombre_troupe == 2 :
+                if territoire.nombre_troupes == 1 or territoire.nombre_troupes == 2 :
                     nombre_de_des_a_jouer = 1
                 else : 
                     choix = int(input("Vous pouvez utiliser 1 ou 2 dés pour vous défendre. Que choisissez vous ? "))

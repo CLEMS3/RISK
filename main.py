@@ -14,6 +14,7 @@ except:
     import pygame
 import hashlib
 import carte_final
+import random
 
 #Menu principal
 class MainMenu :
@@ -27,7 +28,6 @@ class MainMenu :
         self.root.configure(bg='grey')
 
         self.root.attributes('-fullscreen', True)  # fullscreen
-        # self.root.state('zoomed')      #maximised
 
         # imports
         self.img = tk.PhotoImage(file='Images/Logo_Risk.png')
@@ -44,7 +44,7 @@ class MainMenu :
             
             for row in csv_joueur:
                 PLAYER = Joueur(row[0],row[1],row[2])
-                self.liste_joueurs.append(PLAYER) #liste des joueur (class)
+                self.liste_joueurs.append(PLAYER) #liste des joueur (objet)
                 self.liste_pseudo.append(row[1]) #liste des pseudo (pour eviter les doublons)
                 
             f2.close()
@@ -58,7 +58,7 @@ class MainMenu :
         # placement des widgets
         self.create_widgets()
 
-        self.root.bind("<Escape>", self.escape)
+        self.root.bind("<Escape>", self.escape) #touche echap pour quitter le menu
 
     def create_widgets(self):
         # Logo principal
@@ -71,6 +71,7 @@ class MainMenu :
         self.boutons_menu()
 
     def boutons_menu(self):
+        '''affiche les boutons du menu principal'''
         # New game
         self.NG = tk.Button(self.root, text="NOUVELLE PARTIE", bg='grey', font=self.Impact25,command = self.new_game)
         #self.NG.bind('<Button-1>', self.new_game)
@@ -109,20 +110,21 @@ class MainMenu :
         self.BackTitle.pack(pady=20)
 
     def liste_play_classe(self):
+        '''creer une liste de 5 joueurs ordonée par leur nombre de victoire - TOP5'''
         test= []
         for player in self.liste_joueurs:
             test.append(player.win)
-        test.sort(reverse=True)
+        test.sort(reverse=True) #liste des nombre de victoire par ordre décroissant
         self.liste_classe=[]
         tempo = list(self.liste_joueurs)
-        print(test)
+        #print(test)
         try:
-            for i in range(5):
+            for i in range(5): #fais un top 5
                 for player in tempo:
                     if player.win == test[i]:
                         self.liste_classe.append(player)
                         tempo.remove(player)
-        except:
+        except: #si il y a moins de 5 joueurs, ne prend que ceux qui existent
             for i in range(len(tempo)):
                 for player in tempo:
                     if player.win == test[i]:
@@ -141,22 +143,28 @@ class MainMenu :
 
 
     def escape(self, event):
+        '''fct call pour quitter une fenetre'''
         self.root.quit()
 
     def escapeTOP(self):
+        '''fct call pour quitter une fenetre'''
         self.ruleswin.destroy()
 
     def escapeTOP2(self):
+        '''fct call pour quitter une fenetre'''
         self.TOP2.destroy()
 
     def playerbutton_enter(self,event,i):
+        '''fonction pour l'affichage des victoires dans le classement'''
         self.playername[i].config(text=self.liste_classe[i].win+"  victoires")
 
     def playerbutton_leave(self,event,i):
+        '''fonction pour l'affichage des pseudo dans le classement'''
         self.playername[i].config(text=self.liste_classe[i].nom)        
 
 
     def classwin(self):
+        '''fenetre du classement'''
         self.TOP2 = tk.Toplevel()
         self.TOP2.title("Classement")
         self.TOP2.attributes('-fullscreen', True)  # plein écran
@@ -167,6 +175,7 @@ class MainMenu :
         self.zone.pack(pady=30)
         self.liste_play_classe()
         self.playername = []
+        #placement du top 5 et assignement des fonctions entre et leave (affichage score/pseudo)
         for i in range(len(self.liste_classe)):
             self.playername.append(tk.Button(self.zone, text=self.liste_classe[i].nom ,bg='lightgray', font = self.Impact25))
             self.playername[i].bind('<Enter>',lambda event, i=i : self.playerbutton_enter(event, i))
@@ -195,7 +204,6 @@ class MainMenu :
         '''fenetre pour boutons de connection et creation de compte'''
         print(f"login {int(self.NbrJoueur.get())} acounts")
         #menage, on enleve les anciens widgets
-       
         self.LabelJoueur.destroy()
         self.ChoixJoueur.destroy()
         self.BackTitle.destroy()
@@ -216,15 +224,13 @@ class MainMenu :
         #creer un compte
         self.create_acc = tk.Button(self.root, text = 'Créer un compte', bg = 'grey', font = self.Impact15, command = self.NewAccount)
         self.create_acc.pack(pady=20)
-       
         #Bouton Retour
         self.back_button = tk.Button(self.root, text = 'Retour', font = self.Impact15, bg='grey', command = self.back)
         self.back_button_ttp = CreateToolTip(self.back_button, "Attention, tous les comptes seront déconnectés si vous quittez cette fenêtre")
         self.back_button.pack(pady=10)
 
     def login_win(self,i):
-        '''fenetre TOPlayer pour se connecter'''
-     
+        '''fenetre Toplevel pour se connecter'''
         self.login_page = tk.Toplevel()
         self.login_page.attributes('-fullscreen', True)  # plein écran
         self.login_page.configure(bg='grey')
@@ -255,21 +261,18 @@ class MainMenu :
 
         #enleve les label d'erreur si il y'en a
         try: self.errorlabel4.destroy()
-        except:
-            None
+        except: None
 
         try: self.errorlabel3.destroy()
-        except:
-            None
+        except: None
 
         if joueur == 'Selectionnez un joueur': #verifie qu'un joueur à été selectionné
-            try: 
-                self.errorlabel.destroy()
+            try: self.errorlabel.destroy() #supprime le dernier label d'erreur si il existe, evite d'en avoir plusieurs
             except: None 
             self.errorlabel = tk.Label(self.login_page, text = "Veuillez choisir un joueur", font = self.Impact15, fg='red', bg='grey')
             self.errorlabel.pack(pady = 20)
         elif joueur in self.loged_in: #verifie que le joueur n'est pas déjà connecté
-            try: self.errorlabel.destroy()
+            try: self.errorlabel.destroy() #idem
             except: None
             self.errorlabel4 = tk.Label(self.login_page, text = "Joueur déja connecté", font = self.Impact15, fg='red', bg='grey')
             self.errorlabel4.pack(pady = 20)
@@ -283,14 +286,14 @@ class MainMenu :
         
         if ok == 1:
             for player in self.liste_joueurs:
-                if player.nom == joueur: #choisis le bon joueur
+                if player.nom == joueur: #choisis le bon joueur dans la liste, pseudo unique donc pas d'erreur possible
                 
                     if player.mdp == mdpHashed: #verifie le mot de passe
-                        self.login_page.destroy()
-                        self.buttonPlayer[i].configure(bg='green',fg='black')
-                        self.buttonPlayer[i]['state']='disabled'
-                        self.loged_in.append(joueur)
-                        self.OUT.append(player)
+                        self.login_page.destroy() #ferme la fenetre de login
+                        self.buttonPlayer[i].configure(bg='green',fg='black') #change la couleur du bouton
+                        self.buttonPlayer[i]['state']='disabled' #desactive le bouton
+                        self.loged_in.append(joueur) #ajoute le pseudo dans la liste des joueurs connecté (pour ne pas le reconnecter)
+                        self.OUT.append(player) #ajoute l'objet correspondant au joueur dans la liste de sortie
                         print(self.loged_in)
 
                     else:
@@ -300,6 +303,7 @@ class MainMenu :
                         self.errorlabel3.pack(pady=20)
 
     def back(self):
+        '''fonction bouton retour, met a jour les elements de la fenetre'''
         self.create_acc.destroy()
         self.text.destroy()
         self.box.destroy()
@@ -310,12 +314,12 @@ class MainMenu :
         self.OUT = []   
 
     def pygame_launcher(self):
+        '''lance la partie'''
         if __name__ == '__main__':
             print(int(self.NbrJoueur.get()))
             print(self.OUT)
             if len(self.OUT) == int(self.NbrJoueur.get()):
                 # create the window
-
                 window_pg = carte_final.PygameWindow((self.WIDTH, self.HEIGHT), self.OUT)
 
                 # run the main loop
@@ -354,8 +358,12 @@ class MainMenu :
             self.errorlabel6.destroy() 
         except: None
 
-        if name not in self.liste_pseudo and len(name) >= 1:
-            if len(password) > 5 :
+        if name not in self.liste_pseudo and len(name) >= 1 :
+            if len(name) > 9:
+                self.errorlabel2 = tk.Label(self.TL, text = "Pseudo non conforme \n Il doit être entre 1 et 9 caractères", font = self.Impact15, fg='red', bg='grey')
+                self.errorlabel2.pack(pady=10)
+
+            elif len(password) > 5 :
                 hashed_mdp = hashlib.sha256(password.encode('UTF-8')).hexdigest() #encode le mot de passe pour le stockage
                 with open('Fichiers/Joueurs.csv', 'a', newline='') as f3:
                     writer = csv.writer(f3)
@@ -366,18 +374,25 @@ class MainMenu :
                     f3.close()
                     self.TL.destroy()
             else:
-                self.errorlabel6 = tk.Label(self.TL, text = "Votre mot de passe doit être plus long", font = self.Impact15, fg='red', bg='grey')
-                self.errorlabel6.pack(pady=10)
+                    self.errorlabel6 = tk.Label(self.TL, text = "Votre mot de passe doit être plus long", font = self.Impact15, fg='red', bg='grey')
+                    self.errorlabel6.pack(pady=10)
                             
         else:
-            self.errorlabel2 = tk.Label(self.TL, text = "Pseudo non conforme", font = self.Impact15, fg='red', bg='grey')
+            self.errorlabel2 = tk.Label(self.TL, text = "Pseudo non conforme \n Il doit être entre 1 et 9 caractères", font = self.Impact15, fg='red', bg='grey')
             self.errorlabel2.pack(pady=10)
 
-    def debug(self) :
-        window_pg = carte_final.PygameWindow((self.WIDTH, self.HEIGHT), self.liste_joueurs)
+    def debug(self) : ###TEMPORAIRE###
+        '''bouton de debug pour lancer rapidement la fenetre de jeu'''
+        self.OUT2 = []
+        self.OUT2.append(self.liste_joueurs[0])
+        self.OUT2.append(self.liste_joueurs[1])
+        self.OUT2.append(self.liste_joueurs[2])
+        
+        window_pg = carte_final.PygameWindow((self.WIDTH, self.HEIGHT), self.OUT2)
         # run the main loop
         window_pg.main_loop()
         pygame.quit()
+
 
 class Joueur():
 
@@ -387,8 +402,10 @@ class Joueur():
         self.mdp = MDP
         self.win = GameWin
 
-    #def __str__(self):
-        #return(f'le nom du joueur {str(self.ID)} est {str(self.nom)}, il a gangé {str(self.win)} parties')
+        #peut être ajouter un choix de la couleur
+        self.couleur = (random.randint(0, 255),random.randint(0,255),random.randint(0,255)) #sert pour le changement de couleur dans attaque #TODO
+        self.mission = None
+        self.troupe_a_repartir = 0
         
     def __repr__(self):
         return(f'{str(self.nom)}')

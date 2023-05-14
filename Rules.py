@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-
 Created on Tue Mar 28 18:53:04 2023
-
 @author: vince
 """
 from random import randint, random, choice
@@ -36,19 +34,19 @@ class troupes:
 
 
 class territoire:
-    def __init__(self, nom_zone, nom_territoire, mask, surface, joueur=None, nombre_troupes = 0):
+    def __init__(self, nom_zone, nom_territoire, mask, surface, joueur=None, nombre_troupes = 0,color=None):
         self.nom_territoire = nom_territoire
         self.joueur = joueur
         self.nombre_troupes = nombre_troupes
         self.nom_zone = nom_zone  # ce sera pour les bonus
         self.mask = mask
         self.surface = surface
+        self.selec = 0
+        self.collor = color
 
 class Player: #voir avec antoine si on peut pas utiliser directement sa classe Joueur
     def __init__(self, nom):
         self.nom = nom
-        self.mission = None
-        self.troupe_a_repartir = 0
 
 class Game:
     def __init__(self, liste_joueurs, fen_width, fen_height):
@@ -64,9 +62,11 @@ class Game:
         self.fac_reduc = 1.5 ###SETUP MANUEL POUR LA CARTE
 
 
+
         #initialisation de la partie
         self.li_territoires_obj = self.init_territoires()
-        #self.placement_de_tous_les_joueurs(liste_joueurs) #ne marche pas
+        self.placement_de_tous_les_joueurs()
+
         self.init_mission()
 
 
@@ -82,7 +82,7 @@ class Game:
             if territoire_attaquant.nombre_troupes > 1 : 
                 troupes_suffisantes = True
                 if adjacence == True : 
-                    droit_attaque == True
+                    droit_attaque = True
                 else : 
                     print("Le territoire que vous voulez attaquer n'est pas adjacents à votre territoire attaquant")
             else : 
@@ -100,13 +100,13 @@ class Game:
             if territoire_qui_attaque.nombre_troupes == 2 :
                 nombre_de_regiments_attaquant = 1
             if territoire_qui_attaque.nombre_troupes == 3 : 
-                choix = input('Voulez-vous attaquer avec 1 ou 2 regiments')
+                choix = int(input('Voulez-vous attaquer avec 1 ou 2 regiments'))
                 if choix != 2 and choix != 1 : 
                     print ('Choisissez un nombre de régiments attaquant parmi 2 et 3')
                 else : 
                     nombre_de_regiments_attaquant = choix
             if territoire_qui_attaque.nombre_troupes > 3 : 
-                choix = input('Voulez-vous attaquer avec 1,2 ou 3 regiments')
+                choix = int(input('Voulez-vous attaquer avec 1,2 ou 3 regiments'))
                 if choix != 1 and choix != 2 and choix !=3 : 
                     print ('Choisissez un nombre de régiments attaquant parmi 1, 2 et 3')
                 else : 
@@ -119,28 +119,29 @@ class Game:
         mais il peut faire un autre choix ..."""
         nombre_de_des_a_jouer = 0
         nb_regiments_attaquant = 0
-        while nombre_de_des_a_jouer == 0 : 
-            if statut == "Attaquant" : 
-                nb_regiments_attaquant = self.choix_du_nombre_de_regiments_attaquant(territoire)
+        if statut == "Attaquant" : 
+            while nombre_de_des_a_jouer == 0 : 
+                nb_regiments_attaquant = self.choix_du_nombre_de_regiments_attaquant(territoire)    
                 if nb_regiments_attaquant == 1 : 
                     nombre_de_des_a_jouer =  1 
                 if nb_regiments_attaquant == 2 :
-                    choix = input("Vous pouvez utiliser 1 ou 2 dés. Combien en voulez vous ? ")
+                    choix = int(input("Vous pouvez utiliser 1 ou 2 dés. Combien en voulez vous ? "))
                     if choix != 1 and choix != 2 :
                         print("Vous devez choisir parmi 1 et 2 dés")
                     else : 
                         nombre_de_des_a_jouer = choix
                 if nb_regiments_attaquant == 3 :
-                    choix = input("Vous pouvez utiliser 1 ou 2 ou 3 dés. Combien en voulez vous ? ")
+                    choix = int(input("Vous pouvez utiliser 1 ou 2 ou 3 dés. Combien en voulez vous ? "))
                     if choix != 1 and choix != 2 and choix != 3 :
                         print("Vous devez choisir parmi 1, 2 et 3 dés")
                     else : 
                         nombre_de_des_a_jouer = choix
-            elif statut == "Attaqué" : 
-                if territoire.nombre_troupes == 1 or territoire.nombre_troupe == 2 :
+        elif statut == "Attaqué" : 
+            while nombre_de_des_a_jouer == 0 : 
+                if territoire.nombre_troupes == 1 or territoire.nombre_troupes == 2 :
                     nombre_de_des_a_jouer = 1
                 else : 
-                    choix = input("Vous pouvez utiliser 1 ou 2 dés pour vous défendre. Que choisissez vous ? ")
+                    choix = int(input("Vous pouvez utiliser 1 ou 2 dés pour vous défendre. Que choisissez vous ? "))
                     if choix != 1 and choix != 2 :
                         print("Vous devez choisir parmi 1 et 2 dés")
                     else : 
@@ -154,18 +155,17 @@ class Game:
         LE NOMBRE DE DES LANCES PAR L ATTAQUANT EST SEULEMENT DE 3 S IL A 4
         REGIMENT OU PLUS ET QU IL CHOISIT D ATTAQUER AVEC 3 REGIMENTS 
         LE NOMBRE DE DES LANCES PAR CELUI QUI ATTAQUE EST SEULEMENT DE 2 AU MAXIMUM SI IL A 3 REGIMENTS OU PLUS SUR LE TERRITOIRE
-
         LE NOMBRE DE DES LANCES EST CHOISI PAR LE JOUEUR 
         
         https://www.regledujeu.fr/risk-regle-du-jeu/#des
         """      
+        self.droit_attaque(territoire_attaquant, territoire_attaque)
         if self.droit_attaque(territoire_attaquant, territoire_attaque) == True : 
                 scores_attaquant = []
                 scores_attaque = []
                 gagnant = 0
                 nb_des_a_comparer = 0 
-                nb_des_attaquant = self.nombre_de_des_a_jouer(territoire_attaquant,"Attaquant")[0]
-                nb_regiments_attaquant = self.nombre_de_des_a_jouer(territoire_attaquant,"Attaquant")[1]
+                nb_des_attaquant, nb_regiments_attaquant  = self.nombre_de_des_a_jouer(territoire_attaquant,"Attaquant")
                 nb_des_attaque = self.nombre_de_des_a_jouer(territoire_attaque,"Attaqué")[0]
                 if nb_des_attaquant > nb_des_attaque : 
                     nb_des_a_comparer = nb_des_attaque
@@ -173,31 +173,34 @@ class Game:
                     nb_des_a_comparer = nb_des_attaquant
                 for i in range(nb_des_attaquant):
                     scores_attaquant.append(des())
+                    print(scores_attaquant)
                 for i in range(nb_des_attaque):
                     scores_attaque.append(des())
+                    print(scores_attaque)
                 scores_attaquant = tri_fusion(scores_attaquant)
                 scores_attaque = tri_fusion(scores_attaque)
-                while i <= nb_des_a_comparer and gagnant == 0:
+                i=0
+                while i < nb_des_a_comparer and gagnant == 0:
+                    print(scores_attaquant)
+                    print(scores_attaque)
                     if scores_attaquant[i] <= scores_attaque[i]:
                         territoire_attaquant.nombre_troupes -= 1
                         territoire_attaquant.joueur.nb_troupes-=1    
                         print("Le territoire attaquant perd une troupe")
-                        i += 1
                     if scores_attaquant[i] > scores_attaque[i]:
                         territoire_attaque.nombre_troupes -= 1
                         territoire_attaque.joueur.nb_troupes-=1
                         print("Le territoire attaqué perd une troupe")
-                        i += 1
                     if territoire_attaque.nombre_troupes == 0:
-                        territoire_attaquant.joueur.territoires.apppend(territoire_attaque)
-                        territoire_attaque.joueur.territoires.remove(territoire_attaque)
                         territoire_attaque.joueur = territoire_attaquant.joueur
+                        self.changer_couleur(territoire_attaque)
                         print('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
                         nombre_de_troupes_a_transferer = 0 
                         while nombre_de_troupes_a_transferer < nb_regiments_attaquant or nombre_de_troupes_a_transferer > territoire_attaquant.nombre_troupes :
-                            nombre_de_troupes_a_transferer = input("Les troupes attaquante doivent occuper ce territoire, le temps que d'autres renforts arrivent. Combien voulez vous en laisser ( il faut au minimum que vous utilisiez les régiments qui attaquaient? ")
+                            nombre_de_troupes_a_transferer = int(input("Les troupes attaquante doivent occuper ce territoire, le temps que d'autres renforts arrivent. Combien voulez vous en laisser ( il faut au minimum que vous utilisiez les régiments qui attaquaient? "))
                         self.transfert_troupes(territoire_attaquant, territoire_attaque, nombre_de_troupes_a_transferer)
                         gagnant = 1
+                    i+=1
         else : 
             print("Vous ne pouvez pas attaquer")
 
@@ -212,55 +215,51 @@ class Game:
             li.append(i)
         return li
 
-    def transfert_troupes(self, territoire_de_depart, territoire_arrivee, nb_troupes_a_transferer):
+    def transfert_troupes(self, territoire_de_depart, territoire_arrivee,nb_troupes_a_transferer):
         """
-        Fonction qui gère le transfère de troupe d'un territoire à l'autre
+        Fonction qui gère le transfèrt de troupe d'un territoire à l'autre
         """
         if self.verification_adjacence(territoire_de_depart, territoire_arrivee) == True:
             if nb_troupes_a_transferer <= 0:
                 print('Veuillez donner un nombre strictement positif de troupes à transférer')
-            if nb_troupes_a_transferer < territoire_de_depart: #on compare un nombre avec un objet ?
+            if nb_troupes_a_transferer < territoire_de_depart.nombre_troupes:
                 territoire_de_depart.nombre_troupes = territoire_de_depart.nombre_troupes - nb_troupes_a_transferer
                 territoire_arrivee.nombre_troupes += nb_troupes_a_transferer
             else:
-                print(
-                    'Vous ne pouvez pas transférer autant de troupes !!!!')  # il faut rajouter la condition de proximité avec la matrice d'adjacence
+                print('Vous ne pouvez pas transférer autant de troupes !!!!')  # il faut rajouter la condition de proximité avec la matrice d'adjacence
         else:
-            print(
-                "Vos territoires ne sont pas adjacents, vous ne pouvez pas transférer des troupes, sélectionnez un autre territoire")
+            print("Vos territoires ne sont pas adjacents, vous ne pouvez pas transférer des troupes, sélectionnez un autre territoire")
 
 
-
-    def placement_de_tous_les_joueurs(self, liste_joueurs):
+    def placement_de_tous_les_joueurs(self):
         """Cette fonction gère le placement des joueurs en début de partie en fonction du nombre de joueurs
         Elle fait appel aux fonctions joueurs au hasard et placement_initial pour cela"""
-        nb_joueurs = len(liste_joueurs)
-
+        nb_joueurs = len(self.liste_joueurs)
+        self.liste_territoires_restant = self.li_territoires_obj.copy()
         if nb_joueurs == 2:
-            for joueur in liste_joueurs:
-                self.placement_initial(joueur, 40, 14,
-                                  self.liste_territoires_restant)  # il faut ajouter l'armée neutre qui a le meme nombre de territoires
+            for joueur in self.liste_joueurs:
+                self.placement_initial(joueur, 40, 14)  # il faut ajouter l'armée neutre qui a le meme nombre de territoires
         elif nb_joueurs == 3:  # et 2 régiments par territoire
-            for joueur in liste_joueurs:
-                self.placement_initial(joueur, 35, 14, self.liste_territoires_restant)
+            for joueur in self.liste_joueurs:
+                self.placement_initial(joueur, 35, 14)
         elif nb_joueurs == 4:
-            joueurs_chanceux = self.joueur_au_hasard(liste_joueurs)
-            for joueur in liste_joueurs:
-                if liste_joueurs[joueurs_chanceux[0]] == joueur or liste_joueurs[joueurs_chanceux[1]] == joueur:
+            joueurs_chanceux = self.joueur_au_hasard(self.liste_joueurs)
+            for joueur in self.liste_joueurs:
+                if self.liste_joueurs[joueurs_chanceux[0]] == joueur or self.liste_joueurs[joueurs_chanceux[1]] == joueur:
                     self.placement_initial(joueur, 30, 11, self.liste_territoires_restant)
                 else:
-                    self.placement_initial(joueur, 30, 10, self.liste_territoires_restant)
+                    self.placement_initial(joueur, 30, 10)
 
         elif nb_joueurs == 5:
-            joueurs_chanceux = self.joueur_au_hasard(liste_joueurs)
-            for joueur in liste_joueurs:
-                if liste_joueurs[joueurs_chanceux[0]] == joueur or liste_joueurs[joueurs_chanceux[1]] == joueur:
-                    self.placement_initial(joueur, 25, 9, self.liste_territoires_restant)
+            joueurs_chanceux = self.joueur_au_hasard(self.liste_joueurs)
+            for joueur in self.liste_joueurs:
+                if self.liste_joueurs[joueurs_chanceux[0]] == joueur or self.liste_joueurs[joueurs_chanceux[1]] == joueur:
+                    self.placement_initial(joueur, 25, 9)
                 else:
-                    self.placement_initial(joueur, 25, 8, self.liste_territoires_restant)
+                    self.placement_initial(joueur, 25, 8)
         else:
-            for joueur in liste_joueurs:
-                self.placement_initial(joueur, 20, 7, self.liste_territoires_restant)
+            for joueur in self.liste_joueurs:
+                self.placement_initial(joueur, 20, 7)
 
     def joueur_au_hasard(self, liste_joueurs):
         """Permet de retourner 2 indices de joueurs dans la liste des joueurs qui vont avoir un territoire en plus en début de partie"""
@@ -274,54 +273,73 @@ class Game:
         liste_indice_joueurs_selectionnes.append(indice_joueur_selectionne_2)
         return liste_indice_joueurs_selectionnes
 
-    def placement_initial(self, joueur, nb_troupes_a_placer, nb_territoire_a_occuper, liste_territoires_restant):
+    def placement_initial(self, joueur, nb_troupes_a_placer, nb_territoire_a_occuper):
         """Gère le placment d'un joueur (il choisit où placer ses troupes en étant obligé d'avoir une troupe au minimum sur chaque
         territoire)"""
         joueur.nb_troupes = nb_troupes_a_placer  # depend du nombre de joueurs : l'info sera à mettre sur un fichier json que l'on lira
         i = 0
         territoires_occupés_par_le_joueur = []
         nombre_de_troupes_qu_il_reste_a_placer = nb_troupes_a_placer
-
-        while i <= nb_territoire_a_occuper:
-            a = randint(0,(len(self.li_territoires) - 1))  # On attribue une liste de territoires a occuper par le joueur
-            territoires_occupés_par_le_joueur.append(liste_territoires_restant[a])
-            liste_territoires_restant.remove(liste_territoires_restant[a])
+        a=1
+        fin = False
+        while i < nb_territoire_a_occuper and fin == False:
+            if len(territoires_occupés_par_le_joueur)<nb_territoire_a_occuper : 
+                a = randint(0,(len(self.liste_territoires_restant))-1) 
+                territoires_occupés_par_le_joueur.append(self.liste_territoires_restant[a])
+                self.liste_territoires_restant.remove(self.liste_territoires_restant[a])
+                if len(self.liste_territoires_restant)==0 : 
+                    fin = True
             i += 1
         for territoire in territoires_occupés_par_le_joueur:
             territoire.nombre_troupes = 1  # On place une troupe par territoire
             territoire.joueur = joueur
             nombre_de_troupes_qu_il_reste_a_placer -= 1
-
-        while nombre_de_troupes_qu_il_reste_a_placer > 0:
-            nombre_de_troupes_qu_il_reste_a_placer = self.ajout_de_troupes_sur_terrioires(joueur, nombre_de_troupes_qu_il_reste_a_placer)
+            joueur.troupe_a_repartir = nombre_de_troupes_qu_il_reste_a_placer
+            print(territoire.nom_territoire)
+            self.changer_couleur(territoire)
+        
+        #while nombre_de_troupes_qu_il_reste_a_placer > 0:
+            #nombre_de_troupes_qu_il_reste_a_placer = self.ajout_de_troupes_sur_territoires(joueur)
             
 
         # il faut que le joueur tire des territoires au hasard où il placera ses troupes comme il le souhaite avec toujours au minimum une troupe sur chaque territoire occupé
-    def ajout_de_troupes_sur_territoires(self, joueur, nombre_de_troupes_qu_il_reste_a_placer):
-        liste_territoires_joueurs = self.liste_territoires_joueur(joueur) 
-        territoire_ou_il_faut_ajouter_des_troupes = liste_territoires_joueurs[(input("Choisissez l'indice du territoire ou il n'y a pas assez de troupes"))]
-        nombre_de_troupes_a_ajouter = input("Combien de troupes voulez-vous ajouter a ce territoire ?")
-        if nombre_de_troupes_a_ajouter > nombre_de_troupes_qu_il_reste_a_placer:  # Le joueur ajoute des troupes sur les territoires qu'il
-            print("Il ne vous reste pas assez de troupes !!")
-        else:
-            territoire_ou_il_faut_ajouter_des_troupes.nombre_troupes += nombre_de_troupes_a_ajouter
-            nombre_de_troupes_qu_il_reste_a_placer -= nombre_de_troupes_a_ajouter
-        return nombre_de_troupes_qu_il_reste_a_placer 
+    def ajout_de_troupes_sur_territoires(self, joueur, territoire, nombre):
+        if territoire.joueur == joueur : 
+            nombre_de_troupes_qu_il_reste_a_placer = joueur.troupe_a_repartir
+            liste_territoires_joueurs = self.liste_territoires_joueur(joueur)
+            if nombre > nombre_de_troupes_qu_il_reste_a_placer:  # Le joueur ajoute des troupes sur les territoires qu'il
+                print("Il ne vous reste pas assez de troupes !!")
+            else:
+                territoire.nombre_troupes += nombre
+                nombre_de_troupes_qu_il_reste_a_placer -= nombre
+            joueur.troupe_a_repartir = nombre_de_troupes_qu_il_reste_a_placer
+            return nombre_de_troupes_qu_il_reste_a_placer 
+        else : 
+            print("Vous ne pouvez pas ajouter de troupes sur un territoires qui ne vous appartient pas ! ")
     
     def import_adjacence(self):
-        graphe = list(csv.reader(open("Fichiers/adjacences_territoires.csv")))
-        return graphe
+        with open('Fichiers/adjacences_territoires.csv', newline='') as csvfile:
+            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+
+            graphe = []
+            for row in reader:
+                graphe.append(row)
+            return graphe
+
 
     def verification_adjacence(self, territoire1, territoire2):
         """
         Vérifie si deux territoires sont adjacents
+        ⚠ l'indice dans la liste est pas le même que dans le graphe
         """
-        i = self.li_territoires.index(territoire1)
-        j = self.li_territoires.index(territoire2)
-        if self.graphe[i + 1][j + 1] == 1:  # vérifier si il y a pas un décallage
-            return True
-        else:
-            return False
+        print("vérification de l'adjacence")
+        graphe = self.graphe
+        index1 = graphe[0].index(territoire1.nom_territoire)
+        index2 = graphe[0].index(territoire2.nom_territoire)
+        print(graphe[index1][0])
+        print(graphe[0][index2])
+        print(graphe[index1][index2])
+        return graphe[index1][index2] == str(1)
 
     def init_territoires(self):
         """
@@ -341,7 +359,7 @@ class Game:
         """Continent prend les valeurs Europe, Asie, Amérique du Nord, Amérique du Sud, Afrique, Océanie
         """
         own_continent = True
-        for i_territoire in self.liste_territoire_obj:
+        for i_territoire in self.li_territoires_obj:
             if i_territoire.nom_zone == continent and i_territoire.joueur != player:
                 own_continent = False
                 break  # blc des conventions de codage du fimi
@@ -362,52 +380,51 @@ class Game:
                 n_territoire +=i_territoire.nombre_troupes
         return n_territoire
 
-    def bonus(self):
+    def bonus(self, player):
         """
         Le bonus de troupe est octroyé à chaque tour à tout le monde, le nombre variant selon différent critère.
         Bonus pour le contrôle de territoire : 12-14 -> 1 régiment par territoire, 15-17 -> 2, 18-20 -> 3, 21-23 ->4,
         24-26 -> 5, 27-29 -> 6, 30-32 -> 7, 33-35 -> 8, 36-39-> 9, 40-42 -> 10
         Bonus pour le contrôle de continent : NA -> 5, SA -> 2, EU -> 5, AF -> 3, AS -> 7, OC -> 2
         """
-        for player in self.liste_joueurs:
-            bonus = 0
+        bonus = 0
 
-            #bonus territoires
-            n_territoire = self.count_player_territories(player)
-            if 12 <= n_territoire <= 14:
-                bonus+=1
-            if 15 <= n_territoire <= 17:
-                bonus+=2
-            if 18 <= n_territoire <= 20:
-                bonus+=3
-            if 21 <= n_territoire <= 23:
-                bonus+=4
-            if 24 <= n_territoire <= 26:
-                bonus+=5
-            if 27 <= n_territoire <= 29:
-                bonus+=6
-            if 30 <= n_territoire <= 32:
-                bonus+=7
-            if 33 <= n_territoire <= 35:
-                bonus+=8
-            if 36 <= n_territoire <= 39:
-                bonus+=9
-            if 40 <= n_territoire <= 42:
-                bonus+=10
+        #bonus territoires
+        n_territoire = self.count_player_territories(player)
+        if 12 <= n_territoire <= 14:
+            bonus+=1
+        if 15 <= n_territoire <= 17:
+            bonus+=2
+        if 18 <= n_territoire <= 20:
+            bonus+=3
+        if 21 <= n_territoire <= 23:
+            bonus+=4
+        if 24 <= n_territoire <= 26:
+            bonus+=5
+        if 27 <= n_territoire <= 29:
+            bonus+=6
+        if 30 <= n_territoire <= 32:
+            bonus+=7
+        if 33 <= n_territoire <= 35:
+            bonus+=8
+        if 36 <= n_territoire <= 39:
+            bonus+=9
+        if 40 <= n_territoire <= 42:
+            bonus+=10
 
-            #bonus continent
-            if self.check_continent_owner("Amérique du Nord", player):
-                bonus+=5
-            if self.check_continent_owner("Amérique du Sud", player):
-                bonus+=2
-            if self.check_continent_owner("Europe", player):
-                bonus+=5
-            if self.check_continent_owner("Afrique", player):
-                bonus+=3
-            if self.check_continent_owner("Asie", player): #Asinsa meilleur filière
-                bonus+=7
-            if self.check_continent_owner("Océanie", player):
-                bonus+=2
+        #bonus continent
+        if self.check_continent_owner("Amérique du Nord", player):
+            bonus+=5
+        if self.check_continent_owner("Amérique du Sud", player):
+            bonus+=2
+        if self.check_continent_owner("Europe", player):
+            bonus+=5
+        if self.check_continent_owner("Afrique", player):
+            bonus+=3
+        if self.check_continent_owner("Asie", player): #Asinsa meilleur filière
+            bonus+=7
+        if self.check_continent_owner("Océanie", player):
+            bonus+=2
 
         player.troupe_a_repartir += bonus
 
@@ -424,23 +441,40 @@ class Game:
             else:
                 i.mission = Mission(type, i.nom, self.li_territoires_obj)
 
-    def init_joueurs(self):
-        """
-        A voir avec Antoine si c'est necessaire, selon si liste_joueur est une liste de texte ou d'objet
-        """
+    def get_player(self, str):
+        for player in self.liste_joueurs:
+            print(f"Dans get_player, le type de player est {type(player)}")
+            print(f"{player.nom} / {str}")
+            print(f"le type de player.nom est {type(player.nom)} et celui de str {type(str)}")
+            if (player.nom) == (str):
+                return player
+        return "Joueur non trouvé"
+
+    def changer_couleur(self, country):
+        """Remplace tous les pixels de la surface avec color, garde la transparence"""
+        player = country.joueur
+        color = player.couleur
+        width, height = country.surface.get_size()
+        r, g, b = color
+        for x in range(width):
+            for y in range(height):
+                a = country.surface.get_at((x, y))[3]  # obtient la valeur de la couleur de ce pixel, et le [3] prend donc le 4ème élement, ce qui correspond à la valeur de transparence du pixel
+                country.surface.set_at((x, y), pygame.Color(r, g, b,a))  # défini la couleur du pixel selon les valeurs de rgb donné en paramètre, et avec la valeur de transparence initiale
+
 
 #A quoi ça sert ?
 def tri_fusion(liste):
     """Permet de retourner la liste de scores de dés dans l'ordre décroissant """
     liste_triee = []
-    if len(liste) <= 1:
+    liste_triee_ordre_decroissant = []
+    if len(liste) == 1:
         liste_triee = liste
     else:
         milieu = len(liste) // 2
         gauche = tri_fusion(liste[:milieu])
         droite = tri_fusion(liste[milieu:])
         liste_triee = fusion_triee(gauche, droite)
-        liste_triee_ordre_decroissant = liste_triee[::-1]
+    liste_triee_ordre_decroissant = liste_triee[::-1]
     return liste_triee_ordre_decroissant
 
 
@@ -461,7 +495,6 @@ class Mission:
     """
     Différent type de mission qu'un joueur peut être ammené à remplir, dans une variation des règle
     The missions are:
-
         capture Europe, Australia and one other continent #type = 1
         capture Europe, South America and one other continent #type = 2
         capture North America and Africa #type = 3

@@ -206,13 +206,16 @@ class PygameWindow(pygame.Surface):
 
 
     def init_couleurs(self):
-       '''initialise la couleur des territoires en début de partie'''
+       '''
+       initialise la couleur des territoires en début de partie
+       avec les mask 
+       '''
        for country in self.game.li_territoires_obj:
             surface = country.surface
             width, height = surface.get_size()
         
-            for i in range(len(self.liste_joueurs_obj)):
-                if country.joueur == self.liste_joueurs_obj[i]:
+            for i in range(len(self.liste_joueurs_obj)): #associe une couleur à un joueur
+                if country.joueur == self.liste_joueurs_obj[i]: 
                     color = self.colors[i]
                     country.color = color 
 
@@ -232,20 +235,26 @@ class PygameWindow(pygame.Surface):
             
        
     def changer_lumi(self, country):
-        """Assombri un territoire quand il est selectionné"""
+        """
+        Assombri un territoire quand il est selectionné
+        Vas recuperer la couleur du pays, si il faut assombrir, on divise la valeur r g b par 1,5 
+        pour eclaircir on multiplie par 1,5
+        on enregistre ensuite la nouvelle couleur du pays, modifie l'état "selec" 1= selectionné, 0= non selec
+
+        utilise la meme methode que init_couleur pour changer la couleur du pays
+        
+        """
         surface = country.surface
         width, height = surface.get_size()
-        light = country.selec
-        print(light)
+        light = country.selec #recupere l'etat du pays (selec ou non)
+    
         
         
         r,g,b = country.color
         print(r,g,b)
         if light == 0: #on veut assombrir l'image
             country.selec = 1
-            print("ok assombrir")
-            print(f"light : {light}")
-            print(country.selec)
+            
             r = int(r/1.5)
             g = int(g/1.5)
             b= int(b/1.5)
@@ -253,11 +262,9 @@ class PygameWindow(pygame.Surface):
             country.color = (r,g,b)
         elif light==1: #on veut eclaircir l'image
             country.selec = 0
-            print("ok eclaircir")
             r = int(r*1.5)
             g = int(g*1.5)
             b = int(b*1.5)
-            print(r,g,b)
             country.color = (r,g,b)
         surface_mask = country.mask #recupere le mask du pays
         #turn mask to surface

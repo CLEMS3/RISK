@@ -35,7 +35,8 @@ class PygameWindow(pygame.Surface):
         self.select = []
         self.t = 0 #permet de revenir à la bonne vu après les missions
         self.deplacement = True
-        self.played_at_least_once = []
+        self.placement_initial = []
+        self.tour_initial = []
 
     def main_loop(self):
         running = True
@@ -72,15 +73,15 @@ class PygameWindow(pygame.Surface):
                             self.t = 0
                             self.view = 4
                         if event.key == pygame.K_RETURN :
-                            print(self.played_at_least_once)
-                            print(f"len(self.played_at_least_once) = {len(self.played_at_least_once)}")
+                            print(self.placement_initial)
+                            print(f"len(self.placement_initial) = {len(self.placement_initial)}")
                             print(f"len(self.liste_joueurs_obj) = {len(self.liste_joueurs_obj)}")
                             if self.a_qui_le_tour.troupe_a_repartir == 0:
                                 self.select=[]
-                                if len(self.played_at_least_once) >= len(self.liste_joueurs_obj)-1:
+                                if len(self.placement_initial) >= len(self.liste_joueurs_obj)-1:
                                     self.view = 1
                                 else:
-                                    self.played_at_least_once.append(self.a_qui_le_tour)
+                                    self.placement_initial.append(self.a_qui_le_tour)
                                     self.next_player()
                             else:
                                 print("Il vous reste encore des troupes à répartir")
@@ -219,12 +220,14 @@ class PygameWindow(pygame.Surface):
         On vérifie si le joueur a gagné, si oui, on affiche la victoire, sinon on passe au joueur suivant
         """
         self.game.bonus(self.a_qui_le_tour)
+        if len(self.tour_initial) <= 3:
+            self.tour_initial.append(self.a_qui_le_tour)
         if self.a_qui_le_tour.mission.check():
             self.view = 3
         else:
             self.next_player()
         self.deplacement = True
-        self.view = 0
+        self.view = 0 if self.a_qui_le_tour in self.tour_initial else 1
         self.select=[]
 
     def next_player(self):

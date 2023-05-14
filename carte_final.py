@@ -1,10 +1,6 @@
-import random
-import asyncio
 import pygame
 from pygame.locals import *
-import glob
 from random import randint, choice, shuffle
-import time
 import json
 import Rules
 import widgets
@@ -56,6 +52,10 @@ class PygameWindow(pygame.Surface):
         self.selnbr_regi = widgets.selectNB((15, 200), 3, 2, 5) #nombre de regiment
         self.selnbr_troupes = widgets.selectNB((15, 300), 1, 1, 5) #max variable => à modifier
         self.selnbr_des = widgets.selectNB((15, 450), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection
+
+        # Barre de texte pour les messages
+        self.barre_texte = widgets.barreTexte(self.window, (0.333*self.fen_width, 0.837*self.fen_height), self.water.get_size()[0], 30)
+        self.barre_texte.changer_texte("Bonjour ! Ceci est une barre de texte pour afficher des messages.")
 
 
 
@@ -209,7 +209,7 @@ class PygameWindow(pygame.Surface):
 
                 elif self.view == 4: #mission
                     self.afficher_fenetre()
-                    self.window.blit(self.text_font.render(f"Mission", True, (255, 255, 255)),(0.625*self.fen_width, 0.917*self.fen_height))
+                    self.window.blit(self.text_font.render(f"Mission", True, (255, 255, 255)),(0.625*self.fen_width, 0.917*self.fen_height), )
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_m:
                             self.view = self.t
@@ -271,6 +271,9 @@ class PygameWindow(pygame.Surface):
         for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
             self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (0, 0, 0)),(self.coords[country.nom_territoire][0]*self.fen_width/(self.fac_reduc)+2*int(self.fen_width/(self.pos_reduc)), self.coords[country.nom_territoire][1]*self.fen_height/(self.fac_reduc)+int(self.fen_height/(self.pos_reduc))))#{country.nombre_troupes}
         
+        # Barre de texte
+        self.barre_texte.afficher_texte()
+
 
     def affiche_des(self, valeur):
         '''affiche le nombre de dés nécésaires selon le choix du joueur, affiche une valeur aléatoire'''

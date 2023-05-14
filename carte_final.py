@@ -104,7 +104,7 @@ class PygameWindow(pygame.Surface):
                         if self.get_obj(self.select[0]).joueur != self.a_qui_le_tour :
                             print("Vous ne pouvez pas attaquer avec un territoire qui ne vous appartient pas")
                             self.select=[]
-                            
+
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_m:
                             self.t = 1

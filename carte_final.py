@@ -122,7 +122,7 @@ class PygameWindow(pygame.Surface):
                         
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_p and len(self.select) == 1:
-                            self.game.ajout_de_troupes_sur_territoires(self.a_qui_le_tour, self.get_obj(self.select[0]), 1)
+                            self.game.ajout_de_troupes_sur_territoires(self.a_qui_le_tour, self.select[0], 1)
 
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_m:
@@ -157,7 +157,7 @@ class PygameWindow(pygame.Surface):
                             self.selnbr_troupes.decrement()
                         self.selnbr_troupes.draw(self.window)
 
-                        
+                        #selecteur nombre de dés
                         if self.selnbr_des(pygame.mouse.get_pos()) == 0:
                             self.selnbr_des.increment()
                             shuffle(self.dice_list) #change les faces de dés affichées
@@ -168,7 +168,8 @@ class PygameWindow(pygame.Surface):
 
                         for country in self.game.li_territoires_obj:
                             try:
-                                if country.mask.get_at((event.pos[0], event.pos[1])):
+                                scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
+                                if country.mask.get_at(scaled_pos):
                                     print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                                     self.select_deux_surface(country)
                                     print(self.select)
@@ -177,7 +178,7 @@ class PygameWindow(pygame.Surface):
                                 pass
 
                     if self.select != [] : 
-                        if self.get_obj(self.select[0]).joueur != self.a_qui_le_tour :
+                        if self.select[0].joueur != self.a_qui_le_tour :
                             print("Vous ne pouvez pas attaquer avec un territoire qui ne vous appartient pas")
                             self.select=[]
 
@@ -186,7 +187,7 @@ class PygameWindow(pygame.Surface):
                             self.t = 1
                             self.view = 4
                         if event.type == 768 and len(self.select) == 2:
-                            self.game.attaque(self.get_obj(self.select[0]), self.get_obj(self.select[1]))
+                            self.game.attaque(self.select[0], self.select[1])
                         if event.key == pygame.K_RETURN:
                             self.view = 2
                             self.select=[]
@@ -198,7 +199,8 @@ class PygameWindow(pygame.Surface):
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         for country in self.game.li_territoires_obj:
                             try:
-                                if country.mask.get_at((event.pos[0], event.pos[1])):
+                                scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
+                                if country.mask.get_at(scaled_pos):
                                     print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                                     self.select_deux_surface(country)
                                     print(self.select)
@@ -206,10 +208,10 @@ class PygameWindow(pygame.Surface):
                             except IndexError:
                                 pass
                     if self.select != [] : 
-                        if self.get_obj(self.select[0]).joueur != self.a_qui_le_tour :
+                        if self.select[0].joueur != self.a_qui_le_tour :
                             print("Vous ne pouvez pas transférer des troupes depuis un territoire qui ne vous appartient pas")
                             self.select=[]
-                        if len(self.select)==2 and self.get_obj(self.select[1]).joueur != self.a_qui_le_tour :
+                        if len(self.select)==2 and self.select[1].joueur != self.a_qui_le_tour :
                             print("Vous ne pouvez pas transférer des troupes à un territoire qui ne vous appartient pas")
                             self.select=[]
                     if event.type == pygame.KEYDOWN:
@@ -217,7 +219,7 @@ class PygameWindow(pygame.Surface):
                             self.t = 2
                             self.view = 4
                         if event.key == pygame.K_t and len(self.select) == 2:
-                            self.game.transfert_troupes(self.get_obj(self.select[0]), self.get_obj(self.select[1]),1)
+                            self.game.transfert_troupes(self.select[0], self.select[1],1)
                             self.deplacement = False
                         #reverifier si le déplacement est facultatif
                         if event.key == pygame.K_RETURN :
@@ -392,14 +394,6 @@ class PygameWindow(pygame.Surface):
             select = []
             self.changer_lumi(country)
         self.select = select
-
-    def get_obj(self, str_country):
-        """
-        permet de récuperer l'objet territoire à partir de son nom
-        """
-        for country in self.game.li_territoires_obj:
-            if country.nom_territoire == str_country:
-                return country
 
     def end_turn(self):
         """

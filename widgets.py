@@ -3,8 +3,9 @@ Fichier contenant les widgets utiles pour l'UI du Risk.
 
 Utilistation : `import widgets`
 """
-
 import pygame
+
+
 
 class selectNB:
     """
@@ -25,7 +26,6 @@ class selectNB:
     - pas <int> : Valeur du pas des boutons
     """
     
-
     def __init__(self, position : tuple, val : int, minimum : int, maximum : int):
         pygame.init()
         self.font = pygame.font.Font(None, 50)
@@ -42,8 +42,11 @@ class selectNB:
         self.etat = int(val)
         self.pas = 1
 
-    def draw(self, surface):
 
+    def draw(self, surface):
+        """
+        Dessine le sélecteur sur la `surface`
+        """
         # Afficher le sélecteur
         textline = self.font.render(str(self.etat), True, (255,255,255))
 
@@ -56,29 +59,45 @@ class selectNB:
         self.image.blit(textline, (5, (self.rect.height - textline.get_height()) // 2))
         surface.blit(self.image, self.rect)
 
+
     def increment(self):
-        if self.etat < self.max:
+        """
+        Incrémente le sélecteur de `pas` si le `max` n'est pas encore atteint.
+        """
+        if self.etat <= (self.max - self.pas):
             self.etat += self.pas
 
+
     def decrement(self):
-        if self.etat > self.min:
+        """
+        Décrémente le sélecteur de `pas` si le `min` n'est pas encore atteint.
+        """
+        if self.etat >= (self.min + self.pas):
             self.etat -= self.pas
 
+
     def __call__(self, position):
+        """
+        Fonction d'appel de l'objet, vérifie si le clic (sur `position`) a été effectué sur un des boutons
+
+        Renvoie
+        -------
+        - 0 : si le bouton du haut est cliqué
+        - 1 : si le bouton du bas est cliqué
+        """
         
         # Parcours des deux boutons
         for idx, btnR in enumerate(self.buttonRects):
             # Création d'un rectangle de même forme que le bouton, mais de position absolue sur l'écran, afin d'obtenir les bonnes coordonnées
             btnRect = pygame.Rect((btnR.topleft[0] + self.rect.topleft[0], btnR.topleft[1] + self.rect.topleft[1]), btnR.size)
             # Recherche du bouton cliqué
-            if btnRect.collidepoint(position):
+            if btnRect.collidepoint(position):  # Si on a cliqué quelque part dans `btnRect`
                 # L'indice 0 correspond au bouton du haut
                 if idx == 0:
                     return 0
                 else:
                     return 1
                 
-
 
 
 class barreTexte():

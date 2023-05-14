@@ -60,6 +60,8 @@ class PygameWindow(pygame.Surface):
 
                             except IndexError:
                                 pass
+                    if len(self.select) == 2 : 
+                        self.select.remove(self.select[0])
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_p and len(self.select) == 1:
                             self.game.ajout_de_troupes_sur_territoires(self.a_qui_le_tour, self.get_obj(self.select[0]), 1)

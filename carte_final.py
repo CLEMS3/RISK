@@ -53,7 +53,6 @@ class PygameWindow(pygame.Surface):
 
         # Sélecteur de nombres
         self.init_couleurs()
-        self.selnbr_regi = widgets.selectNB((15, 200), 3, 2, 5) #nombre de regiment
         self.selnbr_troupes = widgets.selectNB((15, 300), 1, 1, 5) #max variable => à modifier
         self.selnbr_des = widgets.selectNB((15, 450), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection
 
@@ -67,56 +66,60 @@ class PygameWindow(pygame.Surface):
                 #fermeture de la fenêtre
                 if event.type == pygame.QUIT:
                     running = False
-
-
                 elif event.type == pygame.MOUSEBUTTONDOWN and self.closebutton_rect.collidepoint(pygame.mouse.get_pos()):
                     running = False
 
                 #différentes vues
                 elif self.view == 0: #renforcement
                     self.afficher_fenetre()
+                    self.display_dice = False
                     self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(0.625*self.fen_width, 0.917*self.fen_height))
+
+                    #affichage nombre de troupes a repartir
+                    nbr_restant = self.a_qui_le_tour.troupe_a_repartir
+                    self.window.blit(self.text_font_big.render(str(nbr_restant), True, (255, 255, 255)), ((int((2*self.fen_width/(self.pos_reduc)-10)/2) - 30,300)))
+                    #affichage boutons + et - (juste pendant renforcement)
+                    self.window.blit(self.plus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90,200))
+                    self.window.blit(self.minus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) +30 ,200))
                     if event.type == pygame.MOUSEBUTTONDOWN:
-
-                        # Clic sur le sélecteur ?
+                        #clic sur bouton +
+                        try:
+                            scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90)), int(event.pos[1]-200)) #pour verifier si souris sur bouton sur le mask
+                            if  self.plus_mask.get_at(scaled_pos):
+                                if self.select[0].joueur == self.a_qui_le_tour:
+                                    if nbr_restant > 0:
+                                        print("plus")
+                                        self.select[0].nombre_troupes += 1 #ajout de la troupe sur le pays
+                                        self.a_qui_le_tour.troupe_a_repartir -= 1 #retrait d'une troupe dans la liste des troupes a ajouter
+                        except IndexError: None 
+                        #clic sur bouton -
+                        try:
+                            scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) +30)), int(event.pos[1]-200))
+                            if  self.minus_mask.get_at(scaled_pos):
+                                if self.select[0].joueur == self.a_qui_le_tour:
+                                    if self.select[0].nombre_troupes > 1:
+                                        print("moins")
+                                        self.select[0].nombre_troupes -= 1
+                                        self.a_qui_le_tour.troupe_a_repartir += 1
+                        except IndexError: None 
                         
-                        if self.selnbr_regi(pygame.mouse.get_pos()) == 0:
-                            self.selnbr_regi.increment()
-                        elif self.selnbr_regi(pygame.mouse.get_pos()) == 1:
-                            self.selnbr_regi.decrement()
-                        self.selnbr_regi.draw(self.window)
-
-                        if self.selnbr_troupes(pygame.mouse.get_pos()) == 0:
-                            self.selnbr_troupes.increment()
-                        elif self.selnbr_troupes(pygame.mouse.get_pos()) == 1:
-                            self.selnbr_troupes.decrement()
-                        self.selnbr_troupes.draw(self.window)
-
-                        if self.selnbr_des(pygame.mouse.get_pos()) == 0:
-                            self.selnbr_des.increment()
-                            shuffle(self.dice_list) #change les faces de dés affichées
-                        elif self.selnbr_des(pygame.mouse.get_pos()) == 1:
-                            self.selnbr_des.decrement()
-                            shuffle(self.dice_list) #change les faces de dés affichées
-                        self.selnbr_des.draw(self.window)
-
+                       
 
                         for country in self.game.li_territoires_obj:
                             try:
-                                #print(event.pos)
                                 scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
                                 if country.mask.get_at(scaled_pos):
-                                    print("test")
+                                    
                                     print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
-                                    self.select_deux_surface(country.nom_territoire)
-                                    print(self.select)
-
-
+                                    self.select_deux_surface(country)
+    
                             except IndexError:
                                 pass
                               
                     if len(self.select) == 2 : 
+                        self.changer_lumi(self.select[0])
                         self.select.remove(self.select[0])
+                        
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_p and len(self.select) == 1:
                             self.game.ajout_de_troupes_sur_territoires(self.a_qui_le_tour, self.get_obj(self.select[0]), 1)
@@ -130,7 +133,8 @@ class PygameWindow(pygame.Surface):
                             print(f"len(self.placement_initial) = {len(self.placement_initial)}")
                             print(f"len(self.liste_joueurs_obj) = {len(self.liste_joueurs_obj)}")
                             if self.a_qui_le_tour.troupe_a_repartir == 0:
-                                self.select=[]
+                                self.changer_lumi(self.select[0])
+                                self.select.remove(self.select[0])
                                 if len(self.placement_initial) >= len(self.liste_joueurs_obj)-1:
                                     self.view = 1
                                 else:
@@ -142,13 +146,31 @@ class PygameWindow(pygame.Surface):
 
                 elif self.view == 1: #attaque
                     self.afficher_fenetre()
+                    self.display_dice = True
                     self.window.blit(self.text_font.render(f"Phase d'attaque", True, (255, 255, 255)), (400, 440))
                     if event.type == pygame.MOUSEBUTTONDOWN:
+
+                        #selecteur nombre de regiment
+                        if self.selnbr_troupes(pygame.mouse.get_pos()) == 0:
+                            self.selnbr_troupes.increment()
+                        elif self.selnbr_troupes(pygame.mouse.get_pos()) == 1:
+                            self.selnbr_troupes.decrement()
+                        self.selnbr_troupes.draw(self.window)
+
+                        
+                        if self.selnbr_des(pygame.mouse.get_pos()) == 0:
+                            self.selnbr_des.increment()
+                            shuffle(self.dice_list) #change les faces de dés affichées
+                        elif self.selnbr_des(pygame.mouse.get_pos()) == 1:
+                            self.selnbr_des.decrement()
+                            shuffle(self.dice_list) #change les faces de dés affichées
+                        self.selnbr_des.draw(self.window)
+
                         for country in self.game.li_territoires_obj:
                             try:
                                 if country.mask.get_at((event.pos[0], event.pos[1])):
                                     print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
-                                    self.select_deux_surface(country.nom_territoire)
+                                    self.select_deux_surface(country)
                                     print(self.select)
 
                             except IndexError:
@@ -171,13 +193,14 @@ class PygameWindow(pygame.Surface):
 
                 elif self.view == 2: #déplacement
                     self.afficher_fenetre()
+                    self.display_dice = False
                     self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (400, 440))
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         for country in self.game.li_territoires_obj:
                             try:
                                 if country.mask.get_at((event.pos[0], event.pos[1])):
                                     print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
-                                    self.select_deux_surface(country.nom_territoire)
+                                    self.select_deux_surface(country)
                                     print(self.select)
 
                             except IndexError:
@@ -202,6 +225,8 @@ class PygameWindow(pygame.Surface):
 
                 elif self.view == 3: #win
                     self.afficher_fenetre()
+                    self.display_dice = False
+                    
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_m:
                             self.t = 3
@@ -234,13 +259,19 @@ class PygameWindow(pygame.Surface):
         #adios - bouton quitter
         self.adios = pygame.image.load("Images/adios.png").convert_alpha()
         self.adios = pygame.transform.scale(self.adios,(int(self.fen_height/(self.pos_reduc)-10),int(self.fen_height/(self.pos_reduc)-10)))
+        #dés
         self.dice = []
         for i in range(1,7):
             dice = pygame.image.load(f"Pictures/Dice/{i}.png")
             dice = pygame.transform.scale(dice, (60, 60))
             self.dice.append(dice)
-
-
+        #boutons + et -
+        self.plus = pygame.image.load("Pictures/plus.png").convert_alpha()
+        self.plus = pygame.transform.scale(self.plus,(55,60))
+        self.plus_mask = pygame.mask.from_surface(self.plus)
+        self.minus = pygame.image.load("Pictures/minus.png").convert_alpha()
+        self.minus = pygame.transform.scale(self.minus,(55,60))
+        self.minus_mask = pygame.mask.from_surface(self.minus)
 
     def charger_coord_texte(self):
         with open('Fichiers/coords.json', 'r', encoding='utf-8') as f:
@@ -259,10 +290,10 @@ class PygameWindow(pygame.Surface):
         self.window.blit(self.adios,(int(self.fen_width-self.adios.get_size()[0]-5),5))
         self.add_borders() #ajoute les bordures noires
         self.add_texts() #ajoute les texts
-        self.selnbr_regi.draw(self.window)   # Dessiner le sélecteur du nombre de regiment
-        self.selnbr_des.draw(self.window)   # Dessiner le sélecteur du nombre de dés
-        self.selnbr_troupes.draw(self.window)   # Dessiner le sélecteur du nombre de troupes
-        self.affiche_des(self.selnbr_des.etat) # met à jour les dés
+        if self.view == 1:
+            self.selnbr_des.draw(self.window)   # Dessiner le sélecteur du nombre de dés
+            self.selnbr_troupes.draw(self.window)   # Dessiner le sélecteur du nombre de troupes
+            self.affiche_des(self.selnbr_des.etat) # met à jour les dés
         
         #territoires
         for country in self.game.li_territoires_obj:
@@ -274,13 +305,11 @@ class PygameWindow(pygame.Surface):
 
     def affiche_des(self, valeur):
         '''affiche le nombre de dés nécésaires selon le choix du joueur, affiche une valeur aléatoire'''
-        if self.display_dice :
+        if self.view == 1 :
             x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 150 #pour centrer les 3 dés
             pos = [(x,550),(x+120, 550),(x+240,550)] #écart de 120pixel entre les x (60 entre chaque dés)
             for i in range(valeur):
                 self.window.blit(self.dice[self.dice_list[i]],pos[i]) #affiche une face du dé aléatoire
-
-
 
 
 
@@ -307,12 +336,6 @@ class PygameWindow(pygame.Surface):
 
             country.surface = new_surface
 
-
-
-            
-
-            
-       
     def changer_lumi(self, country):
         """
         Assombri un territoire quand il est selectionné
@@ -370,19 +393,6 @@ class PygameWindow(pygame.Surface):
             self.changer_lumi(country)
         self.select = select
 
-    
-    def add_borders(self):
-        #bordure autour de la map
-        pygame.draw.rect(self.window, (0,0,0), (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc)),int(self.fen_width/(self.fac_reduc)-5),int(self.fen_height/(self.fac_reduc))),3)
-        #bordure quitter
-        #bordure controles
-        pygame.draw.rect(self.window, (0,0,0),(5,5, int(2*self.fen_width/(self.pos_reduc)-10),int(self.fen_height - 10)),4)
-        #bordure info succes    
-        pygame.draw.rect(self.window, (0,0,0),(int(2*self.fen_width/(self.pos_reduc)),5,int(self.fen_width/(self.fac_reduc)-int(self.fen_height/(self.pos_reduc))),int(self.fen_height/(self.pos_reduc)-10)),4)
-        #bordure adios
-        self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
-
-
     def get_obj(self, str_country):
         """
         permet de récuperer l'objet territoire à partir de son nom
@@ -421,8 +431,9 @@ class PygameWindow(pygame.Surface):
         pygame.draw.rect(self.window, (0,0,0),(int(2*self.fen_width/(self.pos_reduc)),5,int(self.fen_width/(self.fac_reduc)-int(self.fen_height/(self.pos_reduc))),int(self.fen_height/(self.pos_reduc)-10)),4)
         #bordure adios
         self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
-        #bordure dés
-        pygame.draw.rect (self.window, (0,0,0), (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 180, 520, 360, 120),4)
+        if self.view == 1:  #si phase attaque
+            #bordure dés
+            pygame.draw.rect (self.window, (0,0,0), (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 180, 520, 360, 120),4)
 
     def add_texts(self):
         '''ajoute tous les textes necessaires durant la partie'''
@@ -435,12 +446,12 @@ class PygameWindow(pygame.Surface):
         self.window.blit(self.text_font_big.render(f"{nom_joueur}", True, color), (xpos,40)) #couleur à changer en fonction du joueur et de la couleur de son pays
 
         #choix nbr troupes
-        text1 = "Combien de Régiments ?"
-        text2 = "Combien de Troupes ?"
-        text3 = "Combien de Dés ?"
-        self.window.blit(self.text_font.render(text1, True, (255, 255, 255)), (120,218))
-        self.window.blit(self.text_font.render(text2, True, (255, 255, 255)), (120,318))
-        self.window.blit(self.text_font.render(text3, True, (255, 255, 255)), (120,468))
+        text1 = "Combien de Troupes ?"
+        text2 = "Combien de Dés ?"
+        
+        if self.view == 1:   
+            self.window.blit(self.text_font.render(text1, True, (255, 255, 255)), (120,318))
+            self.window.blit(self.text_font.render(text2, True, (255, 255, 255)), (120,468))
 
         #Affiche les pays selectionnés et le joueur associé
         text4 = "Pays selectionnés :"

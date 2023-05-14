@@ -132,7 +132,7 @@ class PygameWindow(pygame.Surface):
                         if self.get_obj(self.select[0]).joueur != self.a_qui_le_tour :
                             print("Vous ne pouvez pas transférer des troupes depuis un territoire qui ne vous appartient pas")
                             self.select=[]
-                        if self.get_obj(self.select[1]).joueur != self.a_qui_le_tour :
+                        if len(self.select)==2 and self.get_obj(self.select[1]).joueur != self.a_qui_le_tour :
                             print("Vous ne pouvez pas transférer des troupes à un territoire qui ne vous appartient pas")
                             self.select=[]
                     if event.type == pygame.KEYDOWN:

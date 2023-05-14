@@ -44,6 +44,7 @@ class PygameWindow(pygame.Surface):
         self.colors = [(0,255,0),(255,0,0),(0,0,255),(255,255,0),(255,0,255)]
 
         # Sélecteur de nombres
+        self.init_couleurs()
         self.selnbr_regi = widgets.selectNB((15, 200), 3, 2, 5) #nombre de regiment
         self.selnbr_troupes = widgets.selectNB((15, 300), 1, 1, 5) #max variable => à modifier
         self.selnbr_des = widgets.selectNB((15, 450), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection
@@ -59,7 +60,8 @@ class PygameWindow(pygame.Surface):
                     running = False
 
                 elif event.type == pygame.MOUSEBUTTONDOWN and self.closebutton_rect.collidepoint(pygame.mouse.get_pos()):
-                    self.init_couleurs()
+                    
+                    running = False
 
                 #différentes vues
                 elif self.view == 0: #renforcement
@@ -201,6 +203,8 @@ class PygameWindow(pygame.Surface):
             for i in range(valeur):
                 self.window.blit(self.dice[self.dice_list[i]],pos[i]) #affiche une face du dé aléatoire
 
+
+
     def init_couleurs(self):
        '''initialise la couleur des territoires en début de partie'''
        for country in self.game.li_territoires_obj:
@@ -210,17 +214,22 @@ class PygameWindow(pygame.Surface):
             for i in range(len(self.liste_joueurs_obj)):
                 if country.joueur == self.liste_joueurs_obj[i]:
                     color = self.colors[i]
+                    country.color = color 
 
-            for x in range(width):
-                for y in range(height):
-                    if surface.get_at((x,y))!=(0,0,0):
-				
-                        a = surface.get_at((x, y))[3]  # obtient la valeur de la couleur de ce pixel, et le [3] prend donc le 4ème élement, ce qui correspond à la valeur de transparence du pixel
-                        r = color[0]
-                        g = color[1]
-                        b = color[2]
-                    
-                        surface.set_at((x, y), pygame.Color(r, g, b,a)) # défini la couleur du pixel selon les valeurs de rgb données, et avec la valeur de transparence initiale
+            surface_mask = country.mask #recupere le mask du pays
+            #turn mask to surface
+            new_surface = surface_mask.to_surface() #creer une surface noir et blanc depuis le mask (noir = pixel vide, blanc = pixel utilisé)
+            new_surface.set_colorkey((0,0,0)) #efface le noir
+            new_surface.fill(color, special_flags=pygame.BLEND_RGBA_MULT)
+
+
+            country.surface = new_surface
+
+
+
+            
+
+            
        
     def changer_lumi(self, country):
         """Assombri un territoire quand il est selectionné"""
@@ -228,27 +237,35 @@ class PygameWindow(pygame.Surface):
         width, height = surface.get_size()
         light = country.selec
         print(light)
-        for x in range(width):
-            for y in range(height):
-                a = surface.get_at((x, y))[3]  # obtient la valeur de la couleur de ce pixel, et le [3] prend donc le 4ème élement, ce qui correspond à la valeur de transparence du pixel
-                r = surface.get_at((x, y))[0]
-                g = surface.get_at((x, y))[1]
-                b = surface.get_at((x, y))[2]
-                
-                if light == 0: #on veut assombrir l'image
-                    country.selec = 1
-                    #print(country.selec)
-                    r = int(r/1.5)
-                    g = int(g/1.5)
-                    b = int(b/1.5)
-                else: #on veut eclaircir l'image
-                    country.selec = 0
-                    r = int(r*1.5)
-                    g = int(g*1.5)
-                    b = int(b*1.5)
-                
-                surface.set_at((x, y), pygame.Color(r, g, b,a))  # défini la couleur du pixel selon les valeurs de rgb donné en paramètre, et avec la valeur de transparence initiale
-
+        
+        
+        r,g,b = country.color
+        print(r,g,b)
+        if light == 0: #on veut assombrir l'image
+            country.selec = 1
+            print("ok assombrir")
+            print(f"light : {light}")
+            print(country.selec)
+            r = int(r/1.5)
+            g = int(g/1.5)
+            b= int(b/1.5)
+            print(r,g,b)
+            country.color = (r,g,b)
+        elif light==1: #on veut eclaircir l'image
+            country.selec = 0
+            print("ok eclaircir")
+            r = int(r*1.5)
+            g = int(g*1.5)
+            b = int(b*1.5)
+            print(r,g,b)
+            country.color = (r,g,b)
+        surface_mask = country.mask #recupere le mask du pays
+        #turn mask to surface
+        new_surface = surface_mask.to_surface() #creer une surface noir et blanc depuis le mask (noir = pixel vide, blanc = pixel utilisé)
+        new_surface.set_colorkey((0,0,0)) #efface le noir
+        new_surface.fill((r,g,b), special_flags=pygame.BLEND_RGBA_MULT)
+        country.surface = new_surface
+        
     def select_deux_surface(self, country):
         """
         permet la sélection de deux territoires en les ajoutant à la liste select.

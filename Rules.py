@@ -34,7 +34,7 @@ class troupes:
 
 
 class territoire:
-    def __init__(self, nom_zone, nom_territoire, mask, surface, joueur=None, nombre_troupes = 0):
+    def __init__(self, nom_zone, nom_territoire, mask, surface, joueur=None, nombre_troupes = 0,color=None):
         self.nom_territoire = nom_territoire
         self.joueur = joueur
         self.nombre_troupes = nombre_troupes
@@ -42,6 +42,7 @@ class territoire:
         self.mask = mask
         self.surface = surface
         self.selec = 0
+        self.collor = color
 
 class Player: #voir avec antoine si on peut pas utiliser directement sa classe Joueur
     def __init__(self, nom):

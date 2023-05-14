@@ -99,9 +99,13 @@ class PygameWindow(pygame.Surface):
 
                             except IndexError:
                                 pass
+
+                    if self.select != [] : 
+                        if self.get_obj(self.select[0]).joueur != self.a_qui_le_tour :
+                            print("Vous ne pouvez pas attaquer avec un territoire qui ne vous appartient pas")
+                            self.select=[]
+                            
                     if event.type == pygame.KEYDOWN:
-                        #if self.get_obj(self.select[0]).joueur != self.a_qui_le_tour :
-                                #self.select.remove(self.select[0])
                         if event.key == pygame.K_m:
                             self.t = 1
                             self.view = 4

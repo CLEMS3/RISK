@@ -114,7 +114,7 @@ class Game:
 
         return nombre_de_regiments_attaquant
 
-    def nombre_de_des_a_jouer(self,territoire,nombre_de_regiments_attaquant,nombre_de_des_joues, statut) : 
+    def nombre_de_des_a_jouer(self,territoire,nb_regiments_attaquant,nombre_de_des_joues, statut) : 
         """Cette fonction permet au joueur de déterminer avec combien de dés il veut jouer. Evidemment il a intérêt a jouer avec le plus de dés possibles
         mais il peut faire un autre choix ..."""
         nombre_de_des_a_jouer = 0

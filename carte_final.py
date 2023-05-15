@@ -151,10 +151,11 @@ class PygameWindow(pygame.Surface):
                 elif self.view == 1: #attaque
                     self.afficher_fenetre()
                     self.display_dice = True
-                    self.window.blit(self.text_font.render(f"Phase d'attaque", True, (255, 255, 255)), (400, 440))
+                    self.window.blit(self.text_font.render(f"Phase d'attaque", True, (255, 255, 255)), (0.625*self.fen_width, 0.917*self.fen_height))
                     if event.type == pygame.MOUSEBUTTONDOWN:
 
                         #selecteur nombre de regiment
+                        #TODO changer l'ordre ou ça blit pour pas qu'il y a une sperposition bizzare
                         if self.selnbr_troupes(pygame.mouse.get_pos()) == 0:
                             self.selnbr_troupes.increment()
                         elif self.selnbr_troupes(pygame.mouse.get_pos()) == 1:
@@ -192,6 +193,7 @@ class PygameWindow(pygame.Surface):
                             self.view = 4
                         if event.type == 768 and len(self.select) == 2:
                             self.game.attaque(self.select[0], self.select[1])
+                            print("attaque")
                         if event.key == pygame.K_RETURN:
                             self.view = 2
                             self.select=[]
@@ -199,7 +201,7 @@ class PygameWindow(pygame.Surface):
                 elif self.view == 2: #déplacement
                     self.afficher_fenetre()
                     self.display_dice = False
-                    self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (400, 440))
+                    self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (0.625*self.fen_width, 0.917*self.fen_height))
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         for country in self.game.li_territoires_obj:
                             try:
@@ -438,6 +440,7 @@ class PygameWindow(pygame.Surface):
             pygame.draw.rect (self.window, (0,0,0), (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 180, 520, 360, 120),4)
 
     def add_texts(self):
+        #TODO mettre les positions des textes en relatif
         '''ajoute tous les textes necessaires durant la partie'''
         #Nom du joueur en haut de la partie controle
         nom_joueur = self.a_qui_le_tour.nom #va chercher à qui le tour

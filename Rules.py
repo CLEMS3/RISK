@@ -92,27 +92,27 @@ class Game:
         
         return droit_attaque
     
-    def choix_du_nombre_de_regiments_attaquant(self,territoire_qui_attaque) :  
+    def choix_du_nombre_de_regiments_attaquant(self,territoire_qui_attaque,nombre_de_regiments_attaquant) :  
         """Cette fonction permet de définir combien de régiments attaquent"""
-        nombre_de_regiments_attaquant = 0
-        choix = 0
-        while nombre_de_regiments_attaquant == 0 : 
-            if territoire_qui_attaque.nombre_troupes == 2 :
-                nombre_de_regiments_attaquant = 1
-            if territoire_qui_attaque.nombre_troupes == 3 : 
-                choix = int(input('Voulez-vous attaquer avec 1 ou 2 regiments'))
-                if choix != 2 and choix != 1 : 
-                    print ('Choisissez un nombre de régiments attaquant parmi 2 et 3')
-                else : 
-                    nombre_de_regiments_attaquant = choix
-            if territoire_qui_attaque.nombre_troupes > 3 : 
-                choix = int(input('Voulez-vous attaquer avec 1,2 ou 3 regiments'))
-                if choix != 1 and choix != 2 and choix !=3 : 
-                    print ('Choisissez un nombre de régiments attaquant parmi 1, 2 et 3')
-                else : 
-                    nombre_de_regiments_attaquant = choix
+        test_nombre_de_regiments_attaquant = False 
+        if territoire_qui_attaque.nombre_troupes == 1 and nombre_de_regiments_attaquant==1 : 
+            test_nombre_de_regiments_attaquant = True
+        elif territoire_qui_attaque.nombre_troupes == 1 and nombre_de_regiments_attaquant!=1 : 
+            print("Vous ne pouvez utiliser qu'une seule troupe pour attaquer")
+        if territoire_qui_attaque.nombre_troupes == 2 and nombre_de_regiments_attaquant==1:
+            test_nombre_de_regiments_attaquant = True
+        elif territoire_qui_attaque.nombre_troupes == 2 and nombre_de_regiments_attaquant!=1 : 
+            print("Vous ne pouvez utiliser qu'une seule troupe pour attaquer") 
+        elif territoire_qui_attaque.nombre_troupes == 3  and (nombre_de_regiments_attaquant==1 or nombre_de_regiments_attaquant==2): 
+            test_nombre_de_regiments_attaquant = True
+        elif territoire_qui_attaque.nombre_troupes == 3  and (nombre_de_regiments_attaquant!=1 and nombre_de_regiments_attaquant!=2):
+            print("Vous devez choisir entre 1 et 2 régiments pour attaquer")
+        elif territoire_qui_attaque.nombre_troupes > 3  and (nombre_de_regiments_attaquant==1 or nombre_de_regiments_attaquant==2 or nombre_de_regiments_attaquant==3): 
+            test_nombre_de_regiments_attaquant = True
+        elif territoire_qui_attaque.nombre_troupes > 3  and (nombre_de_regiments_attaquant!=1 and nombre_de_regiments_attaquant!=2 and nombre_de_regiments_attaquant!=3 ):
+            print("Vous devez choisir entre 1 et 2 et 3 régiments pour attaquer")
 
-        return nombre_de_regiments_attaquant
+        return test_nombre_de_regiments_attaquant
 
     def nombre_de_des_a_jouer(self,territoire,nb_regiments_attaquant,nombre_de_des_joues, statut) : 
         """Cette fonction permet au joueur de déterminer avec combien de dés il veut jouer. Evidemment il a intérêt a jouer avec le plus de dés possibles
@@ -139,7 +139,7 @@ class Game:
                 elif (territoire.nombre_troupes == 1 or territoire.nombre_troupes == 2) and nombre_de_des_joues!=1 :
                     print("Attaqué : Vous devez jouer avec 1 dés au maximum")
                 elif nombre_de_des_joues!=1 and nombre_de_des_joues!=2 : 
-                        print("Vous devez choisir parmi 1 et 2 dés")
+                        print("Attaqué: Vous devez choisir parmi 1 et 2 dés")
         return test_nombre_des
     
     def attaque(self, territoire_attaquant, territoire_attaque,nombre_de_regiments_attaquant,nombre_de_des_attaquant,nombre_de_des_attaque):
@@ -153,7 +153,7 @@ class Game:
         
         https://www.regledujeu.fr/risk-regle-du-jeu/#des
         """      
-        if self.droit_attaque(territoire_attaquant, territoire_attaque) == True and  : 
+        if self.droit_attaque(territoire_attaquant, territoire_attaque) == True and self.nombre_de_des_a_jouer(self,territoire_attaquant,nombre_de_regiments_attaquant,nombre_de_des_attaquant, "Attaquant") and self.nombre_de_des_a_jouer(self,territoire_attaque,nombre_de_regiments_attaquant,nombre_de_des_attaque, "Attaqué") and choix_du_nombre_de_regiments_attaquant(self,territoire_attaquant,nombre_de_regiments_attaquant): 
                 scores_attaquant = []
                 scores_attaque = []
                 gagnant = 0

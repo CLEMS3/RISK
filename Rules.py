@@ -153,7 +153,7 @@ class Game:
         
         https://www.regledujeu.fr/risk-regle-du-jeu/#des
         """      
-        if self.droit_attaque(territoire_attaquant, territoire_attaque) == True and self.nombre_de_des_a_jouer(self,territoire_attaquant,nombre_de_regiments_attaquant,nombre_de_des_attaquant, "Attaquant") and self.nombre_de_des_a_jouer(self,territoire_attaque,nombre_de_regiments_attaquant,nombre_de_des_attaque, "Attaqué") and choix_du_nombre_de_regiments_attaquant(self,territoire_attaquant,nombre_de_regiments_attaquant): 
+        if self.droit_attaque(territoire_attaquant, territoire_attaque) == True and self.choix_du_nombre_de_regiments_attaquant(self,territoire_attaquant,nombre_de_regiments_attaquant) and self.nombre_de_des_a_jouer(self,territoire_attaquant,nombre_de_regiments_attaquant,nombre_de_des_attaquant, "Attaquant") and self.nombre_de_des_a_jouer(self,territoire_attaque,nombre_de_regiments_attaquant,nombre_de_des_attaque, "Attaqué") : 
                 scores_attaquant = []
                 scores_attaque = []
                 gagnant = 0

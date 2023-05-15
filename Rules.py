@@ -148,7 +148,7 @@ class Game:
                         nombre_de_des_a_jouer = choix
         return nombre_de_des_a_jouer, nb_regiments_attaquant
     
-    def attaque(self, territoire_attaquant, territoire_attaque):
+    def attaque(self, territoire_attaquant, territoire_attaque,nombre_de_regiments_attaquant,nombre_de_des_attaquant,nombre_de_des_attaque):
         """"
         Fonction qui gère l'attaque d'un territoire par un joueur
         territoire_attaquant et territoire_attaque sont des objets
@@ -159,14 +159,13 @@ class Game:
         
         https://www.regledujeu.fr/risk-regle-du-jeu/#des
         """      
-        self.droit_attaque(territoire_attaquant, territoire_attaque)
         if self.droit_attaque(territoire_attaquant, territoire_attaque) == True : 
                 scores_attaquant = []
                 scores_attaque = []
                 gagnant = 0
                 nb_des_a_comparer = 0 
-                nb_des_attaquant, nb_regiments_attaquant  = self.nombre_de_des_a_jouer(territoire_attaquant,"Attaquant")
-                nb_des_attaque = self.nombre_de_des_a_jouer(territoire_attaque,"Attaqué")[0]
+                nb_des_attaquant, nb_regiments_attaquant  = nombre_de_des_attaquant,nombre_de_regiments_attaquant
+                nb_des_attaque = nombre_de_des_attaque
                 if nb_des_attaquant > nb_des_attaque : 
                     nb_des_a_comparer = nb_des_attaque
                 else : 

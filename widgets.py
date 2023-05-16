@@ -4,6 +4,7 @@ Fichier contenant les widgets utiles pour l'UI du Risk.
 Utilistation : `import widgets`
 """
 import pygame
+import time
 
 
 
@@ -121,6 +122,9 @@ class barreTexte():
     - COULEUR_TEXTE <tuple> : Couleur d'affichage du texte
     - POSITION <tuple> : Position du coin supérieur droit de la barre sur `surface`
     - chaine <str> : Valeur actuelle de la chaine de caractères affichée
+    - der_pas_err <str> : Dernier messages affiché (par opposition à une erreur)
+    - err <bool> : Affiche-t-on actuellement une erreur ?
+    - err_temps <float> : Temps depuis l'affichage de la dernière erreur
     - surface <pygame.Surface> : Surface sur laquelle la barre est implantée
     - surface_barre pygame.Surface> : Surface contenant le contour et sur laquelle le texte est blit
     - police_obj <pygame.font.Font> : Objet pygame de la police utilisée
@@ -134,7 +138,10 @@ class barreTexte():
         self.COULEUR_CONTOUR = couleur_contour
         self.COULEUR_TEXTE = couleur_texte
         self.POSITION = position
-        self.chaine = ""                                                                                    # Initialisation de la chaîne de caractères                           
+        self.chaine = ""                                                                                    # Initialisation de la chaîne de caractères
+        self.der_pas_err = ""                                                                               # Dernier message affiché n'étant pas une erreur   
+        self.err = False                                                                                    # Le message actuellement affiché est-il une erreur ?  
+        self.err_temps = 0                                                                                  # Temps écoulé depuis l'erreur                  
         self.surface = surface                                                                              # Surface sur laquelle est implantée la battre
         self.surface_barre = pygame.Surface((self.LONGUEUR_BARRE, self.HAUTEUR_BARRE), pygame.SRCALPHA)     # Surface contenant le contour et sur laquelle le texte est blit
 
@@ -144,21 +151,45 @@ class barreTexte():
         self.police_obj = pygame.font.Font(police_chemin, police_taille)
 
 
-    def changer_texte(self, nouveau : str):
+    def changer_texte(self, nouveau : str, err : bool = False, forceupdate : bool = False):
         """
         Changer le texte contenu dans la barre
 
         Arguments
         ---------
         - nouveau <str> : Nouveau texte
+        - err <bool> : Le message est-il une erreur ?
+        - forceupdate <bool> : Si True, rafraîchit la fenêtre en plus de mettre à jour le texte
         """
+        # Si erreur, on stocke la dernière chaîne valide
+        if err == True:
+            self.err_temps = time.time()
+            self.der_pas_err = self.chaine if (self.err == False) else self.der_pas_err # Si on vient de passer une erreur, on garde le dernier message, si c'était déjà une erreur, on change rien
+            self.err = True
+        elif (err == False) and (self.err == True): # Si on passe un message, et qu'on était en mode erreur, alors on considère le message comme le nouveau dernier message valide
+            self.err = False
+            self.der_pas_err = nouveau
+        else:
+            self.der_pas_err = nouveau              # Pareil
+
+        # Mise à jour de la chaîne
         self.chaine = str(nouveau)
+
+        # Si mode forcer le rafraîchissement, on rafraîchit
+        if forceupdate == True:
+            self.afficher_texte()
+            pygame.display.update()
 
 
     def afficher_texte(self):
         """
         Afficher la barre et le texte correspondant
         """
+        # Gestion des erreurs
+        if (self.err == True) and (time.time() - self.err_temps >= 5):  # Si 5 secondes se sont écoulées depuis l'erreur, on remet le dernier message valide
+            self.err = False
+            self.changer_texte(self.der_pas_err)
+
         # Barre et contour
         self.surface_barre.fill((255,255,255,0))                                                                        # Transparence
         pygame.draw.rect(self.surface_barre, self.COULEUR_CONTOUR, [0, 0, self.LONGUEUR_BARRE, self.HAUTEUR_BARRE], 3)  # Création du contour

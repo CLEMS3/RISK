@@ -36,7 +36,12 @@ class PygameWindow(pygame.Surface):
         self.charger_images()
         self.display_dice = True
         self.dice_list = [0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5] #pour l'affichage random des dés, plusieurs fois 1-6 pour avoir plus de variété
-        self.game = Rules.Game(self.liste_joueurs_obj, self.fen_width, self.fen_height)
+
+        # Barre de texte pour les messages
+        self.barre_texte = widgets.barreTexte(self.window, (0.333*self.fen_width, 0.837*self.fen_height), self.water.get_size()[0], 30)
+        self.barre_texte.changer_texte("Bonjour ! Ceci est une barre de texte pour afficher des messages.")
+
+        self.game = Rules.Game(self.liste_joueurs_obj, self.fen_width, self.fen_height, self.barre_texte)
         print(len(self.game.li_territoires_obj))
         print(type(self.liste_joueurs_obj))
         self.a_qui_le_tour = choice(self.liste_joueurs_obj) #celui qui commence
@@ -55,10 +60,6 @@ class PygameWindow(pygame.Surface):
         self.init_couleurs()
         self.selnbr_troupes = widgets.selectNB((15, 300), 1, 1, 5) #max variable => à modifier
         self.selnbr_des = widgets.selectNB((15, 450), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection
-
-        # Barre de texte pour les messages
-        self.barre_texte = widgets.barreTexte(self.window, (0.333*self.fen_width, 0.837*self.fen_height), self.water.get_size()[0], 30)
-        self.barre_texte.changer_texte("Bonjour ! Ceci est une barre de texte pour afficher des messages.")
 
 
 
@@ -144,7 +145,10 @@ class PygameWindow(pygame.Surface):
                                     self.placement_initial.append(self.a_qui_le_tour)
                                     self.next_player()
                             else:
+
                                 print("Il vous reste encore des troupes à répartir") #VITO a afficher sur barre
+                                self.barre_texte.changer_texte("Il vous reste encore des troupes à répartir", err=True, forceupdate=True)
+
 
 
                 elif self.view == 1: #attaque
@@ -183,7 +187,7 @@ class PygameWindow(pygame.Surface):
 
                     if self.select != [] : 
                         if self.select[0].joueur != self.a_qui_le_tour :
-                            print("Vous ne pouvez pas attaquer avec un territoire qui ne vous appartient pas")
+                            self.barre_texte.changer_texte("Vous ne pouvez pas attaquer avec un territoire qui ne vous appartient pas", err=True, forceupdate=True)
                             self.select=[]
 
                     if event.type == pygame.KEYDOWN:
@@ -216,10 +220,10 @@ class PygameWindow(pygame.Surface):
                                 pass
                     if self.select != [] : 
                         if self.select[0].joueur != self.a_qui_le_tour :
-                            print("Vous ne pouvez pas transférer des troupes depuis un territoire qui ne vous appartient pas")
+                            self.barre_texte.changer_texte("Vous ne pouvez pas transférer des troupes depuis un territoire qui ne vous appartient pas", err=True, forceupdate=True)
                             self.select=[]
                         if len(self.select)==2 and self.select[1].joueur != self.a_qui_le_tour :
-                            print("Vous ne pouvez pas transférer des troupes à un territoire qui ne vous appartient pas")
+                            self.barre_texte.changer_texte("Vous ne pouvez pas transférer des troupes à un territoire qui ne vous appartient pas", err=True, forceupdate=True)
                             self.select=[]
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_m:

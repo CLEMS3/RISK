@@ -153,7 +153,7 @@ class PygameWindow(pygame.Surface):
                     self.display_dice = True
                    
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-
+                        #TODO ajouter un widget(nombre de dés du joueur attaqué)
                         #selecteur nombre de regiment
                         #TODO changer l'ordre ou ça blit pour pas qu'il y a une sperposition bizzare
                         if self.selnbr_troupes(pygame.mouse.get_pos()) == 0:

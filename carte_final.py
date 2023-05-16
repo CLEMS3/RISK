@@ -54,7 +54,7 @@ class PygameWindow(pygame.Surface):
         self.tour_initial = []
 
         #liste couleurs
-        self.colors = [(0,255,0),(255,0,0),(0,0,255),(255,255,0),(255,0,255)]
+        self.colors = [(174,160,75),(198,166,100),(230,214,144),(190,189,127),(228,160,16),(225,204,79)]
 
         # Sélecteur de nombres
         self.init_couleurs()
@@ -94,7 +94,7 @@ class PygameWindow(pygame.Surface):
                             scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90)), int(event.pos[1]-200)) #pour verifier si souris sur bouton sur le mask
                             if  self.plus_mask.get_at(scaled_pos):
                                 if self.select[0].joueur == self.a_qui_le_tour:
-                                    if nbr_restant > 0:
+                                    if nbr_restant > 0:           #TODO  rajouter des messages d'erreur pour quand les troupes sont plus suffisantes ou le territoire n'appartient pas a celui qui joue 
                                         print("plus")
                                         self.select[0].nombre_troupes += 1 #ajout de la troupe sur le pays
                                         self.a_qui_le_tour.troupe_a_repartir -= 1 #retrait d'une troupe dans la liste des troupes a ajouter
@@ -264,7 +264,7 @@ class PygameWindow(pygame.Surface):
         self.bg = pygame.image.load("Images/background.jpg").convert_alpha()
         self.bg = pygame.transform.scale(self.bg, (int(self.fen_width), int(self.fen_height)))
         #fond de la map
-        self.water = pygame.image.load("Images/ocean_texture.jpg").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
+        self.water = pygame.image.load("Images/fond_carte_3.jpg").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
         self.water = pygame.transform.scale(self.water, (int(self.fen_width/(self.fac_reduc)-5), int(self.fen_height/(self.fac_reduc))))
         #lines adjacent + nom
         self.lines = pygame.image.load("Pictures/Risk_lines.png").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage

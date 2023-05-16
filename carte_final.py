@@ -54,7 +54,7 @@ class PygameWindow(pygame.Surface):
         self.tour_initial = []
 
         #liste couleurs
-        self.colors = [(0,255,0),(255,0,0),(0,0,255),(255,255,0),(255,0,255)]
+        self.colors = [(224,136,193),(150,242,227),(165,229,138),(242,196,161),(159,138,135),(141,138,225)]
 
         # Sélecteur de nombres
         self.init_couleurs()
@@ -264,7 +264,7 @@ class PygameWindow(pygame.Surface):
         self.bg = pygame.image.load("Images/background.jpg").convert_alpha()
         self.bg = pygame.transform.scale(self.bg, (int(self.fen_width), int(self.fen_height)))
         #fond de la map
-        self.water = pygame.image.load("Images/ocean_texture.jpg").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
+        self.water = pygame.image.load("Images/fond_carte_3.jpg").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
         self.water = pygame.transform.scale(self.water, (int(self.fen_width/(self.fac_reduc)-5), int(self.fen_height/(self.fac_reduc))))
         #lines adjacent + nom
         self.lines = pygame.image.load("Pictures/Risk_lines.png").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage

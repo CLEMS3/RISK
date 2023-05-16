@@ -17,6 +17,8 @@ OK #Enlever mode 2 joueurs @Antoine
 
 OK #Ajouter fonction changer couleur @Antoine
 
+#text position en relatif @Antoine
+
 #Faire écran victoire @clement
 
 #son/musique @Vittore

@@ -5,7 +5,7 @@ TO DO
 
 #couleurs à changer @Vincent 
 
-#bouton valider et attaque @Antoine 
+OK #bouton valider et attaque @Antoine 
 
 #carte /fenetre Mission @Clement 
 
@@ -25,7 +25,7 @@ OK #Ajouter fonction changer couleur @Antoine
 
 #son/musique @Vittore
 
-#faire marcher message bar texte @Vittore
+#ajouter tous les message necesaires sur bar texte @Vittore
 
 #Fonction "algorithmiquement complexe" pour chemin plus court @Clement
 

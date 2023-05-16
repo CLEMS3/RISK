@@ -68,7 +68,7 @@ class Game:
         self.placement_de_tous_les_joueurs()
 
         self.init_mission()
-        self.init_dict_nb_troupes_minimum()
+        self.nb_troupes_minimum = self.init_dict_nb_troupes_minimum()
 
     def init_dict_nb_troupes_minimum(self):
         nb_troupes_minimum=dict()

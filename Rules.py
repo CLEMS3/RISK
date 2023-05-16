@@ -69,9 +69,11 @@ class Game:
 
         self.init_mission()
         self.init_dict_nb_troupes_minimum()
+
     def init_dict_nb_troupes_minimum(self):
         nb_troupes_minimum=dict()
         for territoire in self.li_territoires:
+            print(f"->{territoire}")
             nb_troupes_minimum[territoire]=1
 
 
@@ -209,8 +211,9 @@ class Game:
 
     def liste_territoires(self):
         li = []
-        for i in self.import_territoire().values():
-            li.append(i)
+        for i in self.dict_territoires.values():
+            for j in i:
+                li.append(j)
         return li
 
     def transfert_troupes(self, territoire_de_depart, territoire_arrivee,nb_troupes_a_transferer):

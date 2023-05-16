@@ -165,6 +165,7 @@ class Game:
                 scores_attaquant = []
                 scores_attaque = []
                 gagnant = 0
+                territoire_conquis = False
                 nb_des_a_comparer = 0 
                 nb_des_attaquant, nb_regiments_attaquant  = nombre_de_des_attaquant,nombre_de_regiments_attaquant
                 nb_des_attaque = nombre_de_des_attaque
@@ -196,7 +197,8 @@ class Game:
                         territoire_attaque.joueur = territoire_attaquant.joueur
                         self.changer_couleur(territoire_attaque)
                         print('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
-                        nombre_de_troupes_a_transferer = 0 
+                        nombre_de_troupes_a_transferer = 0
+                        territoire_conquis = True 
                         while nombre_de_troupes_a_transferer < nb_regiments_attaquant or nombre_de_troupes_a_transferer > territoire_attaquant.nombre_troupes :
                             nombre_de_troupes_a_transferer = int(input("Les troupes attaquante doivent occuper ce territoire, le temps que d'autres renforts arrivent. Combien voulez vous en laisser ( il faut au minimum que vous utilisiez les régiments qui attaquaient? "))
                         self.transfert_troupes(territoire_attaquant, territoire_attaque, nombre_de_troupes_a_transferer)
@@ -204,6 +206,7 @@ class Game:
                     i+=1
         else : 
             print("Vous ne pouvez pas attaquer")
+        return territoire_conquis
 
     def import_territoire(self):
         with open('Fichiers/package.json', 'r', encoding='utf-8') as f:

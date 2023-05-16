@@ -8,6 +8,7 @@ import time
 import json
 import csv
 import pygame
+import widgets
 
 
 def des():
@@ -49,7 +50,7 @@ class Player: #voir avec antoine si on peut pas utiliser directement sa classe J
         self.nom = nom
 
 class Game:
-    def __init__(self, liste_joueurs, fen_width, fen_height):
+    def __init__(self, liste_joueurs, fen_width, fen_height, barre_texte : widgets.barreTexte):
         #initialisation des variables et chargement des données
         self.liste_joueurs = liste_joueurs #liste d'objet
         self.graphe = self.import_adjacence()
@@ -60,6 +61,9 @@ class Game:
         self.fen_width = fen_width
         self.fen_height = fen_height
         self.fac_reduc = 1.5 ###SETUP MANUEL POUR LA CARTE
+
+        # Closure pour print dans la barre
+        self.print_barre = self.print_closure(barre_texte)
 
 
 
@@ -78,6 +82,14 @@ class Game:
         return nb_troupes_minimum
 
 
+    def print_closure(self, barre_texte : widgets.barreTexte):
+        """
+        Fermeture permettant de remplacer la fonction `print` en envoyant l'output dans la barre
+        """
+        def message(string : str, err : bool = False):
+            print(f"Message with {string}")
+            barre_texte.changer_texte(string, err=err, forceupdate=True)
+        return message
 
     def droit_attaque(self, territoire_attaquant, territoire_attaque):
         """Cette fonction repère si l'attaque est autorisée"""
@@ -92,11 +104,11 @@ class Game:
                 if adjacence == True : 
                     droit_attaque = True
                 else : 
-                    print("Le territoire que vous voulez attaquer n'est pas adjacents à votre territoire attaquant")
+                    self.print_barre("Le territoire que vous voulez attaquer n'est pas adjacents à votre territoire attaquant", err=True)
             else : 
-                print ("Vous n'avez pas assez de troupes pour attaquer")
+                self.print_barre("Vous n'avez pas assez de troupes pour attaquer", err=True)
         else : 
-            print("Vous ne pouvez pas attaquer votre propre territoire !!")        
+            self.print_barre("Vous ne pouvez pas attaquer votre propre territoire !!", err=True)        
         
         return droit_attaque
     
@@ -106,19 +118,19 @@ class Game:
         if territoire_qui_attaque.nombre_troupes == 1 and nombre_de_regiments_attaquant==1 : 
             test_nombre_de_regiments_attaquant = True
         elif territoire_qui_attaque.nombre_troupes == 1 and nombre_de_regiments_attaquant!=1 : 
-            print("Vous ne pouvez utiliser qu'une seule troupe pour attaquer")
+            self.print_barre("Vous ne pouvez utiliser qu'une seule troupe pour attaquer", err=True)
         elif territoire_qui_attaque.nombre_troupes == 2 and nombre_de_regiments_attaquant==1:
             test_nombre_de_regiments_attaquant = True
         elif territoire_qui_attaque.nombre_troupes == 2 and nombre_de_regiments_attaquant!=1 : 
-            print("Vous ne pouvez utiliser qu'une seule troupe pour attaquer") 
+            self.print_barre("Vous ne pouvez utiliser qu'une seule troupe pour attaquer", err=True) 
         elif territoire_qui_attaque.nombre_troupes == 3  and (nombre_de_regiments_attaquant==1 or nombre_de_regiments_attaquant==2): 
             test_nombre_de_regiments_attaquant = True
         elif territoire_qui_attaque.nombre_troupes == 3  and (nombre_de_regiments_attaquant!=1 and nombre_de_regiments_attaquant!=2):
-            print("Vous devez choisir entre 1 et 2 régiments pour attaquer")
+            self.print_barre("Vous devez choisir entre 1 et 2 régiments pour attaquer", err=True)
         elif territoire_qui_attaque.nombre_troupes > 3  and (nombre_de_regiments_attaquant==1 or nombre_de_regiments_attaquant==2 or nombre_de_regiments_attaquant==3): 
             test_nombre_de_regiments_attaquant = True
         elif territoire_qui_attaque.nombre_troupes > 3  and (nombre_de_regiments_attaquant!=1 and nombre_de_regiments_attaquant!=2 and nombre_de_regiments_attaquant!=3 ):
-            print("Vous devez choisir entre 1 et 2 et 3 régiments pour attaquer")
+            self.print_barre("Vous devez choisir entre 1 et 2 et 3 régiments pour attaquer", err=True)
 
         return test_nombre_de_regiments_attaquant
 
@@ -132,22 +144,22 @@ class Game:
                 if nb_regiments_attaquant == 1 and nombre_de_des_joues==1 : 
                     test_nombre_des = True
                 elif nb_regiments_attaquant == 1 and nombre_de_des_joues!=1 : 
-                    print("Attaquant : Vous devez utiliser qu'un seul régiment pour attaquer")
+                    self.print_barre("Attaquant : Vous devez utiliser qu'un seul régiment pour attaquer", err=True)
                 elif nb_regiments_attaquant == 2 and (nombre_de_des_joues ==1 or nombre_de_des_joues ==2):
                     test_nombre_des = True
                 elif nb_regiments_attaquant == 2 and (nombre_de_des_joues !=1 and nombre_de_des_joues !=2):
-                    print("Attaquant : Vous devez choisir parmi 1 ou 2 dés ! " )
+                    self.print_barre("Attaquant : Vous devez choisir parmi 1 ou 2 dés ! ", err=True)
                 elif nb_regiments_attaquant == 3 and (nombre_de_des_joues ==1 or nombre_de_des_joues ==2 or nombre_de_des_joues ==3 ):
                     test_nombre_des = True
                 elif nb_regiments_attaquant == 2 and (nombre_de_des_joues !=1 and nombre_de_des_joues !=2):
-                    print("Attaquant : Vous devez choisir parmi 1, 2 ou 3 dés ! " )
+                    self.print_barre("Attaquant : Vous devez choisir parmi 1, 2 ou 3 dés ! ", err=True)
         elif statut == "Attaqué" : 
                 if (territoire.nombre_troupes == 1 or territoire.nombre_troupes == 2) and nombre_de_des_joues==1 :
                     test_nombre_des = True
                 elif (territoire.nombre_troupes == 1 or territoire.nombre_troupes == 2) and nombre_de_des_joues!=1 :
-                    print("Attaqué : Vous devez jouer avec 1 dés au maximum")
+                    self.print_barre("Attaqué : Vous devez jouer avec 1 dés au maximum", err=True)
                 elif nombre_de_des_joues!=1 and nombre_de_des_joues!=2 : 
-                        print("Attaqué: Vous devez choisir parmi 1 et 2 dés")
+                        self.print_barre("Attaqué: Vous devez choisir parmi 1 et 2 dés", err=True)
         return test_nombre_des
     
     def attaque(self, territoire_attaquant, territoire_attaque,nombre_de_regiments_attaquant,nombre_de_des_attaquant,nombre_de_des_attaque):
@@ -188,24 +200,24 @@ class Game:
                     if scores_attaquant[i] <= scores_attaque[i]:
                         territoire_attaquant.nombre_troupes -= 1
                         territoire_attaquant.joueur.nb_troupes-=1    
-                        print("Le territoire attaquant perd une troupe")
+                        self.print_barre("Le territoire attaquant perd une troupe")
                     if scores_attaquant[i] > scores_attaque[i]:
                         territoire_attaque.nombre_troupes -= 1
                         territoire_attaque.joueur.nb_troupes-=1
-                        print("Le territoire attaqué perd une troupe")
+                        self.print_barre("Le territoire attaqué perd une troupe")
                     if territoire_attaque.nombre_troupes == 0:
                         territoire_attaque.joueur = territoire_attaquant.joueur
                         self.changer_couleur(territoire_attaque)
-                        print('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
+                        self.print_barre('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
                         nombre_de_troupes_a_transferer = 0
                         territoire_conquis = True 
                         while nombre_de_troupes_a_transferer < nb_regiments_attaquant or nombre_de_troupes_a_transferer > territoire_attaquant.nombre_troupes :
-                            nombre_de_troupes_a_transferer = int(input("Les troupes attaquante doivent occuper ce territoire, le temps que d'autres renforts arrivent. Combien voulez vous en laisser ( il faut au minimum que vous utilisiez les régiments qui attaquaient? "))
+                            nombre_de_troupes_a_transferer = int(input("Les troupes attaquante doivent occuper ce territoire, le temps que d'autres renforts arrivent. Combien voulez vous en laisser ( il faut au minimum que vous utilisiez les régiments qui attaquaient? ")) #TODO Transformer ça en menu
                         self.transfert_troupes(territoire_attaquant, territoire_attaque, nombre_de_troupes_a_transferer)
                         gagnant = 1
                     i+=1
         else : 
-            print("Vous ne pouvez pas attaquer")
+            self.print_barre("Vous ne pouvez pas attaquer", err=True)
         return territoire_conquis
 
     def import_territoire(self):
@@ -226,14 +238,14 @@ class Game:
         """
         if self.verification_adjacence(territoire_de_depart, territoire_arrivee) == True:
             if nb_troupes_a_transferer <= 0:
-                print('Veuillez donner un nombre strictement positif de troupes à transférer')
+                self.print_barre('Veuillez donner un nombre strictement positif de troupes à transférer')
             if nb_troupes_a_transferer < territoire_de_depart.nombre_troupes:
                 territoire_de_depart.nombre_troupes = territoire_de_depart.nombre_troupes - nb_troupes_a_transferer
                 territoire_arrivee.nombre_troupes += nb_troupes_a_transferer
             else:
-                print('Vous ne pouvez pas transférer autant de troupes !!!!')  # il faut rajouter la condition de proximité avec la matrice d'adjacence
+                self.print_barre('Vous ne pouvez pas transférer autant de troupes !!!!', err=True)  # il faut rajouter la condition de proximité avec la matrice d'adjacence
         else:
-            print("Vos territoires ne sont pas adjacents, vous ne pouvez pas transférer des troupes, sélectionnez un autre territoire")
+            self.print_barre("Vos territoires ne sont pas adjacents, vous ne pouvez pas transférer des troupes, sélectionnez un autre territoire", err=True)
 
 
     def placement_de_tous_les_joueurs(self):
@@ -313,14 +325,14 @@ class Game:
             nombre_de_troupes_qu_il_reste_a_placer = joueur.troupe_a_repartir
             liste_territoires_joueurs = self.liste_territoires_joueur(joueur)
             if nombre > nombre_de_troupes_qu_il_reste_a_placer:  # Le joueur ajoute des troupes sur les territoires qu'il
-                print("Il ne vous reste pas assez de troupes !!")
+                self.print_barre("Il ne vous reste pas assez de troupes !!", err=True)
             else:
                 territoire.nombre_troupes += nombre
                 nombre_de_troupes_qu_il_reste_a_placer -= nombre
             joueur.troupe_a_repartir = nombre_de_troupes_qu_il_reste_a_placer
             return nombre_de_troupes_qu_il_reste_a_placer 
         else : 
-            print("Vous ne pouvez pas ajouter de troupes sur un territoires qui ne vous appartient pas ! ")
+            self.print_barre("Vous ne pouvez pas ajouter de troupes sur un territoires qui ne vous appartient pas ! ", err=True)
     
     def import_adjacence(self):
         with open('Fichiers/adjacences_territoires.csv', newline='') as csvfile:

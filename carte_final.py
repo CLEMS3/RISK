@@ -47,7 +47,7 @@ class PygameWindow(pygame.Surface):
         self.deplacement = True
         self.placement_initial = []
         self.tour_initial = []
-
+        
         #liste couleurs
         self.colors = [(0,255,0),(255,0,0),(0,0,255),(255,255,0),(255,0,255)]
 
@@ -101,7 +101,7 @@ class PygameWindow(pygame.Surface):
                             scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) +30)), int(event.pos[1]-200))
                             if  self.minus_mask.get_at(scaled_pos):
                                 if self.select[0].joueur == self.a_qui_le_tour:
-                                    if self.select[0].nombre_troupes > 1:
+                                    if self.select[0].nombre_troupes > self.nb_troupes_minimum[self.select[0].nom_territoire]:
                                         print("moins")
                                         self.select[0].nombre_troupes -= 1
                                         self.a_qui_le_tour.troupe_a_repartir += 1
@@ -418,6 +418,9 @@ class PygameWindow(pygame.Surface):
             self.next_player()
         self.deplacement = True
         self.view = 0 if self.a_qui_le_tour in self.tour_initial else 1
+        if self.view == 0 : 
+            for territoire in self.li_territoires: 
+                self.nb_troupes_minimum[territoire]=self.territoire.nb_troupes
         self.select=[]
 
     def next_player(self):

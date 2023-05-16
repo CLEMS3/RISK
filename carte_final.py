@@ -276,6 +276,7 @@ class PygameWindow(pygame.Surface):
                 elif self.view == 4: #mission
                     self.afficher_fenetre()
                     self.window.blit(self.text_font.render(f"Mission", True, (255, 255, 255)),(0.625*self.fen_width, 0.917*self.fen_height))
+                    self.window.blit(self.text_font.render(f"{self.a_qui_le_tour.mission.detail}", True, (0, 0, 0)),(0.375*self.fen_width, 0.200*self.fen_height+20))
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_m:
                             self.view = self.t
@@ -340,8 +341,9 @@ class PygameWindow(pygame.Surface):
 
         #bg
         self.window.blit(self.bg,(0,0))
-        self.window.blit(self.water, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
-        self.window.blit(self.lines, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
+        if self.view not in [3,4]: #pas de carte pour les fenetres win et mission
+            self.window.blit(self.water, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
+            self.window.blit(self.lines, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         self.window.blit(self.adios,(int(self.fen_width-self.adios.get_size()[0]-5),5))
         self.window.blit(self.next,(int(self.fen_width-80),int(self.fen_height-80)))
         self.add_borders() #ajoute les bordures noires
@@ -361,13 +363,14 @@ class PygameWindow(pygame.Surface):
         elif self.view == 2: #deplacement
             self.window.blit(self.transfert,(int(self.fen_width-150),int(self.fen_height-80)))
 
-        #territoires
-        for country in self.game.li_territoires_obj:
-            self.window.blit(country.surface, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
-        #régiments
-        for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
-            self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (0, 0, 0)),(self.coords[country.nom_territoire][0]*self.fen_width/(self.fac_reduc)+2*int(self.fen_width/(self.pos_reduc)), self.coords[country.nom_territoire][1]*self.fen_height/(self.fac_reduc)+int(self.fen_height/(self.pos_reduc))))#{country.nombre_troupes}
-        
+        if self.view not in [3, 4]:  # pas de carte pour les fenetres win et mission
+            #territoires
+            for country in self.game.li_territoires_obj:
+                self.window.blit(country.surface, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
+            #régiments
+            for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
+                self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (0, 0, 0)),(self.coords[country.nom_territoire][0]*self.fen_width/(self.fac_reduc)+2*int(self.fen_width/(self.pos_reduc)), self.coords[country.nom_territoire][1]*self.fen_height/(self.fac_reduc)+int(self.fen_height/(self.pos_reduc))))#{country.nombre_troupes}
+
         # Barre de texte
         self.barre_texte.afficher_texte()
 

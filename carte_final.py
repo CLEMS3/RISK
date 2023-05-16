@@ -36,7 +36,12 @@ class PygameWindow(pygame.Surface):
         self.charger_images()
         self.display_dice = True
         self.dice_list = [0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5] #pour l'affichage random des dés, plusieurs fois 1-6 pour avoir plus de variété
-        self.game = Rules.Game(self.liste_joueurs_obj, self.fen_width, self.fen_height)
+
+        # Barre de texte pour les messages
+        self.barre_texte = widgets.barreTexte(self.window, (0.333*self.fen_width, 0.837*self.fen_height), self.water.get_size()[0], 30)
+        self.barre_texte.changer_texte("Bonjour ! Ceci est une barre de texte pour afficher des messages.")
+
+        self.game = Rules.Game(self.liste_joueurs_obj, self.fen_width, self.fen_height, self.barre_texte)
         print(len(self.game.li_territoires_obj))
         print(type(self.liste_joueurs_obj))
         self.a_qui_le_tour = choice(self.liste_joueurs_obj) #celui qui commence
@@ -55,10 +60,6 @@ class PygameWindow(pygame.Surface):
         self.init_couleurs()
         self.selnbr_troupes = widgets.selectNB((15, 300), 1, 1, 5) #max variable => à modifier
         self.selnbr_des = widgets.selectNB((15, 450), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection
-
-        # Barre de texte pour les messages
-        self.barre_texte = widgets.barreTexte(self.window, (0.333*self.fen_width, 0.837*self.fen_height), self.water.get_size()[0], 30)
-        self.barre_texte.changer_texte("Bonjour ! Ceci est une barre de texte pour afficher des messages.")
 
 
 

@@ -99,7 +99,7 @@ class Game:
             test_nombre_de_regiments_attaquant = True
         elif territoire_qui_attaque.nombre_troupes == 1 and nombre_de_regiments_attaquant!=1 : 
             print("Vous ne pouvez utiliser qu'une seule troupe pour attaquer")
-        if territoire_qui_attaque.nombre_troupes == 2 and nombre_de_regiments_attaquant==1:
+        elif territoire_qui_attaque.nombre_troupes == 2 and nombre_de_regiments_attaquant==1:
             test_nombre_de_regiments_attaquant = True
         elif territoire_qui_attaque.nombre_troupes == 2 and nombre_de_regiments_attaquant!=1 : 
             print("Vous ne pouvez utiliser qu'une seule troupe pour attaquer") 

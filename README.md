@@ -17,6 +17,8 @@ OK #Enlever mode 2 joueurs @Antoine
 
 OK #Ajouter fonction changer couleur @Antoine
 
+#Retirer tous les PRINT inutils
+
 #text position en relatif @Antoine
 
 #Faire écran victoire @clement
@@ -26,6 +28,11 @@ OK #Ajouter fonction changer couleur @Antoine
 #faire marcher message bar texte @Vittore
 
 #Fonction "algorithmiquement complexe" pour chemin plus court @Clement
+
+#decoupage fonctionnel Rules.py @vincent
+
+#VIDEO
+
 
 
 

@@ -87,6 +87,8 @@ class PygameWindow(pygame.Surface):
                     self.window.blit(self.plus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90,200))
                     self.window.blit(self.minus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) +30 ,200))
                     if event.type == pygame.MOUSEBUTTONDOWN:
+
+
                         #clic sur bouton +
                         try:
                             scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90)), int(event.pos[1]-200)) #pour verifier si souris sur bouton sur le mask
@@ -109,7 +111,7 @@ class PygameWindow(pygame.Surface):
                         except IndexError: None 
                         
                        
-
+                        #clic sur pays
                         for country in self.game.li_territoires_obj:
                             try:
                                 scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
@@ -120,14 +122,11 @@ class PygameWindow(pygame.Surface):
     
                             except IndexError:
                                 pass
-                              
+
+                    #selection d'un seul pays dans la phase de renforcement         
                     if len(self.select) == 2 : 
                         self.changer_lumi(self.select[0])
                         self.select.remove(self.select[0])
-                        
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_p and len(self.select) == 1:
-                            self.game.ajout_de_troupes_sur_territoires(self.a_qui_le_tour, self.select[0], 1)
 
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_m:
@@ -146,7 +145,10 @@ class PygameWindow(pygame.Surface):
                                     self.placement_initial.append(self.a_qui_le_tour)
                                     self.next_player()
                             else:
+
+                                print("Il vous reste encore des troupes à répartir") #VITO a afficher sur barre
                                 self.barre_texte.changer_texte("Il vous reste encore des troupes à répartir", err=True, forceupdate=True)
+
 
 
                 elif self.view == 1: #attaque
@@ -200,6 +202,8 @@ class PygameWindow(pygame.Surface):
                             self.select=[]
 
                 elif self.view == 2: #déplacement
+
+                    #TODO add selec comme sur renfo 
                     self.afficher_fenetre()
                     self.display_dice = False
                     self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (0.625*self.fen_width, 0.917*self.fen_height))

@@ -93,11 +93,8 @@ class selectNB:
             btnRect = pygame.Rect((btnR.topleft[0] + self.rect.topleft[0], btnR.topleft[1] + self.rect.topleft[1]), btnR.size)
             # Recherche du bouton cliqué
             if btnRect.collidepoint(position):  # Si on a cliqué quelque part dans `btnRect`
-                # L'indice 0 correspond au bouton du haut
-                if idx == 0:
-                    return 0
-                else:
-                    return 1
+                # L'indice 0 correspond au bouton du haut 
+                return 0 if idx == 0 else 1
                 
 
 

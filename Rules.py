@@ -525,7 +525,28 @@ class Mission:
         self.aim = aim #ne mettre une valeur que pour la mission 7, qui sera alors le joueur nommé
         self.player = player
         self.liste_territoire_obj = liste_territoire_obj #liste_territoire_obj est la liste de tout les objet territoire de associé à chacun des territoires de la carte
+        self.detail = self.init_detail()
 
+    def init_detail(self):
+        if self.type == 1:
+            return "capture Europe, Australia and one other continent"
+        elif self.type == 2:
+            return "capture Europe, South America and one other continent"
+        elif self.type == 3:
+            return "capture North America and Africa"
+        elif self.type == 4:
+            return "capture Asia and South America"
+        elif self.type == 5:
+            return "capture North America and Australia"
+        elif self.type == 6:
+            return "capture 24 territories"
+        elif self.type == 7:
+            if self.aim == self.player:
+                return "capture 24 territories"
+            else:
+                return f"destroy all armies of {self.aim}"
+        elif self.type == 8:
+            return "capture 18 territories and occupy each with two troops"
     def check(self):
         #Pourquoi il y a pas de switch case en python putain
         if self.type == 1:

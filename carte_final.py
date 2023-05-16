@@ -146,7 +146,7 @@ class PygameWindow(pygame.Surface):
                                     self.placement_initial.append(self.a_qui_le_tour)
                                     self.next_player()
                             else:
-                                print("Il vous reste encore des troupes à répartir")
+                                self.barre_texte.changer_texte("Il vous reste encore des troupes à répartir", err=True, forceupdate=True)
 
 
                 elif self.view == 1: #attaque
@@ -185,7 +185,7 @@ class PygameWindow(pygame.Surface):
 
                     if self.select != [] : 
                         if self.select[0].joueur != self.a_qui_le_tour :
-                            print("Vous ne pouvez pas attaquer avec un territoire qui ne vous appartient pas")
+                            self.barre_texte.changer_texte("Vous ne pouvez pas attaquer avec un territoire qui ne vous appartient pas", err=True, forceupdate=True)
                             self.select=[]
 
                     if event.type == pygame.KEYDOWN:
@@ -216,10 +216,10 @@ class PygameWindow(pygame.Surface):
                                 pass
                     if self.select != [] : 
                         if self.select[0].joueur != self.a_qui_le_tour :
-                            print("Vous ne pouvez pas transférer des troupes depuis un territoire qui ne vous appartient pas")
+                            self.barre_texte.changer_texte("Vous ne pouvez pas transférer des troupes depuis un territoire qui ne vous appartient pas", err=True, forceupdate=True)
                             self.select=[]
                         if len(self.select)==2 and self.select[1].joueur != self.a_qui_le_tour :
-                            print("Vous ne pouvez pas transférer des troupes à un territoire qui ne vous appartient pas")
+                            self.barre_texte.changer_texte("Vous ne pouvez pas transférer des troupes à un territoire qui ne vous appartient pas", err=True, forceupdate=True)
                             self.select=[]
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_m:

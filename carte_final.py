@@ -54,7 +54,7 @@ class PygameWindow(pygame.Surface):
         self.tour_initial = []
 
         #liste couleurs
-        self.colors = [(224,136,193),(150,242,227),(165,229,138),(242,196,161),(159,138,135),(141,138,225)]
+        self.colors = [(174,160,75),(198,166,100),(230,214,144),(190,189,127),(228,160,16),(225,204,79)]
 
         # Sélecteur de nombres
         self.init_couleurs()

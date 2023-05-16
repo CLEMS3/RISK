@@ -69,6 +69,11 @@ class Game:
 
         self.init_mission()
 
+    def init_dict_nb_troupes_minimum(self):
+        nb_troupes_minimum=dict()
+        for territoire in self.li_territoires:
+            nb_troupes_minimum[territoire]=1
+
 
 
     def droit_attaque(self, territoire_attaquant, territoire_attaque):

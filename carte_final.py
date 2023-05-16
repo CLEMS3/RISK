@@ -92,7 +92,7 @@ class PygameWindow(pygame.Surface):
                             scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90)), int(event.pos[1]-200)) #pour verifier si souris sur bouton sur le mask
                             if  self.plus_mask.get_at(scaled_pos):
                                 if self.select[0].joueur == self.a_qui_le_tour:
-                                    if nbr_restant > 0:
+                                    if nbr_restant > 0:           #TODO  rajouter des messages d'erreur pour quand les troupes sont plus suffisantes ou le territoire n'appartient pas a celui qui joue 
                                         print("plus")
                                         self.select[0].nombre_troupes += 1 #ajout de la troupe sur le pays
                                         self.a_qui_le_tour.troupe_a_repartir -= 1 #retrait d'une troupe dans la liste des troupes a ajouter

@@ -217,8 +217,7 @@ class Game:
                         gagnant = 1
                     i+=1
         else : 
-            self.print_barre("Vous ne pouvez pas attaquer", err=True)
-        return territoire_conquis
+            print("Vous ne pouvez pas attaquer")
 
     def import_territoire(self):
         with open('Fichiers/package.json', 'r', encoding='utf-8') as f:

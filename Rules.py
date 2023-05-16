@@ -75,6 +75,7 @@ class Game:
         for territoire in self.li_territoires:
             print(f"->{territoire}")
             nb_troupes_minimum[territoire]=1
+        return nb_troupes_minimum
 
 
 

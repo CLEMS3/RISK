@@ -78,16 +78,8 @@ class PygameWindow(pygame.Surface):
                 elif self.view == 0: #renforcement
                     self.afficher_fenetre()
                     self.display_dice = False
-                    self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(0.625*self.fen_width, 0.917*self.fen_height))
-
-                    #affichage nombre de troupes a repartir
                     nbr_restant = self.a_qui_le_tour.troupe_a_repartir
-                    self.window.blit(self.text_font_big.render(str(nbr_restant), True, (255, 255, 255)), ((int((2*self.fen_width/(self.pos_reduc)-10)/2) - 30,300)))
-                    #affichage boutons + et - (juste pendant renforcement)
-                    self.window.blit(self.plus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90,200))
-                    self.window.blit(self.minus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) +30 ,200))
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-
 
                         #clic sur bouton +
                         try:
@@ -98,7 +90,9 @@ class PygameWindow(pygame.Surface):
                                         print("plus")
                                         self.select[0].nombre_troupes += 1 #ajout de la troupe sur le pays
                                         self.a_qui_le_tour.troupe_a_repartir -= 1 #retrait d'une troupe dans la liste des troupes a ajouter
-                        except IndexError: None 
+                                else:
+                                    self.barre_texte.changer_texte("Ce territoire ne vous appartient pas.", err=True, forceupdate=True)
+                        except IndexError: pass
                         #clic sur bouton -
                         try:
                             scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) +30)), int(event.pos[1]-200))
@@ -108,7 +102,7 @@ class PygameWindow(pygame.Surface):
                                         print("moins")
                                         self.select[0].nombre_troupes -= 1
                                         self.a_qui_le_tour.troupe_a_repartir += 1
-                        except IndexError: None 
+                        except IndexError: pass 
                         
                        
                         #clic sur pays
@@ -122,7 +116,28 @@ class PygameWindow(pygame.Surface):
     
                             except IndexError:
                                 pass
+                        
 
+                        #clic sur next
+                        try:
+                            scaled_pos = (event.pos[0]-(self.fen_width-80),event.pos[1]-(self.fen_height-80))
+                            if self.next_mask.get_at(scaled_pos):
+                                print(self.placement_initial)
+                                print(f"len(self.placement_initial) = {len(self.placement_initial)}")
+                                print(f"len(self.liste_joueurs_obj) = {len(self.liste_joueurs_obj)}")
+                                #si toutes les troupes sont placées
+                                if self.a_qui_le_tour.troupe_a_repartir == 0:
+                                    self.changer_lumi(self.select[0])
+                                    self.select.remove(self.select[0])
+                                    if len(self.placement_initial) >= len(self.liste_joueurs_obj)-1:
+                                        self.view = 1
+                                    else: #si tous les joueurs ont placé leurs troupes
+                                        self.placement_initial.append(self.a_qui_le_tour)
+                                        self.next_player()
+                                else:
+                                    self.barre_texte.changer_texte("Il vous reste encore des troupes à répartir", err=True, forceupdate=True)
+                        except IndexError : pass 
+                    
                     #selection d'un seul pays dans la phase de renforcement         
                     if len(self.select) == 2 : 
                         self.changer_lumi(self.select[0])
@@ -132,29 +147,11 @@ class PygameWindow(pygame.Surface):
                         if event.key == pygame.K_m:
                             self.t = 0
                             self.view = 4
-                        if event.key == pygame.K_RETURN :
-                            print(self.placement_initial)
-                            print(f"len(self.placement_initial) = {len(self.placement_initial)}")
-                            print(f"len(self.liste_joueurs_obj) = {len(self.liste_joueurs_obj)}")
-                            if self.a_qui_le_tour.troupe_a_repartir == 0:
-                                self.changer_lumi(self.select[0])
-                                self.select.remove(self.select[0])
-                                if len(self.placement_initial) >= len(self.liste_joueurs_obj)-1:
-                                    self.view = 1
-                                else:
-                                    self.placement_initial.append(self.a_qui_le_tour)
-                                    self.next_player()
-                            else:
-
-                                print("Il vous reste encore des troupes à répartir") #VITO a afficher sur barre
-                                self.barre_texte.changer_texte("Il vous reste encore des troupes à répartir", err=True, forceupdate=True)
-
-
-
+                    
                 elif self.view == 1: #attaque
                     self.afficher_fenetre()
                     self.display_dice = True
-                    self.window.blit(self.text_font.render(f"Phase d'attaque", True, (255, 255, 255)), (0.625*self.fen_width, 0.917*self.fen_height))
+                   
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
 
                         #selecteur nombre de regiment
@@ -174,6 +171,7 @@ class PygameWindow(pygame.Surface):
                             shuffle(self.dice_list) #change les faces de dés affichées
                         self.selnbr_des.draw(self.window)
 
+                        #check clic sur pays
                         for country in self.game.li_territoires_obj:
                             try:
                                 scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
@@ -185,29 +183,50 @@ class PygameWindow(pygame.Surface):
                             except IndexError:
                                 pass
 
+                        #clic sur "Attaque"
+                        try:
+                            scaled_pos = (event.pos[0]-(self.fen_width-150),event.pos[1]-(self.fen_height-80))
+                            if self.next_mask.get_at(scaled_pos):
+                                if len(self.select) == 2:
+                                    print("attaque")
+                                    self.game.attaque(self.select[0], self.select[1]) #parametres a changer ##TEMPORAIRE
+                                    self.changer_lumi(self.select[0])
+                                    self.changer_lumi(self.select[1])
+                                    self.select=[]
+                                    #AJOUTER MESSAGE ERREUR SUR BARRE VITTO > voir rules.py
+                                    # à adapter
+                        except IndexError : pass
+
+                        #clic sur next, 
+                        try:
+                            scaled_pos = (event.pos[0]-(self.fen_width-80),event.pos[1]-(self.fen_height-80))
+                            if self.next_mask.get_at(scaled_pos):
+                                self.view = 2
+                                self.barre_texte.changer_texte("Fin de la phase d'attaque", err=True, forceupdate=True)
+                                
+                                for counrty in self.select: #on deselectionne aussi au niveau des couleurs (pas propre mais fonctionne pour l'instant)
+                                    self.changer_lumi(country)
+
+                                self.select=[]
+
+                        except IndexError : pass
+
                     if self.select != [] : 
                         if self.select[0].joueur != self.a_qui_le_tour :
                             self.barre_texte.changer_texte("Vous ne pouvez pas attaquer avec un territoire qui ne vous appartient pas", err=True, forceupdate=True)
-                            self.select=[]
+                            
 
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_m:
                             self.t = 1
                             self.view = 4
-                        if event.type == 768 and len(self.select) == 2:
-                            self.game.attaque(self.select[0], self.select[1])
-                            print("attaque")
-                        if event.key == pygame.K_RETURN:
-                            self.view = 2
-                            self.select=[]
 
                 elif self.view == 2: #déplacement
-
-                    #TODO add selec comme sur renfo 
                     self.afficher_fenetre()
                     self.display_dice = False
-                    self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (0.625*self.fen_width, 0.917*self.fen_height))
+                    
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
+
                         for country in self.game.li_territoires_obj:
                             try:
                                 scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
@@ -218,24 +237,33 @@ class PygameWindow(pygame.Surface):
 
                             except IndexError:
                                 pass
+
+                        #clic sur next, à voir si deplacement obligatoire
+                        try:
+                            scaled_pos = (event.pos[0]-(self.fen_width-80),event.pos[1]-(self.fen_height-80))
+                            if self.next_mask.get_at(scaled_pos):
+                                self.barre_texte.changer_texte("Fin de la phase de déplacement", err=True, forceupdate=True)
+                                self.end_turn()
+                        except IndexError : pass
+
+                        try:
+                            scaled_pos = (event.pos[0]-(self.fen_width-150),event.pos[1]-(self.fen_height-80))
+                            if self.transfert_mask.get_at(scaled_pos):
+                                if len(self.select) == 2:
+                                    self.game.transfert_troupes(self.select[0], self.select[1],1)
+                                    self.deplacement = False
+                                    #VITTO VOIR POUR MESSAGE D'ERREUR SI NON ADJACENT
+                        except IndexError : pass
+
                     if self.select != [] : 
                         if self.select[0].joueur != self.a_qui_le_tour :
                             self.barre_texte.changer_texte("Vous ne pouvez pas transférer des troupes depuis un territoire qui ne vous appartient pas", err=True, forceupdate=True)
-                            self.select=[]
+                            
                         if len(self.select)==2 and self.select[1].joueur != self.a_qui_le_tour :
                             self.barre_texte.changer_texte("Vous ne pouvez pas transférer des troupes à un territoire qui ne vous appartient pas", err=True, forceupdate=True)
-                            self.select=[]
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_m:
-                            self.t = 2
-                            self.view = 4
-                        if event.key == pygame.K_t and len(self.select) == 2:
-                            self.game.transfert_troupes(self.select[0], self.select[1],1)
-                            self.deplacement = False
-                        #reverifier si le déplacement est facultatif
-                        if event.key == pygame.K_RETURN :
-                            self.end_turn()
-
+                            
+                    
+                       
                 elif self.view == 3: #win
                     self.afficher_fenetre()
                     self.display_dice = False
@@ -285,6 +313,20 @@ class PygameWindow(pygame.Surface):
         self.minus = pygame.image.load("Pictures/minus.png").convert_alpha()
         self.minus = pygame.transform.scale(self.minus,(55,60))
         self.minus_mask = pygame.mask.from_surface(self.minus)
+        #bouton next
+        self.next = pygame.image.load("Pictures/next.png").convert_alpha()
+        self.next = pygame.transform.scale(self.next,(50,50))
+        self.next_mask = pygame.mask.from_surface(self.next)
+        #bouton attaque
+        self.attack = pygame.image.load("Pictures/attack.png").convert_alpha()
+        self.attack = pygame.transform.scale(self.attack,(50,50))
+        self.attack_mask = pygame.mask.from_surface(self.attack)
+        #bouton transfert
+        self.transfert = pygame.image.load("Pictures/transfert.png").convert_alpha()
+        self.transfert = pygame.transform.scale(self.transfert,(50,50))
+        self.transfert_mask = pygame.mask.from_surface(self.transfert)
+
+
 
     def charger_coord_texte(self):
         with open('Fichiers/coords.json', 'r', encoding='utf-8') as f:
@@ -301,13 +343,24 @@ class PygameWindow(pygame.Surface):
         self.window.blit(self.water, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         self.window.blit(self.lines, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         self.window.blit(self.adios,(int(self.fen_width-self.adios.get_size()[0]-5),5))
+        self.window.blit(self.next,(int(self.fen_width-80),int(self.fen_height-80)))
         self.add_borders() #ajoute les bordures noires
         self.add_texts() #ajoute les texts
-        if self.view == 1:
+        if self.view == 0: #renforcement
+            #affichage boutons + et - (juste pendant renforcement)
+            self.window.blit(self.plus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90,200))
+            self.window.blit(self.minus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) +30 ,200))
+        elif self.view == 1: #attaque
             self.selnbr_des.draw(self.window)   # Dessiner le sélecteur du nombre de dés
             self.selnbr_troupes.draw(self.window)   # Dessiner le sélecteur du nombre de troupes
             self.affiche_des(self.selnbr_des.etat) # met à jour les dés
-        
+            
+            #affichage icone attaque
+            self.window.blit(self.attack,(int(self.fen_width-150),int(self.fen_height-80)))
+
+        elif self.view == 2: #deplacement
+            self.window.blit(self.transfert,(int(self.fen_width-150),int(self.fen_height-80)))
+
         #territoires
         for country in self.game.li_territoires_obj:
             self.window.blit(country.surface, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
@@ -364,7 +417,9 @@ class PygameWindow(pygame.Surface):
         surface = country.surface
         width, height = surface.get_size()
         light = country.selec #recupere l'etat du pays (selec ou non)
-    
+
+        #si la liste et vide on deselectionne tous les pays séléctionés avant
+
         
         
         r,g,b = country.color
@@ -468,10 +523,18 @@ class PygameWindow(pygame.Surface):
         text1 = "Combien de Troupes ?"
         text2 = "Combien de Dés ?"
         
-        if self.view == 1:   
+        if self.view == 0: #renfo
+            self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(0.625*self.fen_width, 0.917*self.fen_height))  
+            #affichage nombre de troupes a repartir
+            nbr_restant = self.a_qui_le_tour.troupe_a_repartir
+            self.window.blit(self.text_font_big.render(str(nbr_restant), True, (255, 255, 255)), ((int((2*self.fen_width/(self.pos_reduc)-10)/2) - 30,300)))
+        elif self.view == 1: #attaque
+            self.window.blit(self.text_font.render(f"Phase d'attaque", True, (255, 255, 255)), (0.625*self.fen_width, 0.917*self.fen_height))
             self.window.blit(self.text_font.render(text1, True, (255, 255, 255)), (120,318))
             self.window.blit(self.text_font.render(text2, True, (255, 255, 255)), (120,468))
-
+        elif self.view == 2: #deplacement
+            self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (0.625*self.fen_width, 0.917*self.fen_height))
+                    
         #Affiche les pays selectionnés et le joueur associé
         text4 = "Pays selectionnés :"
         self.window.blit(self.text_font.render(text4, True, (255, 255, 255)), (35,670))

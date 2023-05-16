@@ -97,7 +97,7 @@ class MainMenu :
         self.LabelJoueur = tk.Label(self.root, text='NOMBRE DE JOUEURS', font=self.Impact25, bg="grey")
         self.LabelJoueur.pack(pady=40)
         self.NbrJoueur = tk.DoubleVar()
-        self.ChoixJoueur = tk.Scale(self.root, orient='horizontal', from_=2, to=6, resolution=1, tickinterval=1,
+        self.ChoixJoueur = tk.Scale(self.root, orient='horizontal', from_=3, to=6, resolution=1, tickinterval=1,
                                     length=400, variable=self.NbrJoueur, font=self.Impact25, bg='grey',
                                     activebackground='grey', highlightbackground='grey', showvalue=False,
                                     troughcolor='red', width=20)

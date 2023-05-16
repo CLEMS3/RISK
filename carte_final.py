@@ -71,7 +71,7 @@ class PygameWindow(pygame.Surface):
                 #fermeture de la fenêtre
                 if event.type == pygame.QUIT:
                     running = False
-                elif event.type == pygame.MOUSEBUTTONDOWN and self.closebutton_rect.collidepoint(pygame.mouse.get_pos()):
+                elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.closebutton_rect.collidepoint(pygame.mouse.get_pos()):
                     running = False
 
                 #différentes vues
@@ -86,7 +86,7 @@ class PygameWindow(pygame.Surface):
                     #affichage boutons + et - (juste pendant renforcement)
                     self.window.blit(self.plus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90,200))
                     self.window.blit(self.minus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) +30 ,200))
-                    if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
 
 
                         #clic sur bouton +
@@ -155,7 +155,7 @@ class PygameWindow(pygame.Surface):
                     self.afficher_fenetre()
                     self.display_dice = True
                     self.window.blit(self.text_font.render(f"Phase d'attaque", True, (255, 255, 255)), (0.625*self.fen_width, 0.917*self.fen_height))
-                    if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
 
                         #selecteur nombre de regiment
                         #TODO changer l'ordre ou ça blit pour pas qu'il y a une sperposition bizzare
@@ -207,7 +207,7 @@ class PygameWindow(pygame.Surface):
                     self.afficher_fenetre()
                     self.display_dice = False
                     self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (0.625*self.fen_width, 0.917*self.fen_height))
-                    if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
                         for country in self.game.li_territoires_obj:
                             try:
                                 scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
@@ -336,9 +336,7 @@ class PygameWindow(pygame.Surface):
        avec les mask 
        '''
        for country in self.game.li_territoires_obj:
-            surface = country.surface
-            width, height = surface.get_size()
-        
+            
             for i in range(len(self.liste_joueurs_obj)): #associe une couleur à un joueur
                 if country.joueur == self.liste_joueurs_obj[i]: 
                     color = self.colors[i]
@@ -392,6 +390,14 @@ class PygameWindow(pygame.Surface):
         new_surface.fill((r,g,b), special_flags=pygame.BLEND_RGBA_MULT)
         country.surface = new_surface
         
+    def changer_couleur(self,country,color):
+        '''change la couleur du territoire avec la couleur entrée en parametre sous la forme (r,g,b)'''
+        surface_mask = country.mask #recupere le mask du pays
+        #turn mask to surface
+        new_surface = surface_mask.to_surface() #creer une surface noir et blanc depuis le mask (noir = pixel vide, blanc = pixel utilisé)
+        new_surface.set_colorkey((0,0,0)) #efface le noir
+        new_surface.fill(color, special_flags=pygame.BLEND_RGBA_MULT)
+
     def select_deux_surface(self, country):
         """
         permet la sélection de deux territoires en les ajoutant à la liste select.

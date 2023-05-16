@@ -419,8 +419,8 @@ class PygameWindow(pygame.Surface):
         self.deplacement = True
         self.view = 0 if self.a_qui_le_tour in self.tour_initial else 1
         if self.view == 0 : 
-            for territoire in self.li_territoires: 
-                self.nb_troupes_minimum[territoire]=self.territoire.nb_troupes
+            for territoire in self.game.li_territoires: 
+                self.game.nb_troupes_minimum[territoire]=self.game.li_territoires_obj[territoire].nombre_troupes
         self.select=[]
 
     def next_player(self):

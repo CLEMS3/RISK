@@ -457,6 +457,13 @@ class Game:
             else:
                 i.mission = Mission(type, i.nom, self.li_territoires_obj)
 
+    def get_territoire_object(self,nom_territoire):
+        territoire_obj=None
+        for territoire in self.li_territoires_obj :
+            if territoire.nom_territoire == nom_territoire : 
+                territoire_obj=territoire
+        return territoire_obj
+    
     def get_player(self, str):
         for player in self.liste_joueurs:
             print(f"Dans get_player, le type de player est {type(player)}")

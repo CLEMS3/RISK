@@ -25,7 +25,7 @@ class PygameWindow(pygame.Surface):
         # Taille de l'écran
         self.fen_width, self.fen_height = pygame.display.get_surface().get_size() #640, 480
 
-        self.view = 0 #Renforcement : 0, attaque : 1, déplacement de troupe : 2, win : 3, mission : 4
+        self.view = 3 #Renforcement : 0, attaque : 1, déplacement de troupe : 2, win : 3, mission : 4
 
         #facteur de reduction
         self.fac_reduc = 1.5 ###PENSER A MODIFIER DANS FICHIER RULES 
@@ -266,6 +266,7 @@ class PygameWindow(pygame.Surface):
                        
                 elif self.view == 3: #win
                     self.afficher_fenetre()
+                    self.window.blit(self.ecran_victoire, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
                     self.display_dice = False
                     
                     if event.type == pygame.KEYDOWN:
@@ -326,6 +327,8 @@ class PygameWindow(pygame.Surface):
         self.transfert = pygame.image.load("Pictures/transfert.png").convert_alpha()
         self.transfert = pygame.transform.scale(self.transfert,(50,50))
         self.transfert_mask = pygame.mask.from_surface(self.transfert)
+        self.ecran_victoire = pygame.image.load("Images/ecran_victoire.jpg").convert_alpha()
+        self.ecran_victoire = pygame.transform.scale(self.ecran_victoire, (int(self.fen_width/(self.fac_reduc)-5), int(self.fen_height/(self.fac_reduc))))
 
 
 

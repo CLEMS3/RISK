@@ -25,7 +25,7 @@ class PygameWindow(pygame.Surface):
         # Taille de l'écran
         self.fen_width, self.fen_height = pygame.display.get_surface().get_size() #640, 480
 
-        self.view = 3 #Renforcement : 0, attaque : 1, déplacement de troupe : 2, win : 3, mission : 4
+        self.view = 0 #Renforcement : 0, attaque : 1, déplacement de troupe : 2, win : 3, mission : 4
 
         #facteur de reduction
         self.fac_reduc = 1.5 ###PENSER A MODIFIER DANS FICHIER RULES 
@@ -57,8 +57,8 @@ class PygameWindow(pygame.Surface):
         # Sélecteur de nombres
         self.init_couleurs()
         self.selnbr_troupes = widgets.selectNB((15, 300), 1, 1, 5) #max variable => à modifier
-        self.selnbr_des = widgets.selectNB((15, 450), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection
-
+        self.selnbr_des1 = widgets.selectNB((15, 450), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection #RELATIF
+        self.selnbr_des2 = widgets.selectNB((15, 500), 1, 1, 2) #RELATIF
 
 
     def main_loop(self):
@@ -88,6 +88,7 @@ class PygameWindow(pygame.Surface):
                                         print("plus")
                                         self.select[0].nombre_troupes += 1 #ajout de la troupe sur le pays
                                         self.a_qui_le_tour.troupe_a_repartir -= 1 #retrait d'une troupe dans la liste des troupes a ajouter
+                                    else :  self.barre_texte.changer_texte("Vous n'avez plus de troupes à répartir.", err=True, forceupdate=True)
                                 else:
                                     self.barre_texte.changer_texte("Ce territoire ne vous appartient pas.", err=True, forceupdate=True)
                         except IndexError: pass
@@ -100,6 +101,9 @@ class PygameWindow(pygame.Surface):
                                         print("moins")
                                         self.select[0].nombre_troupes -= 1
                                         self.a_qui_le_tour.troupe_a_repartir += 1
+                                    else :  self.barre_texte.changer_texte(f"Vous ne pouvez pas avoir moins de {self.game.nb_troupes_minimum[self.select[0].nom_territoire]} troupes sur ce territoire.", err=True, forceupdate=True)
+                                else:
+                                    self.barre_texte.changer_texte("Ce territoire ne vous appartient pas.", err=True, forceupdate=True)
                         except IndexError: pass 
                         
                        
@@ -158,14 +162,23 @@ class PygameWindow(pygame.Surface):
                             self.selnbr_troupes.decrement()
                         self.selnbr_troupes.draw(self.window)
 
-                        #selecteur nombre de dés
-                        if self.selnbr_des(pygame.mouse.get_pos()) == 0:
-                            self.selnbr_des.increment()
+                        #selecteur nombre de dés 1 : attaque
+                        if self.selnbr_des1(pygame.mouse.get_pos()) == 0:
+                            self.selnbr_des1.increment()
                             shuffle(self.dice_list) #change les faces de dés affichées
-                        elif self.selnbr_des(pygame.mouse.get_pos()) == 1:
-                            self.selnbr_des.decrement()
+                        elif self.selnbr_des1(pygame.mouse.get_pos()) == 1:
+                            self.selnbr_des1.decrement()
                             shuffle(self.dice_list) #change les faces de dés affichées
-                        self.selnbr_des.draw(self.window)
+                        self.selnbr_des1.draw(self.window)
+
+                        #selecteur nombre de dés 2 : défence
+                        if self.selnbr_des2(pygame.mouse.get_pos()) == 0:
+                            self.selnbr_des2.increment()
+                            shuffle(self.dice_list) #change les faces de dés affichées
+                        elif self.selnbr_des2(pygame.mouse.get_pos()) == 1:
+                            self.selnbr_des2.decrement()
+                            shuffle(self.dice_list) #change les faces de dés affichées
+                        self.selnbr_des2.draw(self.window)
 
                         #check clic sur pays
                         for country in self.game.li_territoires_obj:
@@ -186,9 +199,7 @@ class PygameWindow(pygame.Surface):
                                 if len(self.select) == 2:
                                     print("attaque")
                                     self.game.attaque(self.select[0], self.select[1]) #parametres a changer ##TEMPORAIRE
-                                    self.changer_lumi(self.select[0])
-                                    self.changer_lumi(self.select[1])
-                                    self.select=[]
+                                    self.empty_select()
                                     #AJOUTER MESSAGE ERREUR SUR BARRE VITTO > voir rules.py
                                     # à adapter
                         except IndexError : pass
@@ -199,11 +210,7 @@ class PygameWindow(pygame.Surface):
                             if self.next_mask.get_at(scaled_pos):
                                 self.view = 2
                                 self.barre_texte.changer_texte("Fin de la phase d'attaque", err=True, forceupdate=True)
-                                
-                                for counrty in self.select: #on deselectionne aussi au niveau des couleurs (pas propre mais fonctionne pour l'instant)
-                                    self.changer_lumi(country)
-
-                                self.select=[]
+                                self.empty_select()
 
                         except IndexError : pass
 
@@ -347,13 +354,16 @@ class PygameWindow(pygame.Surface):
         self.add_texts() #ajoute les texts
         if self.view == 0: #renforcement
             #affichage boutons + et - (juste pendant renforcement)
-            self.window.blit(self.plus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90,200))
-            self.window.blit(self.minus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) +30 ,200))
+            self.window.blit(self.plus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90,200)) #RELATIF
+            self.window.blit(self.minus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) +30 ,200))#RELATIF
         elif self.view == 1: #attaque
-            self.selnbr_des.draw(self.window)   # Dessiner le sélecteur du nombre de dés
+            self.selnbr_des1.draw(self.window)   # Dessiner le sélecteur du nombre de dés d'attaque
             self.selnbr_troupes.draw(self.window)   # Dessiner le sélecteur du nombre de troupes
-            self.affiche_des(self.selnbr_des.etat) # met à jour les dés
-            
+            self.affiche_des1(self.selnbr_des1.etat) # met à jour les dés
+            self.selnbr_des2.draw(self.window)   # Dessiner le sélecteur du nombre de dés de defence
+            self.affiche_des2(self.selnbr_des2.etat) # met à jour les dés
+
+
             #affichage icone attaque
             self.window.blit(self.attack,(int(self.fen_width-150),int(self.fen_height-80)))
 
@@ -373,14 +383,21 @@ class PygameWindow(pygame.Surface):
 
 
 
-    def affiche_des(self, valeur):
+    def affiche_des1(self, valeur): #ATTAQUE
         '''affiche le nombre de dés nécésaires selon le choix du joueur, affiche une valeur aléatoire'''
         if self.view == 1 :
             x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 150 #pour centrer les 3 dés
-            pos = [(x,550),(x+120, 550),(x+240,550)] #écart de 120pixel entre les x (60 entre chaque dés)
-            for i in range(valeur):
+            pos = [(x,550),(x+120, 550),(x+240,550)] #écart de 120pixel entre les x (60 entre chaque dés) #RELATIF
+            for i in range(valeur): 
                 self.window.blit(self.dice[self.dice_list[i]],pos[i]) #affiche une face du dé aléatoire
 
+    def affiche_des2(self, valeur): #DEFENCE
+        '''affiche le nombre de dés nécésaires selon le choix du joueur, affiche une valeur aléatoire'''
+        if self.view == 1 :
+            x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 150 #pour centrer les 3 dés
+            pos = [(x,650),(x+120, 650),(x+240 , 650)] #écart de 120pixel entre les x (60 entre chaque dés) #RELATIF
+            for i in range(valeur):
+                self.window.blit(self.dice[self.dice_list[i+2]],pos[i]) #affiche une face du dé aléatoire
 
 
     def init_couleurs(self):
@@ -417,10 +434,6 @@ class PygameWindow(pygame.Surface):
         surface = country.surface
         width, height = surface.get_size()
         light = country.selec #recupere l'etat du pays (selec ou non)
-
-        #si la liste et vide on deselectionne tous les pays séléctionés avant
-
-        
         
         r,g,b = country.color
         
@@ -467,8 +480,7 @@ class PygameWindow(pygame.Surface):
             select = select [:-1]
             self.changer_lumi(country)
         elif len(select)==1 and country== select[0]:
-            select = []
-            self.changer_lumi(country)
+            self.empty_select
         self.select = select
 
     def end_turn(self):
@@ -487,9 +499,16 @@ class PygameWindow(pygame.Surface):
         if self.view == 0 : 
             for territoire in self.game.li_territoires: 
                 self.game.nb_troupes_minimum[territoire]=self.game.get_territoire_object(territoire).nombre_troupes
-        self.select=[]
+        self.empty_select()
+
+    def empty_select(self):
+        """vide self.select et deselectionne les pays"""
+        for country in self.select:
+            self.changer_lumi(country)
+        self.select = []
 
     def next_player(self):
+        '''passe au joueur suivant dans la partie'''
         if self.liste_joueurs_obj[-1] == self.a_qui_le_tour:
             self.a_qui_le_tour = self.liste_joueurs_obj[0]
         else:
@@ -506,7 +525,7 @@ class PygameWindow(pygame.Surface):
         self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
         if self.view == 1:  #si phase attaque
             #bordure dés
-            pygame.draw.rect (self.window, (0,0,0), (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 180, 520, 360, 120),4)
+            pygame.draw.rect (self.window, (0,0,0), (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 180, 520, 360, 120),4) #RELATIF
 
     def add_texts(self):
         #TODO mettre les positions des textes en relatif
@@ -527,22 +546,22 @@ class PygameWindow(pygame.Surface):
             self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(0.625*self.fen_width, 0.917*self.fen_height))  
             #affichage nombre de troupes a repartir
             nbr_restant = self.a_qui_le_tour.troupe_a_repartir
-            self.window.blit(self.text_font_big.render(str(nbr_restant), True, (255, 255, 255)), ((int((2*self.fen_width/(self.pos_reduc)-10)/2) - 30,300)))
+            self.window.blit(self.text_font_big.render(str(nbr_restant), True, (255, 255, 255)), ((int((2*self.fen_width/(self.pos_reduc)-10)/2) - 30,300))) #RELATIF
         elif self.view == 1: #attaque
             self.window.blit(self.text_font.render(f"Phase d'attaque", True, (255, 255, 255)), (0.625*self.fen_width, 0.917*self.fen_height))
-            self.window.blit(self.text_font.render(text1, True, (255, 255, 255)), (120,318))
-            self.window.blit(self.text_font.render(text2, True, (255, 255, 255)), (120,468))
+            self.window.blit(self.text_font.render(text1, True, (255, 255, 255)), (120,318))#RELATIF
+            self.window.blit(self.text_font.render(text2, True, (255, 255, 255)), (120,468))#RELATIF
         elif self.view == 2: #deplacement
             self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (0.625*self.fen_width, 0.917*self.fen_height))
                     
         #Affiche les pays selectionnés et le joueur associé
         text4 = "Pays selectionnés :"
-        self.window.blit(self.text_font.render(text4, True, (255, 255, 255)), (35,670))
+        self.window.blit(self.text_font.render(text4, True, (255, 255, 255)), (35,670)) #RELATIF
         select = self.select
         select_name = []
         select_player = []
         if select != []: #si un joueur selectionne un pays
-            pos = [(35,710),(35,750),(250,710),(250,750)] 
+            pos = [(35,710),(35,750),(250,710),(250,750)]  #RELATIF
             for country in select:
                 select_name.append(country.nom_territoire)
                 select_player.append(country.joueur.nom)

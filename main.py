@@ -117,7 +117,7 @@ class MainMenu :
         test.sort(reverse=True) #liste des nombre de victoire par ordre décroissant
         self.liste_classe=[]
         tempo = list(self.liste_joueurs)
-        #print(test)
+        
         try:
             for i in range(5): #fais un top 5
                 for player in tempo:
@@ -294,7 +294,7 @@ class MainMenu :
                         self.buttonPlayer[i]['state']='disabled' #desactive le bouton
                         self.loged_in.append(joueur) #ajoute le pseudo dans la liste des joueurs connecté (pour ne pas le reconnecter)
                         self.OUT.append(player) #ajoute l'objet correspondant au joueur dans la liste de sortie
-                        print(self.loged_in)
+                        
 
                     else:
                         

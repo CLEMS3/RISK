@@ -42,8 +42,6 @@ class PygameWindow(pygame.Surface):
         self.barre_texte.changer_texte("Bonjour ! Ceci est une barre de texte pour afficher des messages.")
 
         self.game = Rules.Game(self.liste_joueurs_obj, self.fen_width, self.fen_height, self.barre_texte)
-        print(len(self.game.li_territoires_obj))
-        print(type(self.liste_joueurs_obj))
         self.a_qui_le_tour = choice(self.liste_joueurs_obj) #celui qui commence
         self.text_font = pygame.font.Font("Fonts/ARLRDBD.TTF", 20)
         self.text_font_big = pygame.font.Font("Fonts/ARLRDBD.TTF", 50)
@@ -122,9 +120,7 @@ class PygameWindow(pygame.Surface):
                         try:
                             scaled_pos = (event.pos[0]-(self.fen_width-80),event.pos[1]-(self.fen_height-80))
                             if self.next_mask.get_at(scaled_pos):
-                                print(self.placement_initial)
-                                print(f"len(self.placement_initial) = {len(self.placement_initial)}")
-                                print(f"len(self.liste_joueurs_obj) = {len(self.liste_joueurs_obj)}")
+                        
                                 #si toutes les troupes sont placées
                                 if self.a_qui_le_tour.troupe_a_repartir == 0:
                                     self.changer_lumi(self.select[0])
@@ -178,7 +174,7 @@ class PygameWindow(pygame.Surface):
                                 if country.mask.get_at(scaled_pos):
                                     print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                                     self.select_deux_surface(country)
-                                    print(self.select)
+                                    
 
                             except IndexError:
                                 pass
@@ -233,8 +229,6 @@ class PygameWindow(pygame.Surface):
                                 if country.mask.get_at(scaled_pos):
                                     print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                                     self.select_deux_surface(country)
-                                    print(self.select)
-
                             except IndexError:
                                 pass
 
@@ -429,14 +423,14 @@ class PygameWindow(pygame.Surface):
         
         
         r,g,b = country.color
-        print(r,g,b)
+        
         if light == 0: #on veut assombrir l'image
             country.selec = 1
             
             r = int(r/1.5)
             g = int(g/1.5)
             b= int(b/1.5)
-            print(r,g,b)
+            
             country.color = (r,g,b)
         elif light==1: #on veut eclaircir l'image
             country.selec = 0
@@ -565,7 +559,7 @@ if __name__ == "__main__":
     out.append(temp[0])
     out.append(temp[1])
     out.append(temp[4])
-    print(out)
+    
 
     window_pg = PygameWindow((menu.WIDTH, menu.HEIGHT), out)
 

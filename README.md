@@ -7,7 +7,7 @@ TO DO
 
 OK #bouton valider et attaque @Antoine 
 
-#carte /fenetre Mission @Clement 
+Peut etre améliorée mais OK #carte /fenetre Mission @Clement 
 
 OK #ajouter condition type de clic (juste clic gauche pas MOUSBUTTONDOWN) @Antoine
 
@@ -17,9 +17,9 @@ OK #Enlever mode 2 joueurs @Antoine
 
 OK #Ajouter fonction changer couleur @Antoine
 
-#Retirer tous les PRINT inutils
+OK #Retirer tous les PRINT inutils
 
-#text position en relatif @Antoine
+EN COURS #text position en relatif @Antoine
 
 #Faire écran victoire @clement
 

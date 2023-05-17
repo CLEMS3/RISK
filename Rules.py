@@ -77,7 +77,6 @@ class Game:
     def init_dict_nb_troupes_minimum(self):
         nb_troupes_minimum=dict()
         for territoire in self.li_territoires:
-            print(f"->{territoire}")
             nb_troupes_minimum[territoire]=1
         return nb_troupes_minimum
 
@@ -87,7 +86,7 @@ class Game:
         Fermeture permettant de remplacer la fonction `print` en envoyant l'output dans la barre
         """
         def message(string : str, err : bool = False):
-            print(f"Message with {string}")
+            
             barre_texte.changer_texte(string, err=err, forceupdate=True)
         return message
 
@@ -217,7 +216,7 @@ class Game:
                         gagnant = 1
                     i+=1
         else : 
-            print("Vous ne pouvez pas attaquer")
+            self.print_barre("Vous ne pouvez pas attaquer")
 
     def import_territoire(self):
         with open('Fichiers/package.json', 'r', encoding='utf-8') as f:
@@ -311,7 +310,6 @@ class Game:
             territoire.joueur = joueur
             nombre_de_troupes_qu_il_reste_a_placer -= 1
             joueur.troupe_a_repartir = nombre_de_troupes_qu_il_reste_a_placer
-            print(territoire.nom_territoire)
             self.changer_couleur(territoire)
         
         #while nombre_de_troupes_qu_il_reste_a_placer > 0:
@@ -348,13 +346,13 @@ class Game:
         Vérifie si deux territoires sont adjacents
         ⚠ l'indice dans la liste est pas le même que dans le graphe
         """
-        print("vérification de l'adjacence")
+        #print("vérification de l'adjacence")
         graphe = self.graphe
         index1 = graphe[0].index(territoire1.nom_territoire)
         index2 = graphe[0].index(territoire2.nom_territoire)
-        print(graphe[index1][0])
-        print(graphe[0][index2])
-        print(graphe[index1][index2])
+        #print(graphe[index1][0])
+        #print(graphe[0][index2])
+        #print(graphe[index1][index2])
         return graphe[index1][index2] == str(1)
 
     def init_territoires(self):

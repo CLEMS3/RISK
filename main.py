@@ -13,7 +13,7 @@ except:
     subprocess.check_call([sys.executable, "-m", "pip", "install", 'pygame'])
     import pygame
 import hashlib
-import carte_final
+import carte
 import random
 
 #Menu principal
@@ -320,7 +320,7 @@ class MainMenu :
             print(self.OUT)
             if len(self.OUT) == int(self.NbrJoueur.get()):
                 # create the window
-                window_pg = carte_final.PygameWindow((self.WIDTH, self.HEIGHT), self.OUT)
+                window_pg = carte.PygameWindow((self.WIDTH, self.HEIGHT), self.OUT)
 
                 # run the main loop
                 window_pg.main_loop()
@@ -388,7 +388,7 @@ class MainMenu :
         self.OUT2.append(self.liste_joueurs[1])
         self.OUT2.append(self.liste_joueurs[2])
         
-        window_pg = carte_final.PygameWindow((self.WIDTH, self.HEIGHT), self.OUT2)
+        window_pg = carte.PygameWindow((self.WIDTH, self.HEIGHT), self.OUT2)
         # run the main loop
         window_pg.main_loop()
         pygame.quit()

@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 import csv
-import time
 import tkinter.font
 from tkinter.scrolledtext import ScrolledText
 #importation de pygame, et installation du module si il n'est pas déjà installé

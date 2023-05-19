@@ -1,10 +1,6 @@
-import random
-import asyncio
 import pygame
 from pygame.locals import *
-import glob
-from random import randint, choice, shuffle
-import time
+from random import choice, shuffle
 import json
 import Rules
 import widgets

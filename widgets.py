@@ -113,6 +113,8 @@ class barreTexte():
     Kwargs :
     - couleur_texte <tuple> : Couleur d'affichage du texte (défaut : blanc)
     - couleur_contour <tuple> : Couleur du contour de la barre (défaut : rouge)
+    - epaisseur <int> : Épaisseur de la bordure
+    - police <int> : Taille de police
 
     Attributs
     ---------
@@ -121,6 +123,7 @@ class barreTexte():
     - COULEUR_CONTOUR <tuple> : Couleur du contour de la barre
     - COULEUR_TEXTE <tuple> : Couleur d'affichage du texte
     - POSITION <tuple> : Position du coin supérieur droit de la barre sur `surface`
+    - EPAISSEUR <int> : Épaisseur de la bordure
     - chaine <str> : Valeur actuelle de la chaine de caractères affichée
     - der_pas_err <str> : Dernier messages affiché (par opposition à une erreur)
     - err <bool> : Affiche-t-on actuellement une erreur ?
@@ -130,7 +133,7 @@ class barreTexte():
     - police_obj <pygame.font.Font> : Objet pygame de la police utilisée
     """
     
-    def __init__(self, surface : pygame.Surface, position : tuple, longueur : int, hauteur : int, couleur_texte : tuple = (255,255,255), couleur_contour : tuple = (255,255,255)):
+    def __init__(self, surface : pygame.Surface, position : tuple, longueur : int, hauteur : int, couleur_texte : tuple = (255,255,255), couleur_contour : tuple = (255,255,255), epaisseur : int = 3, police : int = None):
 
         # Paramètres/Variables
         self.LONGUEUR_BARRE = int(longueur)
@@ -138,6 +141,7 @@ class barreTexte():
         self.COULEUR_CONTOUR = couleur_contour
         self.COULEUR_TEXTE = couleur_texte
         self.POSITION = position
+        self.EPAISSEUR = int(epaisseur)
         self.chaine = ""                                                                                    # Initialisation de la chaîne de caractères
         self.der_pas_err = ""                                                                               # Dernier message affiché n'étant pas une erreur   
         self.err = False                                                                                    # Le message actuellement affiché est-il une erreur ?  
@@ -147,17 +151,17 @@ class barreTexte():
 
         # Police
         police_chemin = "./Fonts/Monocraft.ttf"
-        police_taille = 19
+        police_taille = int((19/30)*self.HAUTEUR_BARRE) if (police == None) else police
         self.police_obj = pygame.font.Font(police_chemin, police_taille)
 
 
-    def changer_texte(self, nouveau : str, err : bool = False, forceupdate : bool = False):
+    def changer_texte(self, nouveau : list, err : bool = False, forceupdate : bool = False):
         """
         Changer le texte contenu dans la barre
 
         Arguments
         ---------
-        - nouveau <str> : Nouveau texte
+        - nouveau <list> : Nouveau texte, liste de chaînes, une chaîne par ligne
         - err <bool> : Le message est-il une erreur ?
         - forceupdate <bool> : Si True, rafraîchit la fenêtre en plus de mettre à jour le texte
         """
@@ -173,7 +177,7 @@ class barreTexte():
             self.der_pas_err = nouveau              # Pareil
 
         # Mise à jour de la chaîne
-        self.chaine = str(nouveau)
+        self.chaine = nouveau
 
         # Si mode forcer le rafraîchissement, on rafraîchit
         if forceupdate == True:
@@ -191,12 +195,14 @@ class barreTexte():
             self.changer_texte(self.der_pas_err)
 
         # Barre et contour
-        self.surface_barre.fill((255,255,255,0))                                                                        # Transparence
-        pygame.draw.rect(self.surface_barre, self.COULEUR_CONTOUR, [0, 0, self.LONGUEUR_BARRE, self.HAUTEUR_BARRE], 3)  # Création du contour
+        self.surface_barre.fill((255,255,255,0))                                                                                    # Transparence
+        pygame.draw.rect(self.surface_barre, self.COULEUR_CONTOUR, [0, 0, self.LONGUEUR_BARRE, self.HAUTEUR_BARRE], self.EPAISSEUR) # Création du contour
         self.surface.blit(self.surface_barre, self.POSITION)
 
         # Texte
-        texte = self.police_obj.render(self.chaine, True, self.COULEUR_TEXTE)
-        rect_texte = texte.get_rect(center=(self.LONGUEUR_BARRE/2, self.HAUTEUR_BARRE/2))
-        self.surface_barre.blit(texte, rect_texte)
-        self.surface.blit(self.surface_barre, self.POSITION)
+        hauteur = self.HAUTEUR_BARRE/(len(self.chaine) + 1)                             # Calcul de l'intervalle entre chaque ligne
+        for cptr, chaine in enumerate(self.chaine):                                     # Placement des lignes
+            texte = self.police_obj.render(chaine, True, self.COULEUR_TEXTE)
+            rect_texte = texte.get_rect(center=(self.LONGUEUR_BARRE/2, (cptr+1)*hauteur))
+            self.surface_barre.blit(texte, rect_texte)
+            self.surface.blit(self.surface_barre, self.POSITION)

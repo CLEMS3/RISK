@@ -19,7 +19,7 @@ OK #Ajouter fonction changer couleur @Antoine
 
 OK #Retirer tous les PRINT inutils
 
-EN COURS #text position en relatif @Antoine
+OK #text position en relatif @Antoine
 
 #Faire écran victoire @clement
 

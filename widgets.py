@@ -130,7 +130,7 @@ class barreTexte():
     - police_obj <pygame.font.Font> : Objet pygame de la police utilisée
     """
     
-    def __init__(self, surface : pygame.Surface, position : tuple, longueur : int, hauteur : int, couleur_texte : tuple = (255,255,255), couleur_contour : tuple = (255,0,0)):
+    def __init__(self, surface : pygame.Surface, position : tuple, longueur : int, hauteur : int, couleur_texte : tuple = (255,255,255), couleur_contour : tuple = (255,255,255)):
 
         # Paramètres/Variables
         self.LONGUEUR_BARRE = int(longueur)

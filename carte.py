@@ -354,7 +354,8 @@ class PygameWindow(pygame.Surface):
             self.window.blit(self.lines, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         self.window.blit(self.adios,(int(self.fen_width-self.adios.get_size()[0]-5),5))
         self.window.blit(self.next,(int(self.fen_width-80),int(self.fen_height-80)))
-        self.add_borders() #ajoute les bordures noires
+        self.barre_info = self.add_borders() #ajoute les bordures noires
+        self.barre_info.changer_texte("Test !")
         self.add_texts() #ajoute les texts
         if self.view == 0: #renforcement
             #affichage boutons + et - (juste pendant renforcement)
@@ -379,9 +380,6 @@ class PygameWindow(pygame.Surface):
             #régiments
             for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
                 self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (0, 0, 0)),(self.coords[country.nom_territoire][0]*self.fen_width/(self.fac_reduc)+2*int(self.fen_width/(self.pos_reduc)), self.coords[country.nom_territoire][1]*self.fen_height/(self.fac_reduc)+int(self.fen_height/(self.pos_reduc))))#{country.nombre_troupes}
-
-        # Barre de texte
-        self.barre_texte.afficher_texte()
 
 
     def affiche_des1(self, valeur): #ATTAQUE
@@ -514,13 +512,16 @@ class PygameWindow(pygame.Surface):
         pygame.draw.rect(self.window, (0,0,0), (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc)),int(self.fen_width/(self.fac_reduc)-5),int(self.fen_height/(self.fac_reduc))),3)
         #bordure controles
         pygame.draw.rect(self.window, (0,0,0),(5,5, int(2*self.fen_width/(self.pos_reduc)-10),int(self.fen_height - 10)),4)
-        #bordure info succes    
-        pygame.draw.rect(self.window, (0,0,0),(int(2*self.fen_width/(self.pos_reduc)),5,int(self.fen_width/(self.fac_reduc)-int(self.fen_height/(self.pos_reduc))),int(self.fen_height/(self.pos_reduc)-10)),4)
+        #bordure info succes
+        barre_info = widgets.barreTexte(self.window, (0.333*self.fen_width, 0.0025*self.fen_height), self.water.get_size()[0], self.fen_height*0.2, epaisseur=4, couleur_contour=(0,0,0), police=27)    
+        # pygame.draw.rect(self.window, (0,0,0),(int(2*self.fen_width/(self.pos_reduc)),5,int(self.fen_width/(self.fac_reduc)-int(self.fen_height/(self.pos_reduc))),int(self.fen_height/(self.pos_reduc)-10)),4)
         #bordure adios
         self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
         if self.view == 1:  #si phase attaque
             #bordure dés
             pygame.draw.rect (self.window, (0,0,0), (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 180, int(0.602*self.fen_height), int(0.23*self.fen_width), int(0.139*self.fen_height)),4) 
+
+        return barre_info
 
     def add_texts(self):
         '''ajoute tous les textes necessaires durant la partie'''
@@ -566,6 +567,11 @@ class PygameWindow(pygame.Surface):
             for i in range(len(select)):
                 self.window.blit(self.text_font.render(select_name[i]+", appartient à "+select_player[i], True, (255, 255, 255)), pos[i]) #place le nom du pays + propriétaire
 
+        # Barre de texte
+        self.barre_texte.afficher_texte()
+
+        # Barre info
+        self.barre_info.afficher_texte()
 
 
 if __name__ == "__main__":

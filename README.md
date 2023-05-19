@@ -21,7 +21,7 @@ OK #Retirer tous les PRINT inutils
 
 EN COURS #text position en relatif @Antoine
 
-#Faire écran victoire @clement
+OK #Faire écran victoire @clement
 
 #son/musique @Vittore
 

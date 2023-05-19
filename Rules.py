@@ -9,6 +9,7 @@ import json
 import csv
 import pygame
 import widgets
+from math import inf
 
 
 def des():
@@ -481,6 +482,71 @@ class Game:
             for y in range(height):
                 a = country.surface.get_at((x, y))[3]  # obtient la valeur de la couleur de ce pixel, et le [3] prend donc le 4ème élement, ce qui correspond à la valeur de transparence du pixel
                 country.surface.set_at((x, y), pygame.Color(r, g, b,a))  # défini la couleur du pixel selon les valeurs de rgb donné en paramètre, et avec la valeur de transparence initiale
+
+    def liste_voisin(self, territoire):
+        """
+        Fonction qui retourne la liste des territoires voisins d'un territoire donné
+        """
+        liste_voisin = []
+        for i_territoire in self.li_territoires_obj:
+            if self.verification_adjacence(territoire, i_territoire):
+                liste_voisin.append(i_territoire)
+        return liste_voisin
+
+    def suggestion_trajet(self, territoire_depart, territoire_arrivee):
+        """
+        Fonction qui permet de suggérer le trajet le plus court entre deux territoires
+        à l'aide de l'algorithme de Dijkstra
+        on considère que le poids d'une arrête est le nombre de troupes présentes sur le territoire d'arrivée
+        """
+
+        #initialisation des variables
+        candidats = self.liste_territoires_obj.copy()
+
+        graphe = {}
+        for territoire in self.liste_territoires_obj:
+            graphe[territoire] = {}
+            for voisin in self.liste_voisin(territoire):
+                graphe[territoire][voisin] = voisin.nombre_troupes
+
+        chemins = {territoire_depart: (None, 0)} #pour un sommets, on a un tuple (prédesesseur, poids_total)
+        etapes = [territoire_depart]
+        candidats.remove(territoire_depart)
+        for sommet in candidats:
+            chemins[sommet] = (None, inf)
+
+        while candidats != []:
+            #on actualise les poids pour chaque sommet
+            """
+            On parcours tout les sommets qui n'ont pas encore été visités
+            On regarde si en passant par le dernier sommet visité, on a un poids plus faible
+            Si oui, on actualise le poids du sommet, sinon, on garde la valeur précedente
+            """
+            for sommet in candidats:
+                if sommet in graphe[chemins[-1]]:
+                    poids = chemins[-1][1] + graphe[chemins[-1]][sommet] #poids du sommet = poids du sommet précédent + poids de l'arrête
+                    if poids < chemins[sommet][1]:
+                        chemins[sommet] = (chemins[-1], poids)
+
+            #on récupère le sommet avec le poids le plus faible
+            sommet_min = candidats[0]
+            for c in candidats:
+                if chemins[c][1] < chemins[sommet_min][1]:
+                    sommet_min = c
+
+            candidats.remove(sommet_min)
+            etapes.append(sommet_min)
+
+        return etapes
+
+
+
+
+
+
+
+
+
 
 
 #A quoi ça sert ?

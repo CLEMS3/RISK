@@ -52,7 +52,7 @@ class PygameWindow(pygame.Surface):
 
         # Sélecteur de nombres
         self.init_couleurs()
-        
+        self.selnbr_troupes = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+(int(self.fen_height/(self.pos_reduc)-10))/2), 1, 1, 100)
         self.selnbr_des1 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+100), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection 
         self.selnbr_des2 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+170), 1, 1, 2) 
 
@@ -146,8 +146,6 @@ class PygameWindow(pygame.Surface):
                     
                 elif self.view == 1: #attaque
                     self.display_dice = True
-                    try : self.selnbr_troupes = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+(int(self.fen_height/(self.pos_reduc)-10))/2), 1, 1, self.select[0].nombre_troupes)  
-                    except: self.selnbr_troupes = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+(int(self.fen_height/(self.pos_reduc)-10))/2), 0, 0, 1)
                     self.afficher_fenetre()
                     
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
@@ -183,25 +181,27 @@ class PygameWindow(pygame.Surface):
                                 if country.mask.get_at(scaled_pos):
                                     print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                                     self.select_deux_surface(country)
+                                    print('ok clic pays')
                                     
 
                             except IndexError:
                                 pass
-                        print(event.pos)
-                        print(self.fen_height)
+
                         #clic sur "Attaque"
                         try:
                             scaled_pos = (event.pos[0]-(self.fen_width-150),event.pos[1]-(self.fen_height-80))
                             if self.next_mask.get_at(scaled_pos):
                                 if len(self.select) == 2:
-                                    print("attaque")
-                                    print(f"nombre de troupes : {self.selnbr_troupes.etat}")
-                                    print(f"nombre de des attaque : {self.selnbr_des1.etat}")
-                                    print(f"nombre de des defence : {self.selnbr_des2.etat}")
-                                    self.game.attaque(self.select[0], self.select[1], self.selnbr_troupes.etat, self.selnbr_des1.etat, self.selnbr_des2.etat) 
-                                    self.empty_select()
-                                    #AJOUTER MESSAGE ERREUR SUR BARRE VITTO > voir rules.py
-                                    # à adapter
+                                    if self.selnbr_troupes.etat <= self.select[0].nombre_troupes :
+                                        print("attaque")
+                                        print(f"nombre de troupes : {self.selnbr_troupes.etat}")
+                                        print(f"nombre de des attaque : {self.selnbr_des1.etat}")
+                                        print(f"nombre de des defence : {self.selnbr_des2.etat}")
+                                        self.game.attaque(self.select[0], self.select[1], self.selnbr_troupes.etat, self.selnbr_des1.etat, self.selnbr_des2.etat) 
+                                        self.empty_select()
+                                        #AJOUTER MESSAGE ERREUR SUR BARRE VITTO > voir rules.py
+                                    else:
+                                        self.barre_texte.changer_texte(["Trop de troupes selectionnées"], err=True, forceupdate=True)
                         except IndexError : pass
 
                         #clic sur next, 
@@ -216,6 +216,7 @@ class PygameWindow(pygame.Surface):
 
                     if self.select != [] : 
                         if self.select[0].joueur != self.a_qui_le_tour :
+                            self.empty_select()
                             self.barre_texte.changer_texte(["Vous ne pouvez pas attaquer avec un territoire qui ne vous appartient pas"], err=True, forceupdate=True)
                             
 
@@ -464,12 +465,14 @@ class PygameWindow(pygame.Surface):
         if select== [] or (len(select) == 1 and country != select[0]):
             select.append(country)
             self.changer_lumi(country)
-        elif len(select) == 2 and country== select[1]:
+            print('add to select')
+        elif len(select) == 2 and country == select[1]:
             select = select [:-1]
             self.changer_lumi(country)
-        elif len(select)==1 and country== select[0]:
-            self.select= []
-            self.empty_select
+            print('del last')
+        elif len(select)==1 and country == select[0]:
+            self.changer_lumi(country)
+            select = []
         self.select = select
 
     def end_turn(self):
@@ -495,6 +498,7 @@ class PygameWindow(pygame.Surface):
         for country in self.select:
             self.changer_lumi(country)
         self.select = []
+        print('ok empty') 
 
     def next_player(self):
         '''passe au joueur suivant dans la partie'''

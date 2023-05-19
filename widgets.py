@@ -177,7 +177,7 @@ class barreTexte():
             self.der_pas_err = nouveau              # Pareil
 
         # Mise à jour de la chaîne
-        self.chaine = str(nouveau)
+        self.chaine = nouveau
 
         # Si mode forcer le rafraîchissement, on rafraîchit
         if forceupdate == True:
@@ -200,7 +200,9 @@ class barreTexte():
         self.surface.blit(self.surface_barre, self.POSITION)
 
         # Texte
-        texte = self.police_obj.render(self.chaine, True, self.COULEUR_TEXTE)
-        rect_texte = texte.get_rect(center=(self.LONGUEUR_BARRE/2, self.HAUTEUR_BARRE/2))
-        self.surface_barre.blit(texte, rect_texte)
-        self.surface.blit(self.surface_barre, self.POSITION)
+        hauteur = self.HAUTEUR_BARRE/(len(self.chaine) + 1)                             # Calcul de l'intervalle entre chaque ligne
+        for cptr, chaine in enumerate(self.chaine):                                     # Placement des lignes
+            texte = self.police_obj.render(chaine, True, self.COULEUR_TEXTE)
+            rect_texte = texte.get_rect(center=(self.LONGUEUR_BARRE/2, (cptr+1)*hauteur))
+            self.surface_barre.blit(texte, rect_texte)
+            self.surface.blit(self.surface_barre, self.POSITION)

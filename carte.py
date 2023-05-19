@@ -39,7 +39,7 @@ class PygameWindow(pygame.Surface):
 
         # Barre de texte pour les messages
         self.barre_texte = widgets.barreTexte(self.window, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.fac_reduc))+5), self.water.get_size()[0], 30)
-        self.barre_texte.changer_texte("Bonjour ! Ceci est une barre de texte pour afficher des messages.")
+        self.barre_texte.changer_texte(["Bonjour ! Ceci est une barre de texte pour afficher des messages."])
 
         self.game = Rules.Game(self.liste_joueurs_obj, self.fen_width, self.fen_height, self.barre_texte)
         self.a_qui_le_tour = choice(self.liste_joueurs_obj) #celui qui commence
@@ -88,9 +88,9 @@ class PygameWindow(pygame.Surface):
                                         print("plus")
                                         self.select[0].nombre_troupes += 1 #ajout de la troupe sur le pays
                                         self.a_qui_le_tour.troupe_a_repartir -= 1 #retrait d'une troupe dans la liste des troupes a ajouter
-                                    else :  self.barre_texte.changer_texte("Vous n'avez plus de troupes à répartir.", err=True, forceupdate=True)
+                                    else :  self.barre_texte.changer_texte(["Vous n'avez plus de troupes à répartir."], err=True, forceupdate=True)
                                 else:
-                                    self.barre_texte.changer_texte("Ce territoire ne vous appartient pas.", err=True, forceupdate=True)
+                                    self.barre_texte.changer_texte(["Ce territoire ne vous appartient pas."], err=True, forceupdate=True)
                         except IndexError: pass
                         #clic sur bouton -
                         try:
@@ -101,9 +101,9 @@ class PygameWindow(pygame.Surface):
                                         print("moins")
                                         self.select[0].nombre_troupes -= 1
                                         self.a_qui_le_tour.troupe_a_repartir += 1
-                                    else :  self.barre_texte.changer_texte(f"Vous ne pouvez pas avoir moins de {self.game.nb_troupes_minimum[self.select[0].nom_territoire]} troupes sur ce territoire.", err=True, forceupdate=True)
+                                    else :  self.barre_texte.changer_texte([f"Vous ne pouvez pas avoir moins de {self.game.nb_troupes_minimum[self.select[0].nom_territoire]} troupes sur ce territoire."], err=True, forceupdate=True)
                                 else:
-                                    self.barre_texte.changer_texte("Ce territoire ne vous appartient pas.", err=True, forceupdate=True)
+                                    self.barre_texte.changer_texte(["Ce territoire ne vous appartient pas."], err=True, forceupdate=True)
                         except IndexError: pass 
                         
                        
@@ -135,7 +135,7 @@ class PygameWindow(pygame.Surface):
                                         self.placement_initial.append(self.a_qui_le_tour)
                                         self.next_player()
                                 else:
-                                    self.barre_texte.changer_texte("Il vous reste encore des troupes à répartir", err=True, forceupdate=True)
+                                    self.barre_texte.changer_texte(["Il vous reste encore des troupes à répartir"], err=True, forceupdate=True)
                         except IndexError : pass 
                     
                     #selection d'un seul pays dans la phase de renforcement         
@@ -213,14 +213,14 @@ class PygameWindow(pygame.Surface):
                             scaled_pos = (event.pos[0]-(self.fen_width-80),event.pos[1]-(self.fen_height-80))
                             if self.next_mask.get_at(scaled_pos):
                                 self.view = 2
-                                self.barre_texte.changer_texte("Fin de la phase d'attaque", err=True, forceupdate=True)
+                                self.barre_texte.changer_texte(["Fin de la phase d'attaque"], err=True, forceupdate=True)
                                 self.empty_select()
 
                         except IndexError : pass
 
                     if self.select != [] : 
                         if self.select[0].joueur != self.a_qui_le_tour :
-                            self.barre_texte.changer_texte("Vous ne pouvez pas attaquer avec un territoire qui ne vous appartient pas", err=True, forceupdate=True)
+                            self.barre_texte.changer_texte(["Vous ne pouvez pas attaquer avec un territoire qui ne vous appartient pas"], err=True, forceupdate=True)
                             
 
                     if event.type == pygame.KEYDOWN:
@@ -247,7 +247,7 @@ class PygameWindow(pygame.Surface):
                         try:
                             scaled_pos = (event.pos[0]-(self.fen_width-80),event.pos[1]-(self.fen_height-80))
                             if self.next_mask.get_at(scaled_pos):
-                                self.barre_texte.changer_texte("Fin de la phase de déplacement", err=True, forceupdate=True)
+                                self.barre_texte.changer_texte(["Fin de la phase de déplacement"], err=True, forceupdate=True)
                                 self.end_turn()
                         except IndexError : pass
 
@@ -262,10 +262,10 @@ class PygameWindow(pygame.Surface):
 
                     if self.select != [] : 
                         if self.select[0].joueur != self.a_qui_le_tour :
-                            self.barre_texte.changer_texte("Vous ne pouvez pas transférer des troupes depuis un territoire qui ne vous appartient pas", err=True, forceupdate=True)
+                            self.barre_texte.changer_texte(["Vous ne pouvez pas transférer des troupes depuis un territoire qui ne vous appartient pas"], err=True, forceupdate=True)
                             
                         if len(self.select)==2 and self.select[1].joueur != self.a_qui_le_tour :
-                            self.barre_texte.changer_texte("Vous ne pouvez pas transférer des troupes à un territoire qui ne vous appartient pas", err=True, forceupdate=True)
+                            self.barre_texte.changer_texte(["Vous ne pouvez pas transférer des troupes à un territoire qui ne vous appartient pas"], err=True, forceupdate=True)
                             
                     
                        
@@ -355,7 +355,7 @@ class PygameWindow(pygame.Surface):
         self.window.blit(self.adios,(int(self.fen_width-self.adios.get_size()[0]-5),5))
         self.window.blit(self.next,(int(self.fen_width-80),int(self.fen_height-80)))
         self.barre_info = self.add_borders() #ajoute les bordures noires
-        self.barre_info.changer_texte("Test !")
+        self.barre_info.changer_texte(["Test !", "ligne 2", "ligne 3", "ligne 4"])
         self.add_texts() #ajoute les texts
         if self.view == 0: #renforcement
             #affichage boutons + et - (juste pendant renforcement)
@@ -513,8 +513,7 @@ class PygameWindow(pygame.Surface):
         #bordure controles
         pygame.draw.rect(self.window, (0,0,0),(5,5, int(2*self.fen_width/(self.pos_reduc)-10),int(self.fen_height - 10)),4)
         #bordure info succes
-        barre_info = widgets.barreTexte(self.window, (0.333*self.fen_width, 0.0025*self.fen_height), self.water.get_size()[0], self.fen_height*0.2, epaisseur=4, couleur_contour=(0,0,0), police=27)    
-        # pygame.draw.rect(self.window, (0,0,0),(int(2*self.fen_width/(self.pos_reduc)),5,int(self.fen_width/(self.fac_reduc)-int(self.fen_height/(self.pos_reduc))),int(self.fen_height/(self.pos_reduc)-10)),4)
+        barre_info = widgets.barreTexte(self.window, (0.333*self.fen_width, 0.0053*self.fen_height), self.water.get_size()[0] - self.adios.get_size()[0] - 3, self.fen_height*0.159, epaisseur=4, couleur_contour=(0,0,0), police=27)
         #bordure adios
         self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
         if self.view == 1:  #si phase attaque

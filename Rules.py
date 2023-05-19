@@ -88,7 +88,7 @@ class Game:
         """
         def message(string : str, err : bool = False):
             
-            barre_texte.changer_texte(string, err=err, forceupdate=True)
+            barre_texte.changer_texte([string], err=err, forceupdate=True)
         return message
 
     def droit_attaque(self, territoire_attaquant, territoire_attaque):

@@ -266,10 +266,7 @@ class Game:
         Elle fait appel aux fonctions joueurs au hasard et placement_initial pour cela"""
         nb_joueurs = len(self.liste_joueurs)
         self.liste_territoires_restant = self.li_territoires_obj.copy()
-        if nb_joueurs == 2:
-            for joueur in self.liste_joueurs:
-                self.placement_initial(joueur, 40, 14)  # il faut ajouter l'armée neutre qui a le meme nombre de territoires
-        elif nb_joueurs == 3:  # et 2 régiments par territoire
+        if nb_joueurs == 3:  # et 2 régiments par territoire
             for joueur in self.liste_joueurs:
                 self.placement_initial(joueur, 35, 14)
         elif nb_joueurs == 4:

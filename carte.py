@@ -21,7 +21,7 @@ class PygameWindow(pygame.Surface):
         # Taille de l'écran
         self.fen_width, self.fen_height = pygame.display.get_surface().get_size() #640, 480
 
-        self.view = 1 #Renforcement : 0, attaque : 1, déplacement de troupe : 2, win : 3, mission : 4
+        self.view = 0 #Renforcement : 0, attaque : 1, déplacement de troupe : 2, win : 3, mission : 4
 
         #facteur de reduction
         self.fac_reduc = 1.5 ###PENSER A MODIFIER DANS FICHIER RULES 
@@ -188,11 +188,7 @@ class PygameWindow(pygame.Surface):
 
                             except IndexError:
                                 pass
-                        print(event.pos)
-                        print(self.fen_width)
-                        print(self.fen_height)   
-                        print(f"sel 1 : {int(self.fen_height/(self.pos_reduc))+(int(self.fen_height/(self.pos_reduc)-10))} ")
-                        print(f"sel 2 : {int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+140}")
+                        
 
                         #clic sur "Attaque"
                         try:

@@ -396,7 +396,7 @@ class PygameWindow(pygame.Surface):
                 for i in range(valeur): 
                     self.window.blit(self.dice[self.dice_list1[i]],pos[i]) #affiche une face du dé aléatoire
             if etat == 2: #des defence
-                x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 100 #pour centrer les 3 dés
+                x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 60 #pour centrer les 3 dés
                 y = int(0.319*self.fen_width)
                 pos = [(x,y),(x+80, y)] #écart de 120pixel entre les x (60 entre chaque dés) 
                 for i in range(valeur): 

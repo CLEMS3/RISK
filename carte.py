@@ -201,7 +201,7 @@ class PygameWindow(pygame.Surface):
                                         print(f"nombre de des attaque : {self.selnbr_des1.etat}")
                                         print(f"nombre de des defence : {self.selnbr_des2.etat}")
                                         self.game.attaque(self.select[0], self.select[1], self.selnbr_troupes.etat, self.selnbr_des1.etat, self.selnbr_des2.etat) 
-                                        self.empty_select()
+                                        #self.empty_select()
                                         #AJOUTER MESSAGE ERREUR SUR BARRE VITTO > voir rules.py
                                     else:
                                         self.barre_texte.changer_texte(["Trop de troupes selectionnées"], err=True, forceupdate=True)

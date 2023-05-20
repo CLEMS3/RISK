@@ -53,8 +53,8 @@ class PygameWindow(pygame.Surface):
         # Sélecteur de nombres
         self.init_couleurs()
         self.selnbr_troupes = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+(int(self.fen_height/(self.pos_reduc)-10))/2), 1, 1, 100)
-        self.selnbr_des1 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+100), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection 
-        self.selnbr_des2 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+170), 1, 1, 2) 
+        self.selnbr_des1 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+50), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection 
+        self.selnbr_des2 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+120), 1, 1, 2) 
 
 
     def main_loop(self):
@@ -149,9 +149,8 @@ class PygameWindow(pygame.Surface):
                     self.afficher_fenetre()
                     
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                        #TODO ajouter un widget(nombre de dés du joueur attaqué)
-                        #selecteur nombre de regiment
-                        #TODO changer l'ordre ou ça blit pour pas qu'il y a une sperposition bizzare
+                       #selecteur nombre de regiment
+                        
                         if self.selnbr_troupes(pygame.mouse.get_pos()) == 0:
                             self.selnbr_troupes.increment()
                         elif self.selnbr_troupes(pygame.mouse.get_pos()) == 1:
@@ -383,7 +382,7 @@ class PygameWindow(pygame.Surface):
         '''affiche le nombre de dés nécésaires selon le choix du joueur, affiche une valeur aléatoire'''
         if self.view == 1 :
             x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 150 #pour centrer les 3 dés
-            y =int(0.602*self.fen_height) +30
+            y =int(0.602*self.fen_height) -20
             pos = [(x,y),(x+120, y),(x+240,y)] #écart de 120pixel entre les x (60 entre chaque dés) 
             for i in range(valeur): 
                 self.window.blit(self.dice[self.dice_list[i]],pos[i]) #affiche une face du dé aléatoire
@@ -518,7 +517,7 @@ class PygameWindow(pygame.Surface):
         self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
         if self.view == 1:  #si phase attaque
             #bordure dés
-            pygame.draw.rect (self.window, (0,0,0), (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 180, int(0.602*self.fen_height), int(0.23*self.fen_width), int(0.139*self.fen_height)),4) 
+            pygame.draw.rect (self.window, (0,0,0), (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 180, int(0.602*self.fen_height)-50, int(0.23*self.fen_width), int(0.139*self.fen_height)),4) 
 
         return barre_info
 
@@ -542,30 +541,32 @@ class PygameWindow(pygame.Surface):
             self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(int(0.625*self.fen_width), int(0.917*self.fen_height)))  
             #affichage nombre de troupes a repartir
             nbr_restant = self.a_qui_le_tour.troupe_a_repartir
-            self.window.blit(self.text_font_big.render(str(nbr_restant), True, (255, 255, 255)), ((int((2*self.fen_width/(self.pos_reduc)-10)/2) - 30,int(self.fen_height/(self.pos_reduc))+75))) #RELATIF
+            self.window.blit(self.text_font_big.render(str(nbr_restant), True, (255, 255, 255)), ((int((2*self.fen_width/(self.pos_reduc)-10)/2) - 30,int(self.fen_height/(self.pos_reduc))+75)))
         elif self.view == 1: #attaque
             self.window.blit(self.text_font.render(f"Phase d'attaque", True, (255, 255, 255)), (int(0.625*self.fen_width), int(0.917*self.fen_height)))
             self.window.blit(self.text_font.render(text1, True, (255, 255, 255)), (120,int(self.fen_height/(self.pos_reduc))+(int(self.fen_height/(self.pos_reduc)-10))/2+20))
-            self.window.blit(self.text_font.render(text2, True, (255, 255, 255)), (120,int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+120))
-            self.window.blit(self.text_font.render(text3, True, (255, 255, 255)), (120,int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+190))
+            self.window.blit(self.text_font.render(text2, True, (255, 255, 255)), (120,int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+70))
+            self.window.blit(self.text_font.render(text3, True, (255, 255, 255)), (120,int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+140))
  
         elif self.view == 2: #deplacement
             self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (int(0.625*self.fen_width), int(0.917*self.fen_height)))
                     
         #Affiche les pays selectionnés et le joueur associé
         text4 = "Pays selectionnés :"
-        self.window.blit(self.text_font.render(text4, True, (255, 255, 255)), (35,670)) #RELATIF
+        self.window.blit(self.text_font.render(text4, True, (255, 255, 255)), (int(0.023*self.fen_width),int(0.694*self.fen_height))) #RELATIF
         select = self.select
         select_name = []
         select_player = []
         if select != []: #si un joueur selectionne un pays
-            pos = [(35,710),(35,750),(250,710),(250,750)]  #RELATIF
+            x = int(0.023*self.fen_width)
+            y = int(0.694*self.fen_height)
+            pos = [(x,y+40),(x,y+120),(x,y+80),(x,y+160)]  #RELATIF
             for country in select:
                 select_name.append(country.nom_territoire)
                 select_player.append(country.joueur.nom)
             for i in range(len(select)):
-                self.window.blit(self.text_font.render(select_name[i]+", appartient à "+select_player[i], True, (255, 255, 255)), pos[i]) #place le nom du pays + propriétaire
-
+                self.window.blit(self.text_font.render(select_name[i], True, (255, 255, 255)), pos[i]) #place le nom du pays + propriétaire
+                self.window.blit(self.text_font.render("appartient à "+select_player[i], True, (255, 255, 255)), pos[i+2])
         # Barre de texte
         self.barre_texte.afficher_texte()
 

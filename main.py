@@ -401,8 +401,6 @@ class Joueur():
         self.mdp = MDP
         self.win = GameWin
 
-        #peut être ajouter un choix de la couleur
-        self.couleur = (random.randint(0, 255),random.randint(0,255),random.randint(0,255)) #sert pour le changement de couleur dans attaque #TODO
         self.mission = None
         self.troupe_a_repartir = 0
         

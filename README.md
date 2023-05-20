@@ -5,23 +5,11 @@ TO DO
 
 #couleurs à changer @Vincent 
 
-OK #bouton valider et attaque @Antoine 
+#Renforcement territoire apres victoire 
 
 Peut etre améliorée mais OK #carte /fenetre Mission @Clement 
 
-OK #ajouter condition type de clic (juste clic gauche pas MOUSBUTTONDOWN) @Antoine
-
-OK #fonction attaque à jour @Vicent 
-
-OK #Enlever mode 2 joueurs @Antoine
-
-OK #Ajouter fonction changer couleur @Antoine
-
-OK #Retirer tous les PRINT inutils
-
-OK #text position en relatif @Antoine
-
-OK #Faire écran victoire @clement
+#fonction attaque à jour @Vicent 
 
 #son/musique @Vittore
 

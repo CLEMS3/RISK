@@ -311,7 +311,7 @@ class Game:
             territoire.joueur = joueur
             nombre_de_troupes_qu_il_reste_a_placer -= 1
             joueur.troupe_a_repartir = nombre_de_troupes_qu_il_reste_a_placer
-            self.changer_couleur(territoire)
+            #self.changer_couleur(territoire)
         
         #while nombre_de_troupes_qu_il_reste_a_placer > 0:
             #nombre_de_troupes_qu_il_reste_a_placer = self.ajout_de_troupes_sur_territoires(joueur)

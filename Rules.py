@@ -137,31 +137,33 @@ class Game:
     def nombre_de_des_a_jouer(self,territoire,nb_regiments_attaquant,nombre_de_des_joues, statut) : 
         """Cette fonction permet au joueur de déterminer avec combien de dés il veut jouer. Evidemment il a intérêt a jouer avec le plus de dés possibles
         mais il peut faire un autre choix ..."""
-        nombre_de_des_a_jouer = 0
-        nb_regiments_attaquant = 0
         test_nombre_des = False
         if statut == "Attaquant" : 
-                if nb_regiments_attaquant == 1 and nombre_de_des_joues==1 : 
-                    test_nombre_des = True
-                elif nb_regiments_attaquant == 1 and nombre_de_des_joues!=1 : 
-                    self.print_barre("Attaquant : Vous devez utiliser qu'un seul régiment pour attaquer", err=True)
-                elif nb_regiments_attaquant == 2 and (nombre_de_des_joues ==1 or nombre_de_des_joues ==2):
-                    test_nombre_des = True
-                elif nb_regiments_attaquant == 2 and (nombre_de_des_joues !=1 and nombre_de_des_joues !=2):
-                    self.print_barre("Attaquant : Vous devez choisir parmi 1 ou 2 dés ! ", err=True)
-                elif nb_regiments_attaquant == 3 and (nombre_de_des_joues ==1 or nombre_de_des_joues ==2 or nombre_de_des_joues ==3 ):
-                    test_nombre_des = True
-                elif nb_regiments_attaquant == 2 and (nombre_de_des_joues !=1 and nombre_de_des_joues !=2):
-                    self.print_barre("Attaquant : Vous devez choisir parmi 1, 2 ou 3 dés ! ", err=True)
+            print("On est passé")
+            print(f"nombre_de_regiments_attaquant = {nb_regiments_attaquant}")
+            print(f"nombre de des a jouer = {nombre_de_des_joues}")
+            if nb_regiments_attaquant == 1 and nombre_de_des_joues == 1 : 
+                print("Le test a fonctionné")
+                test_nombre_des = True
+            elif nb_regiments_attaquant == 1 and nombre_de_des_joues!=1 : 
+                self.print_barre("Attaquant : Vous devez utiliser qu'un seul régiment pour attaquer", err=True)
+            elif nb_regiments_attaquant == 2 and (nombre_de_des_joues ==1 or nombre_de_des_joues ==2):
+                test_nombre_des = True
+            elif nb_regiments_attaquant == 2 and (nombre_de_des_joues !=1 and nombre_de_des_joues !=2):
+                self.print_barre("Attaquant : Vous devez choisir parmi 1 ou 2 dés ! ", err=True)
+            elif nb_regiments_attaquant == 3 and (nombre_de_des_joues ==1 or nombre_de_des_joues ==2 or nombre_de_des_joues ==3 ):
+                test_nombre_des = True
+            elif nb_regiments_attaquant == 2 and (nombre_de_des_joues !=1 and nombre_de_des_joues !=2):
+                self.print_barre("Attaquant : Vous devez choisir parmi 1, 2 ou 3 dés ! ", err=True)
         elif statut == "Attaqué" : 
-                if (territoire.nombre_troupes == 1 or territoire.nombre_troupes == 2) and nombre_de_des_joues==1 :
-                    test_nombre_des = True
-                elif (territoire.nombre_troupes == 1 or territoire.nombre_troupes == 2) and nombre_de_des_joues!=1 :
-                    self.print_barre("Attaqué : Vous devez jouer avec 1 dés au maximum", err=True)
-                elif nombre_de_des_joues!=1 and nombre_de_des_joues!=2 : 
-                        self.print_barre("Attaqué: Vous devez choisir parmi 1 et 2 dés", err=True)
-                elif territoire.nombre_troupes>=3 and (nombre_de_des_joues==1 or nombre_de_des_joues==2):
-                    test_nombre_des = True
+            if (territoire.nombre_troupes == 1 or territoire.nombre_troupes == 2) and nombre_de_des_joues==1 :
+                test_nombre_des = True
+            elif (territoire.nombre_troupes == 1 or territoire.nombre_troupes == 2) and nombre_de_des_joues!=1 :
+                self.print_barre("Attaqué : Vous devez jouer avec 1 dés au maximum", err=True)
+            elif nombre_de_des_joues!=1 and nombre_de_des_joues!=2 : 
+                    self.print_barre("Attaqué: Vous devez choisir parmi 1 et 2 dés", err=True)
+            elif territoire.nombre_troupes>=3 and (nombre_de_des_joues==1 or nombre_de_des_joues==2):
+                test_nombre_des = True
         return test_nombre_des
     
     def attaque(self, territoire_attaquant, territoire_attaque,nombre_de_regiments_attaquant,nombre_de_des_attaquant,nombre_de_des_attaque):

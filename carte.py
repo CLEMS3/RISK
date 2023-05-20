@@ -390,15 +390,15 @@ class PygameWindow(pygame.Surface):
         '''affiche le nombre de dés nécésaires selon le choix du joueur, affiche une valeur aléatoire'''
         if self.view == 1 :
             if etat == 1 : #des attaque
-                x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 150 #pour centrer les 3 dés
-                y = int(0.234*self.fen_width)##RELATIF A CHANGER
-                pos = [(x,y),(x+90, y),(x+180,y)] #écart de 120pixel entre les x (60 entre chaque dés) 
+                x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 100 #pour centrer les 3 dés
+                y = int(0.234*self.fen_width)
+                pos = [(x,y),(x+80, y),(x+160,y)] #écart de 90pixel entre les x (60 entre chaque dés) 
                 for i in range(valeur): 
                     self.window.blit(self.dice[self.dice_list1[i]],pos[i]) #affiche une face du dé aléatoire
             if etat == 2: #des defence
-                x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 150 #pour centrer les 3 dés
-                y = int(0.319*self.fen_width) ##RELATIF A CHANGER
-                pos = [(x,y),(x+90, y),(x+90,y)] #écart de 120pixel entre les x (60 entre chaque dés) 
+                x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 100 #pour centrer les 3 dés
+                y = int(0.319*self.fen_width)
+                pos = [(x,y),(x+80, y)] #écart de 120pixel entre les x (60 entre chaque dés) 
                 for i in range(valeur): 
                     self.window.blit(self.dice[self.dice_list2[i]],pos[i]) #affiche une face du dé aléatoire
 

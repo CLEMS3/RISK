@@ -86,7 +86,7 @@ class Game:
         """
         Fermeture permettant de remplacer la fonction `print` en envoyant l'output dans la barre
         """
-        def message(string : str, err : bool = False):
+        def message(string : str, err : bool = True):
             
             barre_texte.changer_texte([string], err=err, forceupdate=True)
         return message
@@ -213,15 +213,17 @@ class Game:
                     if scores_attaquant[i] <= scores_attaque[i]:
                         territoire_attaquant.nombre_troupes -= 1
                         territoire_attaquant.joueur.nb_troupes-=1    
-                        self.print_barre("Le territoire attaquant perd une troupe")
+                        self.print_barre("Le territoire attaquant a perdu")
                     if scores_attaquant[i] > scores_attaque[i]:
                         territoire_attaque.nombre_troupes -= 1
                         territoire_attaque.joueur.nb_troupes-=1
-                        self.print_barre("Le territoire attaqué perd une troupe")
+                        self.print_barre("Le territoire attaqué a perdu")
                     if territoire_attaque.nombre_troupes == 0:
                         territoire_attaque.joueur = territoire_attaquant.joueur
-                        self.changer_couleur(territoire_attaque)
-                        self.print_barre('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
+                        #self.changer_couleur(territoire_attaque)
+                        print('ok attaque')
+                        #self.print_barre("Le territoire est conquis")
+                        # self.print_barre('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
                         nombre_de_troupes_a_transferer = 0
                         territoire_conquis = True 
                         #while nombre_de_troupes_a_transferer < nb_regiments_attaquant or nombre_de_troupes_a_transferer > territoire_attaquant.nombre_troupes :

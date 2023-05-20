@@ -7,6 +7,10 @@ TO DO
 
 #Renforcement territoire apres victoire 
 
+#Transfert de une seule troupe @antoine
+
+#Corriger les missions incoherentes @clement
+
 Peut etre améliorée mais OK #carte /fenetre Mission @Clement 
 
 #fonction attaque à jour @Vicent 

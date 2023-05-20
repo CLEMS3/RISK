@@ -200,9 +200,19 @@ class PygameWindow(pygame.Surface):
                                         print(f"nombre de troupes : {self.selnbr_troupes.etat}")
                                         print(f"nombre de des attaque : {self.selnbr_des1.etat}")
                                         print(f"nombre de des defence : {self.selnbr_des2.etat}")
-                                        self.game.attaque(self.select[0], self.select[1], self.selnbr_troupes.etat, self.selnbr_des1.etat, self.selnbr_des2.etat) 
-                                        #self.empty_select()
-                                        #AJOUTER MESSAGE ERREUR SUR BARRE VITTO > voir rules.py
+                                        #self.game.attaque(self.select[0], self.select[1], self.selnbr_troupes.etat, self.selnbr_des1.etat, self.selnbr_des2.etat) 
+                                        
+                                        if self.game.attaque(self.select[0], self.select[1], self.selnbr_troupes.etat, self.selnbr_des1.etat, self.selnbr_des2.etat):
+                                            print('ok conquis')
+                                            self.select[1].color = self.select[0].color
+                                            self.select[1].joueur = self.select[0].joueur
+                                            self.changer_lumi(self.select[1])
+                                            self.select = [self.select[0]]
+                                            self.changer_couleur(self.select[1], self.select[1].color)
+                                           
+                                            self.barre_texte.changer_texte([f"Bravo {self.a_qui_le_tour.nom}, vous avez conquis {self.select[1].nom_territoire}"], err=False, forceupdate=True)
+                                            #self.view = 5 #REPARTITION TROUPES TODO
+                                        
                                     else:
                                         self.barre_texte.changer_texte(["Trop de troupes selectionnées"], err=True, forceupdate=True)
                         except IndexError : pass

@@ -39,7 +39,7 @@ python3 src/main.py
 
 ### Menu principal <div id="mmenu"></div>
 
-Le menu principal est composé de quatre boutons.
+Le menu principal est composé de trois boutons.
 
 Le joueur peut choisir de :
 - Commencer une **nouvelle partie**, ce qui, après sélection et identification des joueurs, le conduira directement dans le fenêtre de jeu.

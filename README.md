@@ -7,7 +7,7 @@ TO DO
 
 #MODIFIER FICHIER JOUEUR APRES VICTOIRE (score)
 
-#Renforcement territoire apres victoire 
+OK #Renforcement territoire apres victoire @antoine
 
 #écran victoire avec pseudo du gagnant + mission reussie @clement
 

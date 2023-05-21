@@ -7,13 +7,13 @@ TO DO
 
 #Renforcement territoire apres victoire 
 
-#Transfert de une seule troupe @antoine
+OK #Transfert entre deux territoires seulement @antoine
 
 #Corriger les missions incoherentes @clement
 
 Peut etre améliorée mais OK #carte /fenetre Mission @Clement 
 
-#fonction attaque à jour @Vicent 
+OK #fonction attaque à jour @Vicent 
 
 #son/musique @Vittore
 

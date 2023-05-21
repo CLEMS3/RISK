@@ -207,12 +207,10 @@ class PygameWindow(pygame.Surface):
                                             print('ok conquis')
                                             self.select[1].color = self.select[0].color
                                             self.select[1].joueur = self.select[0].joueur
-                                            self.changer_lumi(self.select[1])
-                                            self.select = [self.select[0]]
                                             self.changer_couleur(self.select[1], self.select[1].color)
-                                           
+                                            troupe_attaque = self.selnbr_des1.etat
                                             self.barre_texte.changer_texte([f"Bravo {self.a_qui_le_tour.nom}, vous avez conquis {self.select[1].nom_territoire}"], err=False, forceupdate=True)
-                                            #self.view = 5 #REPARTITION TROUPES TODO
+                                            self.view = 5 #REPARTITION TROUPES TODO
                                     
                         except IndexError : pass
 
@@ -237,7 +235,7 @@ class PygameWindow(pygame.Surface):
                             self.t = 1
                             self.view = 4
 
-                elif self.view == 2: #déplacement
+                elif self.view == 2: #déplacement OK FONCTIONNEL
                     self.afficher_fenetre()
                     self.display_dice = False
                     
@@ -266,26 +264,28 @@ class PygameWindow(pygame.Surface):
                         try:
                             scaled_pos = (event.pos[0]-(self.fen_width-150),event.pos[1]-(self.fen_height-80))
                             if self.transfert_mask.get_at(scaled_pos):
-                                if len(self.select) == 2:
-                                    if self.transfert_done == {}: #permet le premier transfert
-                                        self.game.transfert_troupes(self.select[0], self.select[1],1)
-                                        self.transfert_done[(self.select[0], self.select[1])] = 1
-                                        self.transfert_done[(self.select[1],self.select[0])] = -1
+                                if self.select[0].joueur == self.a_qui_le_tour and self.select[1].joueur == self.a_qui_le_tour :
+                                    if len(self.select) == 2:
+                                        if self.transfert_done == {}: #permet le premier transfert
+                                            self.game.transfert_troupes(self.select[0], self.select[1],1)
+                                            self.transfert_done[(self.select[0], self.select[1])] = 1
+                                            self.transfert_done[(self.select[1],self.select[0])] = -1
 
 
-                                    elif (self.select[0],self.select[1]) in self.transfert_done.keys(): #si un transfert a deja été fait entre les deux pays : OK
-                                        self.game.transfert_troupes(self.select[0], self.select[1],1)       
-                                        self.transfert_done[(self.select[0], self.select[1])] += 1
-                                        self.transfert_done[(self.select[1],self.select[0])] -= 1
+                                        elif (self.select[0],self.select[1]) in self.transfert_done.keys(): #si un transfert a deja été fait entre les deux pays : OK
+                                            self.game.transfert_troupes(self.select[0], self.select[1],1)       
+                                            self.transfert_done[(self.select[0], self.select[1])] += 1
+                                            self.transfert_done[(self.select[1],self.select[0])] -= 1
 
-                                        if self.transfert_done[(self.select[0], self.select[1])] == 0: #si on est revenu à l'état initial > on enleve de la liste des transfert
-                                            self.transfert_done.pop((self.select[0], self.select[1]))
-                                        if self.transfert_done[(self.select[1], self.select[0])] == 0: #idem mais dans l'autre sens
-                                            self.transfert_done.pop((self.select[1], self.select[0]))
-                                    else:
-                                        self.barre_texte.changer_texte(["Vous ne pouvez faire de deplacement qu'entre deux territoires"], err=True, forceupdate=True)
+                                            if self.transfert_done[(self.select[0], self.select[1])] == 0: #si on est revenu à l'état initial > on enleve de la liste des transfert
+                                                self.transfert_done.pop((self.select[0], self.select[1]))
+                                            if self.transfert_done[(self.select[1], self.select[0])] == 0: #idem mais dans l'autre sens
+                                                self.transfert_done.pop((self.select[1], self.select[0]))
+                                        else:
+                                            self.barre_texte.changer_texte(["Vous ne pouvez faire de deplacement qu'entre deux territoires"], err=True, forceupdate=True)
+                                 
                                 self.deplacement = False
-                                
+
                                     #VITTO VOIR POUR MESSAGE D'ERREUR SI NON ADJACENT
                         except IndexError : pass
 
@@ -295,10 +295,8 @@ class PygameWindow(pygame.Surface):
                             
                         if len(self.select)==2 and self.select[1].joueur != self.a_qui_le_tour :
                             self.barre_texte.changer_texte(["Vous ne pouvez pas transférer des troupes à un territoire qui ne vous appartient pas"], err=True, forceupdate=True)
-                            
-                    
-                       
-                elif self.view == 3: #win
+                               
+                elif self.view == 3: #win @CLEMENT A FINIR
                     self.afficher_fenetre()
                     self.window.blit(self.ecran_victoire, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
                     self.display_dice = False
@@ -308,7 +306,7 @@ class PygameWindow(pygame.Surface):
                             self.t = 3
                             self.view = 4
 
-                elif self.view == 4: #mission
+                elif self.view == 4: #mission @CLEMENT PEUT ETRE AMELIORE 
                     self.afficher_fenetre()
                     self.window.blit(self.text_font.render(f"Mission", True, (255, 255, 255)),(0.625*self.fen_width, 0.917*self.fen_height))
                     self.window.blit(self.text_font.render(f"{self.a_qui_le_tour.mission.detail}", True, (0, 0, 0)),(int(0.375*self.fen_width), int(0.200*self.fen_height+20)))
@@ -316,6 +314,55 @@ class PygameWindow(pygame.Surface):
                         if event.key == pygame.K_m:
                             self.view = self.t
 
+                elif self.view == 5: #repartition troupes apres victoire
+                    self.display_dice = False
+                    self.afficher_fenetre()
+
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+
+                        #clic sur bouton +
+                        try:
+                            scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90)), int(event.pos[1]-int(self.fen_height/(self.pos_reduc)))) #pour verifier si souris sur bouton sur le mask
+                            if  self.plus_mask.get_at(scaled_pos):
+                                
+                                    if self.select[0].nombre_troupes > 1:        
+                                        print("plus")
+                                        self.select[1].nombre_troupes += 1 #ajout de la troupe sur le pays
+                                        self.select[0].nombre_troupes -= 1 
+                                        
+                                    else :  self.barre_texte.changer_texte([f"Nombre minimum de troupes atteint sur {self.select[0].nom_territoire}."], err=True, forceupdate=True)
+                                
+                        except IndexError: pass
+                        #clic sur bouton -
+                        try:
+                            scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) +30)), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
+                            if  self.minus_mask.get_at(scaled_pos):
+                               
+                                    if self.select[1].nombre_troupes > 1:
+                                        print("moins")
+                                        self.select[1].nombre_troupes -= 1
+                                        self.select[0].nombre_troupes += 1
+
+                                    else :  self.barre_texte.changer_texte([f"Nombre minimum de troupes atteint sur {self.select[1].nom_territoire}."], err=True, forceupdate=True)
+                                
+                        except IndexError: pass 
+                     #clic sur next, 
+                        try:
+                            scaled_pos = (event.pos[0]-(self.fen_width-80),event.pos[1]-(self.fen_height-80))
+                            if self.next_mask.get_at(scaled_pos):
+                                if self.select[1].nombre_troupes > troupe_attaque :
+
+                                    self.view = 1 #retour à l'attaque
+                                    self.barre_texte.changer_texte(["Fin de la phase de repartition"], err=True, forceupdate=True)
+                                    self.changer_lumi(self.select[1])
+                                    self.select = [self.select[0]]
+
+                        except IndexError : pass
+
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_m:
+                            self.t = 1
+                            self.view = 4
 
             # update the window
             pygame.display.update()
@@ -364,8 +411,6 @@ class PygameWindow(pygame.Surface):
         self.ecran_victoire = pygame.image.load("Images/ecran_victoire.jpg").convert_alpha()
         self.ecran_victoire = pygame.transform.scale(self.ecran_victoire, (int(self.fen_width/(self.fac_reduc)-5), int(self.fen_height/(self.fac_reduc))))
 
-
-
     def charger_coord_texte(self):
         with open('Fichiers/coords.json', 'r', encoding='utf-8') as f:
             donnees_lues = json.load(f)
@@ -386,7 +431,7 @@ class PygameWindow(pygame.Surface):
         self.barre_info = self.add_borders() #ajoute les bordures noires
         self.barre_info.changer_texte(["Test !", "ligne 2", "ligne 3", "ligne 4"])
         self.add_texts() #ajoute les texts
-        if self.view == 0: #renforcement
+        if self.view == 0 or self.view == 5 : #renforcement ou repartition
             #affichage boutons + et - (juste pendant renforcement)
             self.window.blit(self.plus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90,int(self.fen_height/(self.pos_reduc))))
             self.window.blit(self.minus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) +30 ,int(self.fen_height/(self.pos_reduc))))
@@ -409,7 +454,6 @@ class PygameWindow(pygame.Surface):
             #régiments
             for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
                 self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (0, 0, 0)),(self.coords[country.nom_territoire][0]*self.fen_width/(self.fac_reduc)+2*int(self.fen_width/(self.pos_reduc)), self.coords[country.nom_territoire][1]*self.fen_height/(self.fac_reduc)+int(self.fen_height/(self.pos_reduc))))#{country.nombre_troupes}
-
 
     def affiche_des(self, valeur, etat): #ATTAQUE
         '''affiche le nombre de dés nécésaires selon le choix du joueur, affiche une valeur aléatoire'''
@@ -610,7 +654,8 @@ class PygameWindow(pygame.Surface):
         self.barre_info.afficher_texte()
 
 
-if __name__ == "__main__":
+
+if __name__ == "__main__": #pour debug
     import main
     menu = main.MainMenu()
     temp = menu.liste_joueurs

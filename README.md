@@ -95,7 +95,9 @@ TODO : Compléter
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/olmetaprogrammer"><img src="https://avatars.githubusercontent.com/u/128503773?v=4?s=100" width="100px;" alt="olmetaprogrammer"/><br /><sub><b>olmetaprogrammer</b></sub></a><br /></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/AntoinePscl"><img src="https://avatars.githubusercontent.com/u/128501984?v=4?s=100" width="100px;" alt="AntoinePscl"/><br /><sub><b>AntoinePscl</b></sub></a><br /></td>      <td align="center" valign="top" width="14.28%"><a href="https://github.com/CLEMS3"><img src="https://avatars.githubusercontent.com/u/56449459?v=4?s=100" width="100px;" alt="CLEMS3"/><br /><sub><b>CLEMS3</b></sub></a><br /></td>      <td align="center" valign="top" width="14.28%"><a href="https://github.com/vitto4"><img src="https://avatars.githubusercontent.com/u/128498605?v=4?s=100" width="100px;" alt="vitto4"/><br /><sub><b>vitto4</b></sub></a><br /></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/AntoinePscl"><img src="https://avatars.githubusercontent.com/u/128501984?v=4?s=100" width="100px;" alt="AntoinePscl"/><br /><sub><b>AntoinePscl</b></sub></a><br /></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/CLEMS3"><img src="https://avatars.githubusercontent.com/u/56449459?v=4?s=100" width="100px;" alt="CLEMS3"/><br /><sub><b>CLEMS3</b></sub></a><br /></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/vitto4"><img src="https://avatars.githubusercontent.com/u/128498605?v=4?s=100" width="100px;" alt="vitto4"/><br /><sub><b>vitto4</b></sub></a><br /></td>
     </tr>
   </tbody>
 </table>

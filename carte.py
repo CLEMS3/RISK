@@ -47,13 +47,14 @@ class PygameWindow(pygame.Surface):
         self.deplacement = True
         self.placement_initial = []
         self.tour_initial = []
+        self.transfert_done = {}
 
         #liste couleurs
         self.colors = [(174,160,75),(198,166,100),(230,214,144),(190,189,127),(228,160,16),(225,204,79)]
 
         # Sélecteur de nombres
         self.init_couleurs()
-        self.selnbr_troupes = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+(int(self.fen_height/(self.pos_reduc)-10))/2), 1, 1, 100)
+        self.selnbr_troupes = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+(int(self.fen_height/(self.pos_reduc)-10))/2), 1, 1, 3)
         self.selnbr_des1 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection 
         self.selnbr_des2 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+140), 1, 1, 2) 
 
@@ -212,9 +213,7 @@ class PygameWindow(pygame.Surface):
                                            
                                             self.barre_texte.changer_texte([f"Bravo {self.a_qui_le_tour.nom}, vous avez conquis {self.select[1].nom_territoire}"], err=False, forceupdate=True)
                                             #self.view = 5 #REPARTITION TROUPES TODO
-                                        
-                                    else:
-                                        self.barre_texte.changer_texte(["Trop de troupes selectionnées"], err=True, forceupdate=True)
+                                    
                         except IndexError : pass
 
                         #clic sur next, 
@@ -242,6 +241,7 @@ class PygameWindow(pygame.Surface):
                     self.afficher_fenetre()
                     self.display_dice = False
                     
+                    
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
 
                         for country in self.game.li_territoires_obj:
@@ -259,14 +259,33 @@ class PygameWindow(pygame.Surface):
                             if self.next_mask.get_at(scaled_pos):
                                 self.barre_texte.changer_texte(["Fin de la phase de déplacement"], err=True, forceupdate=True)
                                 self.end_turn()
+                                self.transfert_done = {}
                         except IndexError : pass
 
+                        #clic sur transfert
                         try:
                             scaled_pos = (event.pos[0]-(self.fen_width-150),event.pos[1]-(self.fen_height-80))
                             if self.transfert_mask.get_at(scaled_pos):
                                 if len(self.select) == 2:
-                                    self.game.transfert_troupes(self.select[0], self.select[1],1)
-                                    self.deplacement = False
+                                    if self.transfert_done == {}: #permet le premier transfert
+                                        self.game.transfert_troupes(self.select[0], self.select[1],1)
+                                        self.transfert_done[(self.select[0], self.select[1])] = 1
+                                        self.transfert_done[(self.select[1],self.select[0])] = -1
+
+
+                                    elif (self.select[0],self.select[1]) in self.transfert_done.keys(): #si un transfert a deja été fait entre les deux pays : OK
+                                        self.game.transfert_troupes(self.select[0], self.select[1],1)       
+                                        self.transfert_done[(self.select[0], self.select[1])] += 1
+                                        self.transfert_done[(self.select[1],self.select[0])] -= 1
+
+                                        if self.transfert_done[(self.select[0], self.select[1])] == 0: #si on est revenu à l'état initial > on enleve de la liste des transfert
+                                            self.transfert_done.pop((self.select[0], self.select[1]))
+                                        if self.transfert_done[(self.select[1], self.select[0])] == 0: #idem mais dans l'autre sens
+                                            self.transfert_done.pop((self.select[1], self.select[0]))
+                                    else:
+                                        self.barre_texte.changer_texte(["Vous ne pouvez faire de deplacement qu'entre deux territoires"], err=True, forceupdate=True)
+                                self.deplacement = False
+                                
                                     #VITTO VOIR POUR MESSAGE D'ERREUR SI NON ADJACENT
                         except IndexError : pass
 

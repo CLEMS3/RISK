@@ -9,6 +9,8 @@ TO DO
 
 #Renforcement territoire apres victoire 
 
+#écran victoire avec pseudo du gagnant + mission reussie @clement
+
 OK #Transfert entre deux territoires seulement @antoine
 
 #Corriger les missions incoherentes @clement

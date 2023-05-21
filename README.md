@@ -5,7 +5,11 @@ TO DO
 
 #couleurs à changer @Vincent 
 
+#MODIFIER FICHIER JOUEUR APRES VICTOIRE (score)
+
 #Renforcement territoire apres victoire 
+
+#écran victoire avec pseudo du gagnant + mission reussie @clement
 
 OK #Transfert entre deux territoires seulement @antoine
 

@@ -13,7 +13,6 @@ except:
     import pygame
 import hashlib
 import carte
-import random
 
 #Menu principal
 class MainMenu :
@@ -81,9 +80,6 @@ class MainMenu :
         # Rules
         self.rules = tk.Button(self.root, text='RÈGLES DU JEU', font=self.Impact25, bg='grey', command = self.Rules_info)
         self.rules.pack(pady=30)
-        #lancer debug carte
-        self.debugbutton = tk.Button(self.root, text='LANCER LA CARTE', font=self.Impact25, bg='grey', command =self.debug)
-        self.debugbutton.pack(pady=30) 
 
     def new_game(self):
         '''Nouveaux boutons pour choisir le nombre de joueur et lancer la partie'''
@@ -91,7 +87,6 @@ class MainMenu :
         self.classement.destroy()
         self.NG.destroy()
         self.rules.destroy()
-        self.debugbutton.destroy() 
         # label et scale pour choix
         self.LabelJoueur = tk.Label(self.root, text='NOMBRE DE JOUEURS', font=self.Impact25, bg="grey")
         self.LabelJoueur.pack(pady=40)
@@ -140,7 +135,6 @@ class MainMenu :
         self.startlogin.destroy()
         self.boutons_menu()
 
-
     def escape(self, event):
         '''fct call pour quitter une fenetre'''
         self.root.quit()
@@ -160,7 +154,6 @@ class MainMenu :
     def playerbutton_leave(self,event,i):
         '''fonction pour l'affichage des pseudo dans le classement'''
         self.playername[i].config(text=self.liste_classe[i].nom)        
-
 
     def classwin(self):
         '''fenetre du classement'''
@@ -183,7 +176,6 @@ class MainMenu :
         self.back3 = tk.Button(self.TOP2, text= 'Retour', font=self.Impact15, bg='grey', command=self.escapeTOP2 )
         self.back3.pack(pady=30)
             
-
     def Rules_info(self):
         """fenetre d'affichage des regles apres lecture fichier txt contenant les regles"""
         self.ruleswin = tk.Toplevel()
@@ -379,18 +371,6 @@ class MainMenu :
         else:
             self.errorlabel2 = tk.Label(self.TL, text = "Pseudo non conforme \n Il doit être entre 1 et 9 caractères", font = self.Impact15, fg='red', bg='grey')
             self.errorlabel2.pack(pady=10)
-
-    def debug(self) : ###TEMPORAIRE###
-        '''bouton de debug pour lancer rapidement la fenetre de jeu'''
-        self.OUT2 = []
-        self.OUT2.append(self.liste_joueurs[0])
-        self.OUT2.append(self.liste_joueurs[1])
-        self.OUT2.append(self.liste_joueurs[2])
-        
-        window_pg = carte.PygameWindow((self.WIDTH, self.HEIGHT), self.OUT2)
-        # run the main loop
-        window_pg.main_loop()
-        pygame.quit()
 
 
 class Joueur():

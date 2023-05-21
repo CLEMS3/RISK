@@ -58,7 +58,6 @@ class PygameWindow(pygame.Surface):
         self.selnbr_des1 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection 
         self.selnbr_des2 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+140), 1, 1, 2) 
 
-
     def main_loop(self):
         running = True
         while running:
@@ -125,10 +124,14 @@ class PygameWindow(pygame.Surface):
                         
                                 #si toutes les troupes sont placées
                                 if self.a_qui_le_tour.troupe_a_repartir == 0:
-                                    self.changer_lumi(self.select[0])
-                                    self.select.remove(self.select[0])
+                                    try :
+                                        self.changer_lumi(self.select[0])
+                                        self.select.remove(self.select[0])
+                                    except : pass
+                                    print('next')
                                     if len(self.placement_initial) >= len(self.liste_joueurs_obj)-1:
                                         self.view = 1
+                                        print('go attack')
                                     else: #si tous les joueurs ont placé leurs troupes
                                         self.placement_initial.append(self.a_qui_le_tour)
                                         self.next_player()
@@ -267,15 +270,15 @@ class PygameWindow(pygame.Surface):
                                 if self.select[0].joueur == self.a_qui_le_tour and self.select[1].joueur == self.a_qui_le_tour :
                                     if len(self.select) == 2:
                                         if self.transfert_done == {}: #permet le premier transfert
-                                            self.game.transfert_troupes(self.select[0], self.select[1],1)
-                                            self.transfert_done[(self.select[0], self.select[1])] = 1
-                                            self.transfert_done[(self.select[1],self.select[0])] = -1
+                                            if self.game.transfert_troupes(self.select[0], self.select[1],1):
+                                                self.transfert_done[(self.select[0], self.select[1])] = 1
+                                                self.transfert_done[(self.select[1],self.select[0])] = -1
 
 
                                         elif (self.select[0],self.select[1]) in self.transfert_done.keys(): #si un transfert a deja été fait entre les deux pays : OK
-                                            self.game.transfert_troupes(self.select[0], self.select[1],1)       
-                                            self.transfert_done[(self.select[0], self.select[1])] += 1
-                                            self.transfert_done[(self.select[1],self.select[0])] -= 1
+                                            if self.game.transfert_troupes(self.select[0], self.select[1],1):    
+                                                self.transfert_done[(self.select[0], self.select[1])] += 1
+                                                self.transfert_done[(self.select[1],self.select[0])] -= 1
 
                                             if self.transfert_done[(self.select[0], self.select[1])] == 0: #si on est revenu à l'état initial > on enleve de la liste des transfert
                                                 self.transfert_done.pop((self.select[0], self.select[1]))
@@ -350,7 +353,7 @@ class PygameWindow(pygame.Surface):
                         try:
                             scaled_pos = (event.pos[0]-(self.fen_width-80),event.pos[1]-(self.fen_height-80))
                             if self.next_mask.get_at(scaled_pos):
-                                if self.select[1].nombre_troupes > troupe_attaque :
+                                if self.select[1].nombre_troupes >= troupe_attaque :
 
                                     self.view = 1 #retour à l'attaque
                                     self.barre_texte.changer_texte(["Fin de la phase de repartition"], err=True, forceupdate=True)
@@ -416,6 +419,27 @@ class PygameWindow(pygame.Surface):
             donnees_lues = json.load(f)
         return donnees_lues
 
+    def init_couleurs(self):
+       '''
+       initialise la couleur des territoires en début de partie
+       avec les mask 
+       '''
+       for country in self.game.li_territoires_obj:
+            
+            for i in range(len(self.liste_joueurs_obj)): #associe une couleur à un joueur
+                if country.joueur == self.liste_joueurs_obj[i]: 
+                    color = self.colors[i]
+                    country.color = color 
+
+            surface_mask = country.mask #recupere le mask du pays
+            #turn mask to surface
+            new_surface = surface_mask.to_surface() #creer une surface noir et blanc depuis le mask (noir = pixel vide, blanc = pixel utilisé)
+            new_surface.set_colorkey((0,0,0)) #efface le noir
+            new_surface.fill(color, special_flags=pygame.BLEND_RGBA_MULT)
+
+
+            country.surface = new_surface
+
     def afficher_fenetre(self):
         """
         Affiche les pays sur la surface de la fenêtre
@@ -471,27 +495,70 @@ class PygameWindow(pygame.Surface):
                 for i in range(valeur): 
                     self.window.blit(self.dice[self.dice_list2[i]],pos[i]) #affiche une face du dé aléatoire
 
-    def init_couleurs(self):
-       '''
-       initialise la couleur des territoires en début de partie
-       avec les mask 
-       '''
-       for country in self.game.li_territoires_obj:
-            
-            for i in range(len(self.liste_joueurs_obj)): #associe une couleur à un joueur
-                if country.joueur == self.liste_joueurs_obj[i]: 
-                    color = self.colors[i]
-                    country.color = color 
+    def add_borders(self):
+        #bordure autour de la map
+        pygame.draw.rect(self.window, (0,0,0), (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc)),int(self.fen_width/(self.fac_reduc)-5),int(self.fen_height/(self.fac_reduc))),3)
+        #bordure controles
+        pygame.draw.rect(self.window, (0,0,0),(5,5, int(2*self.fen_width/(self.pos_reduc)-10),int(self.fen_height - 10)),4)
+        #bordure info succes
+        barre_info = widgets.barreTexte(self.window, (0.333*self.fen_width, 0.0053*self.fen_height), self.water.get_size()[0] - self.adios.get_size()[0] - 3, self.fen_height*0.159, epaisseur=4, couleur_contour=(0,0,0), police=27)
+        #bordure adios
+        self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
+        
+        return barre_info
 
-            surface_mask = country.mask #recupere le mask du pays
-            #turn mask to surface
-            new_surface = surface_mask.to_surface() #creer une surface noir et blanc depuis le mask (noir = pixel vide, blanc = pixel utilisé)
-            new_surface.set_colorkey((0,0,0)) #efface le noir
-            new_surface.fill(color, special_flags=pygame.BLEND_RGBA_MULT)
+    def add_texts(self):
+        '''ajoute tous les textes necessaires durant la partie'''
+        #Nom du joueur en haut de la partie controle
+        nom_joueur = self.a_qui_le_tour.nom #va chercher à qui le tour
+        i = self.liste_joueurs_obj.index(self.a_qui_le_tour)
+        color = self.colors[i] #recupere la couleur associée au joueur
+        len_name = len(nom_joueur)
+        xpos = int((2*self.fen_width/(self.pos_reduc)/2))-14*len_name # calcul pour centrer le nom en fonction du nombre de lettre (c'est manuel mais.. pas d'autre methode)
+        ypos = (int(self.fen_height/(self.pos_reduc))-20)/3
+        self.window.blit(self.text_font_big.render(f"{nom_joueur}", True, color), (xpos,ypos)) #couleur à changer en fonction du joueur et de la couleur de son pays
 
+        #choix nbr troupes
+        text1 = "Combien de Troupes ?"
+        text2 = "Combien de Dés pour attaquer ?"
+        text3 = "Combien de Dés pour défendre ?"
+        
+        if self.view == 0: #renfo
+            self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(int(0.625*self.fen_width), int(0.917*self.fen_height)))  
+            #affichage nombre de troupes a repartir
+            nbr_restant = self.a_qui_le_tour.troupe_a_repartir
+            self.window.blit(self.text_font_big.render(str(nbr_restant), True, (255, 255, 255)), ((int((2*self.fen_width/(self.pos_reduc)-10)/2) - 30,int(self.fen_height/(self.pos_reduc))+75)))
+        elif self.view == 1: #attaque
+            self.window.blit(self.text_font.render(f"Phase d'attaque", True, (255, 255, 255)), (int(0.625*self.fen_width), int(0.917*self.fen_height)))
+            self.window.blit(self.text_font.render(text1, True, (255, 255, 255)), (120,int(self.fen_height/(self.pos_reduc))+(int(self.fen_height/(self.pos_reduc)-10))/2+20))
+            self.window.blit(self.text_font.render(text2, True, (255, 255, 255)), (120,int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+20))
+            self.window.blit(self.text_font.render(text3, True, (255, 255, 255)), (120,int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+160))
+ 
+        elif self.view == 2: #deplacement
+            self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (int(0.625*self.fen_width), int(0.917*self.fen_height)))
+                    
+        #Affiche les pays selectionnés et le joueur associé
+        text4 = "Pays selectionnés :"
+        self.window.blit(self.text_font.render(text4, True, (255, 255, 255)), (int(0.023*self.fen_width),int(0.694*self.fen_height))) #RELATIF
+        select = self.select
+        select_name = []
+        select_player = []
+        if select != []: #si un joueur selectionne un pays
+            x = int(0.023*self.fen_width)
+            y = int(0.694*self.fen_height)
+            pos = [(x,y+40),(x,y+120),(x,y+80),(x,y+160)]  #RELATIF
+            for country in select:
+                select_name.append(country.nom_territoire)
+                select_player.append(country.joueur.nom)
+            for i in range(len(select)):
+                self.window.blit(self.text_font.render(select_name[i], True, (255, 255, 255)), pos[i]) #place le nom du pays + propriétaire
+                self.window.blit(self.text_font.render("appartient à "+select_player[i], True, (255, 255, 255)), pos[i+2])
+        # Barre de texte
+        self.barre_texte.afficher_texte()
 
-            country.surface = new_surface
-
+        # Barre info
+        self.barre_info.afficher_texte()
+    
     def changer_lumi(self, country):
         """
         Assombri un territoire quand il est selectionné
@@ -557,6 +624,13 @@ class PygameWindow(pygame.Surface):
             select = []
         self.select = select
 
+    def empty_select(self):
+        """vide self.select et deselectionne les pays"""
+        for country in self.select:
+            self.changer_lumi(country)
+        self.select = []
+        print('ok empty')
+
     def end_turn(self):
         """
         On vérifie si le joueur a gagné, si oui, on affiche la victoire, sinon on passe au joueur suivant
@@ -575,83 +649,25 @@ class PygameWindow(pygame.Surface):
                 self.game.nb_troupes_minimum[territoire]=self.game.get_territoire_object(territoire).nombre_troupes
         self.empty_select()
 
-    def empty_select(self):
-        """vide self.select et deselectionne les pays"""
-        for country in self.select:
-            self.changer_lumi(country)
-        self.select = []
-        print('ok empty') 
-
     def next_player(self):
         '''passe au joueur suivant dans la partie'''
+        self.check_loss()
+
         if self.liste_joueurs_obj[-1] == self.a_qui_le_tour:
             self.a_qui_le_tour = self.liste_joueurs_obj[0]
         else:
             self.a_qui_le_tour = self.liste_joueurs_obj[self.liste_joueurs_obj.index(self.a_qui_le_tour) + 1]
 
-    def add_borders(self):
-        #bordure autour de la map
-        pygame.draw.rect(self.window, (0,0,0), (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc)),int(self.fen_width/(self.fac_reduc)-5),int(self.fen_height/(self.fac_reduc))),3)
-        #bordure controles
-        pygame.draw.rect(self.window, (0,0,0),(5,5, int(2*self.fen_width/(self.pos_reduc)-10),int(self.fen_height - 10)),4)
-        #bordure info succes
-        barre_info = widgets.barreTexte(self.window, (0.333*self.fen_width, 0.0053*self.fen_height), self.water.get_size()[0] - self.adios.get_size()[0] - 3, self.fen_height*0.159, epaisseur=4, couleur_contour=(0,0,0), police=27)
-        #bordure adios
-        self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
-        
-        return barre_info
-
-    def add_texts(self):
-        '''ajoute tous les textes necessaires durant la partie'''
-        #Nom du joueur en haut de la partie controle
-        nom_joueur = self.a_qui_le_tour.nom #va chercher à qui le tour
-        i = self.liste_joueurs_obj.index(self.a_qui_le_tour)
-        color = self.colors[i] #recupere la couleur associée au joueur
-        len_name = len(nom_joueur)
-        xpos = int((2*self.fen_width/(self.pos_reduc)/2))-14*len_name # calcul pour centrer le nom en fonction du nombre de lettre (c'est manuel mais.. pas d'autre methode)
-        ypos = (int(self.fen_height/(self.pos_reduc))-20)/3
-        self.window.blit(self.text_font_big.render(f"{nom_joueur}", True, color), (xpos,ypos)) #couleur à changer en fonction du joueur et de la couleur de son pays
-
-        #choix nbr troupes
-        text1 = "Combien de Troupes ?"
-        text2 = "Combien de Dés pour attaquer ?"
-        text3 = "Combien de Dés pour défendre ?"
-        
-        if self.view == 0: #renfo
-            self.window.blit(self.text_font.render(f"Phase de renforcement", True, (255, 255, 255)),(int(0.625*self.fen_width), int(0.917*self.fen_height)))  
-            #affichage nombre de troupes a repartir
-            nbr_restant = self.a_qui_le_tour.troupe_a_repartir
-            self.window.blit(self.text_font_big.render(str(nbr_restant), True, (255, 255, 255)), ((int((2*self.fen_width/(self.pos_reduc)-10)/2) - 30,int(self.fen_height/(self.pos_reduc))+75)))
-        elif self.view == 1: #attaque
-            self.window.blit(self.text_font.render(f"Phase d'attaque", True, (255, 255, 255)), (int(0.625*self.fen_width), int(0.917*self.fen_height)))
-            self.window.blit(self.text_font.render(text1, True, (255, 255, 255)), (120,int(self.fen_height/(self.pos_reduc))+(int(self.fen_height/(self.pos_reduc)-10))/2+20))
-            self.window.blit(self.text_font.render(text2, True, (255, 255, 255)), (120,int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+20))
-            self.window.blit(self.text_font.render(text3, True, (255, 255, 255)), (120,int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+160))
- 
-        elif self.view == 2: #deplacement
-            self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (int(0.625*self.fen_width), int(0.917*self.fen_height)))
-                    
-        #Affiche les pays selectionnés et le joueur associé
-        text4 = "Pays selectionnés :"
-        self.window.blit(self.text_font.render(text4, True, (255, 255, 255)), (int(0.023*self.fen_width),int(0.694*self.fen_height))) #RELATIF
-        select = self.select
-        select_name = []
-        select_player = []
-        if select != []: #si un joueur selectionne un pays
-            x = int(0.023*self.fen_width)
-            y = int(0.694*self.fen_height)
-            pos = [(x,y+40),(x,y+120),(x,y+80),(x,y+160)]  #RELATIF
-            for country in select:
-                select_name.append(country.nom_territoire)
-                select_player.append(country.joueur.nom)
-            for i in range(len(select)):
-                self.window.blit(self.text_font.render(select_name[i], True, (255, 255, 255)), pos[i]) #place le nom du pays + propriétaire
-                self.window.blit(self.text_font.render("appartient à "+select_player[i], True, (255, 255, 255)), pos[i+2])
-        # Barre de texte
-        self.barre_texte.afficher_texte()
-
-        # Barre info
-        self.barre_info.afficher_texte()
+    def check_loss(self):
+        '''verifie si un joueur a perdu tout ses territoires et le retire de la liste de joueurs'''
+        for player in self.liste_joueurs_obj:
+            list_play= []
+            for country in self.game.li_territoires_obj:
+                if country.joueur == player:
+                    list_play.append(country)
+            if list_play == []:
+                self.liste_joueurs_obj.remove(player)
+    
 
 
 

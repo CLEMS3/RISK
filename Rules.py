@@ -249,18 +249,20 @@ class Game:
         """
         Fonction qui gère le transfèrt de troupe d'un territoire à l'autre
         """
+        transfert = False
         if self.verification_adjacence(territoire_de_depart, territoire_arrivee) == True:
             if nb_troupes_a_transferer <= 0:
                 self.print_barre('Veuillez donner un nombre strictement positif de troupes à transférer')
             if nb_troupes_a_transferer < territoire_de_depart.nombre_troupes:
                 territoire_de_depart.nombre_troupes = territoire_de_depart.nombre_troupes - nb_troupes_a_transferer
                 territoire_arrivee.nombre_troupes += nb_troupes_a_transferer
+                transfert = True
             else:
                 self.print_barre('Vous ne pouvez pas transférer autant de troupes !!!!', err=True)  # il faut rajouter la condition de proximité avec la matrice d'adjacence
         else:
             self.print_barre("Vos territoires ne sont pas adjacents, vous ne pouvez pas transférer des troupes, sélectionnez un autre territoire", err=True)
-
-
+        
+        return transfert
     def placement_de_tous_les_joueurs(self):
         """Cette fonction gère le placement des joueurs en début de partie en fonction du nombre de joueurs
         Elle fait appel aux fonctions joueurs au hasard et placement_initial pour cela"""

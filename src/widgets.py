@@ -150,7 +150,7 @@ class barreTexte():
         self.surface_barre = pygame.Surface((self.LONGUEUR_BARRE, self.HAUTEUR_BARRE), pygame.SRCALPHA)     # Surface contenant le contour et sur laquelle le texte est blit
 
         # Police
-        police_chemin = "./Fonts/Monocraft.ttf"
+        police_chemin = "./src/Fonts/Monocraft.ttf"
         police_taille = int((19/30)*self.HAUTEUR_BARRE) if (police == None) else police
         self.police_obj = pygame.font.Font(police_chemin, police_taille)
 

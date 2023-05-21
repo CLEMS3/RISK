@@ -40,8 +40,8 @@ class PygameWindow(pygame.Surface):
 
         self.game = Rules.Game(self.liste_joueurs_obj, self.fen_width, self.fen_height, self.barre_texte)
         self.a_qui_le_tour = choice(self.liste_joueurs_obj) #celui qui commence
-        self.text_font = pygame.font.Font("Fonts/ARLRDBD.TTF", 20)
-        self.text_font_big = pygame.font.Font("Fonts/ARLRDBD.TTF", 50)
+        self.text_font = pygame.font.Font("src/Fonts/ARLRDBD.TTF", 20)
+        self.text_font_big = pygame.font.Font("src/Fonts/ARLRDBD.TTF", 50)
         self.select = []
         self.t = 0 #permet de revenir à la bonne vu après les missions
         self.deplacement = True
@@ -375,47 +375,47 @@ class PygameWindow(pygame.Surface):
         Charge toute les images et les transforme comme il faut, sauf les pays qui sont liés à la classe territoire
         """
         #fond d'écran
-        self.bg = pygame.image.load("Images/background.jpg").convert_alpha()
+        self.bg = pygame.image.load("src/Images/background.jpg").convert_alpha()
         self.bg = pygame.transform.scale(self.bg, (int(self.fen_width), int(self.fen_height)))
         #fond de la map
-        self.water = pygame.image.load("Images/fond_carte_3.jpg").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
+        self.water = pygame.image.load("src/Images/fond_carte_3.jpg").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
         self.water = pygame.transform.scale(self.water, (int(self.fen_width/(self.fac_reduc)-5), int(self.fen_height/(self.fac_reduc))))
         #lines adjacent + nom
-        self.lines = pygame.image.load("Pictures/Risk_lines.png").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
+        self.lines = pygame.image.load("src/Pictures/Risk_lines.png").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
         self.lines = pygame.transform.scale(self.lines, (int(self.fen_width/(self.fac_reduc)-5), int(self.fen_height/(self.fac_reduc))))
         #adios - bouton quitter
-        self.adios = pygame.image.load("Images/adios.png").convert_alpha()
+        self.adios = pygame.image.load("src/Images/adios.png").convert_alpha()
         self.adios = pygame.transform.scale(self.adios,(int(self.fen_height/(self.pos_reduc)-10),int(self.fen_height/(self.pos_reduc)-10)))
         #dés
         self.dice = []
         for i in range(1,7):
-            dice = pygame.image.load(f"Pictures/Dice/{i}.png")
+            dice = pygame.image.load(f"src/Pictures/Dice/{i}.png")
             dice = pygame.transform.scale(dice, (40,40))
             self.dice.append(dice)
         #boutons + et -
-        self.plus = pygame.image.load("Pictures/plus.png").convert_alpha()
+        self.plus = pygame.image.load("src/Pictures/plus.png").convert_alpha()
         self.plus = pygame.transform.scale(self.plus,(55,60))
         self.plus_mask = pygame.mask.from_surface(self.plus)
-        self.minus = pygame.image.load("Pictures/minus.png").convert_alpha()
+        self.minus = pygame.image.load("src/Pictures/minus.png").convert_alpha()
         self.minus = pygame.transform.scale(self.minus,(55,60))
         self.minus_mask = pygame.mask.from_surface(self.minus)
         #bouton next
-        self.next = pygame.image.load("Pictures/next.png").convert_alpha()
+        self.next = pygame.image.load("src/Pictures/next.png").convert_alpha()
         self.next = pygame.transform.scale(self.next,(50,50))
         self.next_mask = pygame.mask.from_surface(self.next)
         #bouton attaque
-        self.attack = pygame.image.load("Pictures/attack.png").convert_alpha()
+        self.attack = pygame.image.load("src/Pictures/attack.png").convert_alpha()
         self.attack = pygame.transform.scale(self.attack,(50,50))
         self.attack_mask = pygame.mask.from_surface(self.attack)
         #bouton transfert
-        self.transfert = pygame.image.load("Pictures/transfert.png").convert_alpha()
+        self.transfert = pygame.image.load("src/Pictures/transfert.png").convert_alpha()
         self.transfert = pygame.transform.scale(self.transfert,(50,50))
         self.transfert_mask = pygame.mask.from_surface(self.transfert)
-        self.ecran_victoire = pygame.image.load("Images/ecran_victoire.jpg").convert_alpha()
+        self.ecran_victoire = pygame.image.load("src/Images/ecran_victoire.jpg").convert_alpha()
         self.ecran_victoire = pygame.transform.scale(self.ecran_victoire, (int(self.fen_width/(self.fac_reduc)-5), int(self.fen_height/(self.fac_reduc))))
 
     def charger_coord_texte(self):
-        with open('Fichiers/coords.json', 'r', encoding='utf-8') as f:
+        with open('src/Fichiers/coords.json', 'r', encoding='utf-8') as f:
             donnees_lues = json.load(f)
         return donnees_lues
 

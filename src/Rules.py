@@ -234,7 +234,7 @@ class Game:
         return territoire_conquis
 
     def import_territoire(self):
-        with open('Fichiers/package.json', 'r', encoding='utf-8') as f:
+        with open('src/Fichiers/package.json', 'r', encoding='utf-8') as f:
             donnees_lues = json.load(f)
         return donnees_lues  # retourne un dictionnaire
 
@@ -346,7 +346,7 @@ class Game:
             self.print_barre("Vous ne pouvez pas ajouter de troupes sur un territoires qui ne vous appartient pas ! ", err=True)
     
     def import_adjacence(self):
-        with open('Fichiers/adjacences_territoires.csv', newline='') as csvfile:
+        with open('src/Fichiers/adjacences_territoires.csv', newline='') as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
 
             graphe = []
@@ -377,7 +377,7 @@ class Game:
         li = []
         for area, countries_list in self.dict_territoires.items():
             for country in countries_list:
-                image = pygame.image.load(f"Pictures/Maps/{country}.png").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
+                image = pygame.image.load(f"src/Pictures/Maps/{country}.png").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
                 image = pygame.transform.scale(image, (int(self.fen_width/self.fac_reduc), int(self.fen_height/self.fac_reduc)))
                 mask = pygame.mask.from_surface(image)
                 li.append(territoire(area, country, mask, image))

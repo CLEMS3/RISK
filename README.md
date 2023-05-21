@@ -30,7 +30,7 @@ Pour simplifier l'installation, l'utilisation d'un environnement virtuel est pos
 
 ### Utilisation <div id="utilisation"></div>
 
-Après décompression de l'archive, il suffit de lancer le fichier `./src/main.py` :
+Après décompression de l'archive, il suffit de lancer le fichier `./src/main.py` en étant dans le dossier racine du projet :
 ```bash
 python3 src/main.py
 ```

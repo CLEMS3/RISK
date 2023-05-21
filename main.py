@@ -13,7 +13,6 @@ except:
     import pygame
 import hashlib
 import carte
-import random
 
 #Menu principal
 class MainMenu :

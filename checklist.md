@@ -3,27 +3,20 @@
 
 TO DO
 
-#couleurs à changer @Vincent 
 
 #MODIFIER FICHIER JOUEUR APRES VICTOIRE (score)
 
-OK #Renforcement territoire apres victoire @antoine
-
 #écran victoire avec pseudo du gagnant + mission reussie @clement
 
-OK #Transfert entre deux territoires seulement @antoine
-
-#Corriger les missions incoherentes @clement
+#Corriger les missions incoherentes @clement IMPORTANT IMPORTANT
 
 Peut etre améliorée mais OK #carte /fenetre Mission @Clement 
-
-OK #fonction attaque à jour @Vicent 
 
 #son/musique @Vittore
 
 #ajouter tous les message necesaires sur bar texte @Vittore
 
-#Fonction "algorithmiquement complexe" pour chemin plus court @Clement
+#Fonction "algorithmiquement complexe" pour chemin plus court @Clement IMPORTANT IMPORTANT 
 
 #decoupage fonctionnel Rules.py @vincent
 

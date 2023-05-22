@@ -105,6 +105,9 @@ class Game:
                     droit_attaque = True
                 else : 
                     self.print_barre("Le territoire que vous voulez attaquer n'est pas adjacents à votre territoire attaquant", err=True)
+                    chemin_str= ', '.join(self.suggestion_trajet(territoire_attaquant,territoire_attaque))
+                    self.print_barre(f"Le meilleur chemin pour y arriver est {chemin_str}", err=True)
+
             else : 
                 self.print_barre("Vous n'avez pas assez de troupes pour attaquer", err=True)
         else : 
@@ -234,7 +237,7 @@ class Game:
         return territoire_conquis
 
     def import_territoire(self):
-        with open('src/Fichiers/package.json', 'r', encoding='utf-8') as f:
+        with open('Fichiers/package.json', 'r', encoding='utf-8') as f:
             donnees_lues = json.load(f)
         return donnees_lues  # retourne un dictionnaire
 
@@ -346,7 +349,7 @@ class Game:
             self.print_barre("Vous ne pouvez pas ajouter de troupes sur un territoires qui ne vous appartient pas ! ", err=True)
     
     def import_adjacence(self):
-        with open('src/Fichiers/adjacences_territoires.csv', newline='') as csvfile:
+        with open('Fichiers/adjacences_territoires.csv', newline='') as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
 
             graphe = []
@@ -377,7 +380,7 @@ class Game:
         li = []
         for area, countries_list in self.dict_territoires.items():
             for country in countries_list:
-                image = pygame.image.load(f"src/Pictures/Maps/{country}.png").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
+                image = pygame.image.load(f"Pictures/Maps/{country}.png").convert_alpha()  # Chargement des images et convert pour optimiser l'affichage
                 image = pygame.transform.scale(image, (int(self.fen_width/self.fac_reduc), int(self.fen_height/self.fac_reduc)))
                 mask = pygame.mask.from_surface(image)
                 li.append(territoire(area, country, mask, image))
@@ -390,6 +393,7 @@ class Game:
         for i_territoire in self.li_territoires_obj:
             if i_territoire.nom_zone == continent and i_territoire.joueur != player:
                 own_continent = False
+                break  # blc des conventions de codage du fimi
                 break  # blc des conventions de codage du fimi
         return own_continent
     
@@ -514,10 +518,10 @@ class Game:
         """
 
         #initialisation des variables
-        candidats = self.liste_territoires_obj.copy()
+        candidats = self.li_territoires_obj.copy()
 
         graphe = {}
-        for territoire in self.liste_territoires_obj:
+        for territoire in candidats:
             graphe[territoire] = {}
             for voisin in self.liste_voisin(territoire):
                 graphe[territoire][voisin] = voisin.nombre_troupes
@@ -528,6 +532,7 @@ class Game:
         for sommet in candidats:
             chemins[sommet] = (None, inf)
 
+
         while candidats != []:
             #on actualise les poids pour chaque sommet
             """
@@ -536,10 +541,11 @@ class Game:
             Si oui, on actualise le poids du sommet, sinon, on garde la valeur précedente
             """
             for sommet in candidats:
-                if sommet in graphe[chemins[-1]]:
-                    poids = chemins[-1][1] + graphe[chemins[-1]][sommet] #poids du sommet = poids du sommet précédent + poids de l'arrête
+                #pb : pour le premier sommet, il faut prendre en compte qu'il n'y a pas de prédessesseur
+                if sommet in graphe[chemins[sommet][0]]:
+                    poids = chemins[chemins[sommet][0]][1] + graphe[chemins[sommet][0]][sommet] #poids du sommet = poids du sommet précédent + poids de l'arrête
                     if poids < chemins[sommet][1]:
-                        chemins[sommet] = (chemins[-1], poids)
+                        chemins[sommet] = (chemins[sommet][0], poids)
 
             #on récupère le sommet avec le poids le plus faible
             sommet_min = candidats[0]

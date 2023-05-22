@@ -28,13 +28,13 @@ class MainMenu :
         self.root.attributes('-fullscreen', True)  # fullscreen
 
         # imports
-        self.img = tk.PhotoImage(file='src/Images/Logo_Risk.png')
+        self.img = tk.PhotoImage(file='Images/Logo_Risk.png')
 
-        with open("src/Fichiers/Regles.txt", 'r') as f1:
+        with open("Fichiers/Regles.txt", 'r') as f1:
             self.textrules = f1.read()
 
         #joueurs
-        with open('src/Fichiers/Joueurs.csv', 'r', encoding='windows-1252' ) as f2:
+        with open('Fichiers/Joueurs.csv', 'r', encoding='windows-1252' ) as f2:
             csv_joueur = csv.reader(f2,delimiter=",")
             csv_joueur.__next__()
             self.liste_joueurs = []

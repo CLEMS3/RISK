@@ -186,17 +186,15 @@ class Game:
         nb_regiments = self.choix_du_nombre_de_regiments_attaquant(territoire_attaquant,nombre_de_regiments_attaquant)
         verif_des_attaquant = self.nombre_de_des_a_jouer(territoire_attaquant,nombre_de_regiments_attaquant,nombre_de_des_attaquant,"Attaquant")
         verif_des_defenseur = self.nombre_de_des_a_jouer(territoire_attaque,nombre_de_regiments_attaquant,nombre_de_des_attaque,"Attaqué")
-        print(f"verif droit attaque : {droit_attaque}")
-        print(f"verif nb_regiments : {nb_regiments}")
-        print(f"verif des attaquant : {verif_des_attaquant}")
-        print(f"verif des défenseurs : {verif_des_defenseur}")
         if droit_attaque and nb_regiments and verif_des_attaquant and verif_des_defenseur : 
                 scores_attaquant = []
                 scores_attaque = []
                 gagnant = 0
                 nb_des_a_comparer = 0 
-                nb_des_attaquant, nb_regiments_attaquant  = nombre_de_des_attaquant,nombre_de_regiments_attaquant
+                nb_des_attaquant  = nombre_de_des_attaquant
                 nb_des_attaque = nombre_de_des_attaque
+                nb_troupes_perdues_attaquant=0
+                nb_troupes_perdues_attaque=0
                 if nb_des_attaquant > nb_des_attaque : 
                     nb_des_a_comparer = nb_des_attaque
                 else : 
@@ -215,25 +213,18 @@ class Game:
                     print(scores_attaque)
                     if scores_attaquant[i] <= scores_attaque[i]:
                         territoire_attaquant.nombre_troupes -= 1
-                        territoire_attaquant.joueur.nb_troupes-=1    
-                        self.print_barre("Le territoire attaquant a perdu")
+                        territoire_attaquant.joueur.nb_troupes-=1
+                        nb_troupes_perdues_attaquant+=1   
                     if scores_attaquant[i] > scores_attaque[i]:
                         territoire_attaque.nombre_troupes -= 1
                         territoire_attaque.joueur.nb_troupes-=1
-                        self.print_barre("Le territoire attaqué a perdu")
+                        nb_troupes_perdues_attaque+=1
                     if territoire_attaque.nombre_troupes == 0:
                         territoire_attaque.joueur = territoire_attaquant.joueur
-                        #self.changer_couleur(territoire_attaque)
-                        print('ok attaque')
-                        #self.print_barre("Le territoire est conquis")
-                        # self.print_barre('Attaquant, vous avez gagné un nouveau territoire, déplacez vos troupes pour l occuper')
-                        nombre_de_troupes_a_transferer = 0
                         territoire_conquis = True 
-                        #while nombre_de_troupes_a_transferer < nb_regiments_attaquant or nombre_de_troupes_a_transferer > territoire_attaquant.nombre_troupes :
-                            #nombre_de_troupes_a_transferer = int(input("Les troupes attaquante doivent occuper ce territoire, le temps que d'autres renforts arrivent. Combien voulez vous en laisser ( il faut au minimum que vous utilisiez les régiments qui attaquaient? ")) #TODO Transformer ça en menu
-                        #self.transfert_troupes(territoire_attaquant, territoire_attaque, nombre_de_troupes_a_transferer)
                         gagnant = 1
                     i+=1
+                self.print_barre(f"Le territoire attaquant a perdu {nb_troupes_perdues_attaquant} troupes, le territoire attaqué a perdu {nb_troupes_perdues_attaque} troupes")
         return territoire_conquis
 
     def import_territoire(self):

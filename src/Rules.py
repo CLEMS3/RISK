@@ -3,7 +3,7 @@
 Created on Tue Mar 28 18:53:04 2023
 @author: vince
 """
-from random import randint, random, choice
+from random import randint, random, choice,shuffle
 import time
 import json
 import csv
@@ -62,7 +62,8 @@ class Game:
         self.fen_width = fen_width
         self.fen_height = fen_height
         self.fac_reduc = 1.5 ###SETUP MANUEL POUR LA CARTE
-
+        self.scores_attaquant = []
+        self.scores_attaque = []
         # Closure pour print dans la barre
         self.print_barre = self.print_closure(barre_texte)
 
@@ -207,6 +208,8 @@ class Game:
                     print(scores_attaque)
                 scores_attaquant = tri_fusion(scores_attaquant)
                 scores_attaque = tri_fusion(scores_attaque)
+                self.scores_attaquant = scores_attaquant
+                self.scores_attaque = scores_attaque
                 i=0
                 while i < nb_des_a_comparer and gagnant == 0:
                     print(scores_attaquant)
@@ -224,7 +227,7 @@ class Game:
                         territoire_conquis = True 
                         gagnant = 1
                     i+=1
-                self.print_barre(f"Le territoire attaquant a perdu {nb_troupes_perdues_attaquant} troupes, le territoire attaqué a perdu {nb_troupes_perdues_attaque} troupes")
+                self.print_barre(f"territoire attaquant a perdu {nb_troupes_perdues_attaquant} troupes,le territoire attaqué a perdu {nb_troupes_perdues_attaque} troupes")
         return territoire_conquis
 
     def import_territoire(self):

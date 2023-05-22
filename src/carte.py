@@ -4,7 +4,7 @@ from random import choice, shuffle
 import json
 import Rules
 import widgets
-
+import time
 
 
 class PygameWindow(pygame.Surface):
@@ -231,7 +231,6 @@ class PygameWindow(pygame.Surface):
                         if self.select[0].joueur != self.a_qui_le_tour :
                             self.empty_select()
                             self.barre_texte.changer_texte(["Vous ne pouvez pas attaquer avec un territoire qui ne vous appartient pas"], err=True, forceupdate=True)
-                            
 
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_m:
@@ -487,13 +486,19 @@ class PygameWindow(pygame.Surface):
                 y = int(0.234*self.fen_width)
                 pos = [(x,y),(x+80, y),(x+160,y)] #écart de 90pixel entre les x (60 entre chaque dés) 
                 for i in range(valeur): 
-                    self.window.blit(self.dice[self.dice_list1[i]],pos[i]) #affiche une face du dé aléatoire
+                    if len(self.game.scores_attaquant)==0 : 
+                        self.window.blit(self.dice[self.dice_list1[i]],pos[i]) #affiche une face du dé aléatoire
+                    else : 
+                        self.window.blit(self.dice[self.game.scores_attaquant[i]- 1],pos[i])
             if etat == 2: #des defence
                 x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 60 #pour centrer les 3 dés
                 y = int(0.319*self.fen_width)
                 pos = [(x,y),(x+80, y)] #écart de 120pixel entre les x (60 entre chaque dés) 
-                for i in range(valeur): 
-                    self.window.blit(self.dice[self.dice_list2[i]],pos[i]) #affiche une face du dé aléatoire
+                for i in range(valeur):
+                    if len(self.game.scores_attaque)==0 : 
+                        self.window.blit(self.dice[self.dice_list1[i]],pos[i]) #affiche une face du dé aléatoire
+                    else : 
+                        self.window.blit(self.dice[self.game.scores_attaque[i]- 1],pos[i])
 
     def add_borders(self):
         #bordure autour de la map

@@ -496,7 +496,7 @@ class PygameWindow(pygame.Surface):
                 pos = [(x,y),(x+80, y)] #écart de 120pixel entre les x (60 entre chaque dés) 
                 for i in range(valeur):
                     if len(self.game.scores_attaque)==0 : 
-                        self.window.blit(self.dice[self.dice_list1[i]],pos[i]) #affiche une face du dé aléatoire
+                        self.window.blit(self.dice[self.dice_list2[i]],pos[i]) #affiche une face du dé aléatoire
                     else : 
                         self.window.blit(self.dice[self.game.scores_attaque[i]- 1],pos[i])
 

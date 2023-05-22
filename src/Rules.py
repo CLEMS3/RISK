@@ -105,7 +105,7 @@ class Game:
                     droit_attaque = True
                 else : 
                     self.print_barre("Le territoire que vous voulez attaquer n'est pas adjacents à votre territoire attaquant", err=True)
-                    chemin_str= ', '.join(self.suggestion_trajet(territoire_attaquant,territoire_attaque))
+                    chemin_str= '-> '.join([country.nom_territoire for country in self.suggestion_trajet(territoire_attaquant,territoire_attaque)])
                     self.print_barre(f"Le meilleur chemin pour y arriver est {chemin_str}", err=True)
 
             else : 
@@ -523,7 +523,7 @@ class Game:
         for sommet in candidats:
             chemins[sommet] = (None, inf)
 
-
+        print("//////", '/'.join([territoire.nom_territoire for territoire in self.li_territoires_obj]))
         while candidats != []:
             #on actualise les poids pour chaque sommet
             """
@@ -532,11 +532,13 @@ class Game:
             Si oui, on actualise le poids du sommet, sinon, on garde la valeur précedente
             """
             for sommet in candidats:
+                predecesseur = chemins[sommet][0]
+                etape_precdente = etapes[-1]
                 #pb : pour le premier sommet, il faut prendre en compte qu'il n'y a pas de prédessesseur
-                if sommet in graphe[chemins[sommet][0]]:
-                    poids = chemins[chemins[sommet][0]][1] + graphe[chemins[sommet][0]][sommet] #poids du sommet = poids du sommet précédent + poids de l'arrête
+                if sommet in graphe[etape_precdente]:
+                    poids = chemins[etape_precdente][1] + graphe[etape_precdente][sommet] #poids du sommet = poids du sommet précédent + poids de l'arrête
                     if poids < chemins[sommet][1]:
-                        chemins[sommet] = (chemins[sommet][0], poids)
+                        chemins[sommet] = (etape_precdente, poids)
 
             #on récupère le sommet avec le poids le plus faible
             sommet_min = candidats[0]
@@ -547,6 +549,15 @@ class Game:
             candidats.remove(sommet_min)
             etapes.append(sommet_min)
 
+            #affichage (ces prints incroyable reproduisent l'algorithme de Dijkstra fait à la main)
+            """
+            print('<départ>' if len(etapes) == 0 else f"<{etapes[-1].nom_territoire}({chemins[sommet_min][1]})>", end='/')
+            for sommet in chemins.keys():
+                print(f"{sommet.nom_territoire}({chemins[sommet][1]})" if sommet not in etapes else "|||", end='/')
+            print("\n")"""
+
+
+        print(etapes)
         return etapes
 
 

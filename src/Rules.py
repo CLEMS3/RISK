@@ -273,7 +273,7 @@ class Game:
             joueurs_chanceux = self.joueur_au_hasard(self.liste_joueurs)
             for joueur in self.liste_joueurs:
                 if self.liste_joueurs[joueurs_chanceux[0]] == joueur or self.liste_joueurs[joueurs_chanceux[1]] == joueur:
-                    self.placement_initial(joueur, 30, 11, self.liste_territoires_restant)
+                    self.placement_initial(joueur, 30, 11)
                 else:
                     self.placement_initial(joueur, 30, 10)
 

@@ -485,19 +485,19 @@ class PygameWindow(pygame.Surface):
                 y = int(0.234*self.fen_width)
                 pos = [(x,y),(x+80, y),(x+160,y)] #écart de 90pixel entre les x (60 entre chaque dés) 
                 for i in range(valeur): 
-                    if len(self.game.scores_attaquant)==0 : 
-                        self.window.blit(self.dice[self.dice_list1[i]],pos[i]) #affiche une face du dé aléatoire
-                    else : 
+                    if len(self.game.scores_attaquant)== self.selnbr_des1.etat : 
                         self.window.blit(self.dice[self.game.scores_attaquant[i]- 1],pos[i])
+                    else : 
+                        self.window.blit(self.dice[self.dice_list1[i]],pos[i]) #affiche une face du dé aléatoire
             if etat == 2: #des defence
                 x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 60 #pour centrer les 3 dés
                 y = int(0.319*self.fen_width)
                 pos = [(x,y),(x+80, y)] #écart de 120pixel entre les x (60 entre chaque dés) 
                 for i in range(valeur):
-                    if len(self.game.scores_attaque)==0 : 
-                        self.window.blit(self.dice[self.dice_list2[i]],pos[i]) #affiche une face du dé aléatoire
-                    else : 
+                    if len (self.game.scores_attaque) == self.selnbr_des2.etat: 
                         self.window.blit(self.dice[self.game.scores_attaque[i]- 1],pos[i])
+                    else : 
+                        self.window.blit(self.dice[self.dice_list2[i]],pos[i]) #affiche une face du dé aléatoire
 
     def add_borders(self):
         #bordure autour de la map

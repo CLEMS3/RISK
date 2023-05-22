@@ -50,7 +50,7 @@ class PygameWindow(pygame.Surface):
         self.transfert_done = {}
 
         #liste couleurs
-        self.colors = [(174,160,75),(198,166,100),(230,214,144),(190,189,127),(228,160,16),(225,204,79)]
+        self.colors = [(230 ,214,144),(132,92,2),(69,72,25),(144,117,2),(174,160,75),(114,125,0)]
 
         # Sélecteur de nombres
         self.init_couleurs()
@@ -675,10 +675,14 @@ if __name__ == "__main__": #pour debug
     import main
     menu = main.MainMenu()
     temp = menu.liste_joueurs
+    print(len(temp))
     out = []
     out.append(temp[0])
     out.append(temp[1])
     out.append(temp[4])
+    out.append(temp[2])
+    out.append(temp[3])
+    out.append(temp[5])
     
 
     window_pg = PygameWindow((menu.WIDTH, menu.HEIGHT), out)

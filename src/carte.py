@@ -353,7 +353,6 @@ class PygameWindow(pygame.Surface):
                             scaled_pos = (event.pos[0]-(self.fen_width-80),event.pos[1]-(self.fen_height-80))
                             if self.next_mask.get_at(scaled_pos):
                                 if self.select[1].nombre_troupes >= troupe_attaque :
-
                                     self.view = 1 #retour à l'attaque
                                     self.barre_texte.changer_texte(["Fin de la phase de repartition"], err=True, forceupdate=True)
                                     self.changer_lumi(self.select[1])

@@ -48,7 +48,6 @@ class PygameWindow(pygame.Surface):
         self.placement_initial = []
         self.tour_initial = []
         self.transfert_done = {}
-
         #liste couleurs
         self.colors = [(230 ,214,144),(132,92,2),(69,72,25),(144,117,2),(174,160,75),(114,125,0)]
 
@@ -196,6 +195,7 @@ class PygameWindow(pygame.Surface):
 
                         #clic sur "Attaque"
                         try:
+                            self.lancer_des = False
                             scaled_pos = (event.pos[0]-(self.fen_width-150),event.pos[1]-(self.fen_height-80))
                             if self.next_mask.get_at(scaled_pos):
                                 if len(self.select) == 2:
@@ -444,8 +444,7 @@ class PygameWindow(pygame.Surface):
             self.window.blit(self.lines, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         self.window.blit(self.adios,(int(self.fen_width-self.adios.get_size()[0]-5),5))
         self.window.blit(self.next,(int(self.fen_width-80),int(self.fen_height-80)))
-        self.barre_info = self.add_borders() #ajoute les bordures noires
-        self.barre_info.changer_texte(["Test !", "ligne 2", "ligne 3", "ligne 4"])
+        self.add_borders() #ajoute les bordures noires
         self.add_texts() #ajoute les texts
         if self.view == 0 or self.view == 5 : #renforcement ou repartition
             #affichage boutons + et - (juste pendant renforcement)
@@ -481,14 +480,14 @@ class PygameWindow(pygame.Surface):
                 for i in range(valeur): 
                     if len(self.game.scores_attaquant)== valeur : 
                         self.window.blit(self.dice[self.game.scores_attaquant[i]- 1],pos[i])
-                    else : 
+                    else  : 
                         self.window.blit(self.dice[self.dice_list1[i]],pos[i]) #affiche une face du dé aléatoire
             if etat == 2: #des defence
                 x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 60 #pour centrer les 3 dés
                 y = int(0.319*self.fen_width)
                 pos = [(x,y),(x+80, y)] #écart de 120pixel entre les x (60 entre chaque dés) 
                 for i in range(valeur):
-                    if len (self.game.scores_attaque) == valeur: 
+                    if len (self.game.scores_attaque) == valeur : 
                         self.window.blit(self.dice[self.game.scores_attaque[i]- 1],pos[i])
                     else : 
                         self.window.blit(self.dice[self.dice_list2[i]],pos[i]) #affiche une face du dé aléatoire
@@ -498,12 +497,9 @@ class PygameWindow(pygame.Surface):
         pygame.draw.rect(self.window, (0,0,0), (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc)),int(self.fen_width/(self.fac_reduc)-5),int(self.fen_height/(self.fac_reduc))),3)
         #bordure controles
         pygame.draw.rect(self.window, (0,0,0),(5,5, int(2*self.fen_width/(self.pos_reduc)-10),int(self.fen_height - 10)),4)
-        #bordure info succes
-        barre_info = widgets.barreTexte(self.window, (0.333*self.fen_width, 0.0053*self.fen_height), self.water.get_size()[0] - self.adios.get_size()[0] - 3, self.fen_height*0.159, epaisseur=4, couleur_contour=(0,0,0), police=27)
         #bordure adios
         self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
         
-        return barre_info
 
     def add_texts(self):
         '''ajoute tous les textes necessaires durant la partie'''
@@ -554,8 +550,6 @@ class PygameWindow(pygame.Surface):
         # Barre de texte
         self.barre_texte.afficher_texte()
 
-        # Barre info
-        self.barre_info.afficher_texte()
     
     def changer_lumi(self, country):
         """

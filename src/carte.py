@@ -48,6 +48,7 @@ class PygameWindow(pygame.Surface):
         self.placement_initial = []
         self.tour_initial = []
         self.transfert_done = {}
+        self.etat_mission = 0 #mission non affichée
         #liste couleurs
         self.colors = [(230 ,214,144),(132,92,2),(69,72,25),(144,117,2),(174,160,75),(114,125,0)]
 
@@ -67,14 +68,24 @@ class PygameWindow(pygame.Surface):
                     running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.closebutton_rect.collidepoint(pygame.mouse.get_pos()):
                     running = False
-
+                
+                
                 #différentes vues
                 elif self.view == 0: #renforcement
                     self.afficher_fenetre()
                     self.display_dice = False
                     nbr_restant = self.a_qui_le_tour.troupe_a_repartir
-                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
 
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                        
+                        if self.mission_rect.collidepoint(pygame.mouse.get_pos()):
+                            if self.etat_mission == 0:
+                                self.t = 0
+                                self.etat_mission = 1
+                            elif self.etat_mission == 1:
+                                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.mission_rect.collidepoint(pygame.mouse.get_pos()):
+                                    self.view = self.t
+                                    self.etat_mission = 0
                         #clic sur bouton +
                         try:
                             scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90)), int(event.pos[1]-int(self.fen_height/(self.pos_reduc)))) #pour verifier si souris sur bouton sur le mask
@@ -142,11 +153,6 @@ class PygameWindow(pygame.Surface):
                     if len(self.select) == 2 : 
                         self.changer_lumi(self.select[0])
                         self.select.remove(self.select[0])
-
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_m:
-                            self.t = 0
-                            self.view = 4
                     
                 elif self.view == 1: #attaque
                     self.display_dice = True
@@ -179,6 +185,14 @@ class PygameWindow(pygame.Surface):
                             shuffle(self.dice_list2) #change les faces de dés affichées
                         self.selnbr_des2.draw(self.window)
 
+                        if self.mission_rect.collidepoint(pygame.mouse.get_pos()):
+                            if self.etat_mission == 0:
+                                self.t = 1
+                                self.etat_mission = 1
+                            elif self.etat_mission == 1:
+                                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.mission_rect.collidepoint(pygame.mouse.get_pos()):
+                                    self.view = self.t
+                                    self.etat_mission = 0
                         #check clic sur pays
                         for country in self.game.li_territoires_obj:
                             try:
@@ -226,17 +240,22 @@ class PygameWindow(pygame.Surface):
                             self.empty_select()
                             self.barre_texte.changer_texte(["Vous ne pouvez pas attaquer avec un territoire qui ne vous appartient pas"], err=True, forceupdate=True)
 
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_m:
-                            self.t = 1
-                            self.view = 4
-
                 elif self.view == 2: #déplacement OK FONCTIONNEL
                     self.afficher_fenetre()
                     self.display_dice = False
                     
                     
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
+
+                        if self.mission_rect.collidepoint(pygame.mouse.get_pos()):
+                            if self.etat_mission == 0:
+                                self.t = 2
+                                self.etat_mission = 1
+                            elif self.etat_mission == 1:
+                                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.mission_rect.collidepoint(pygame.mouse.get_pos()):
+                                    self.view = self.t
+                                    self.etat_mission = 0
+
 
                         for country in self.game.li_territoires_obj:
                             try:
@@ -297,25 +316,30 @@ class PygameWindow(pygame.Surface):
                     self.window.blit(self.ecran_victoire, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
                     self.display_dice = False
                     #afficher nom du gagnant + ajouter +1 au score sur fichier csv joueurs
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_m:
-                            self.t = 3
-                            self.view = 4
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.mission_rect.collidepoint(pygame.mouse.get_pos()):
+                        if self.etat_mission == 0:
+                                self.t = 3
+                                self.etat_mission = 1
+                        elif self.etat_mission == 1:
+                            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.mission_rect.collidepoint(pygame.mouse.get_pos()):
+                                self.view = self.t
+                                self.etat_mission = 0
 
-                elif self.view == 4: #mission @CLEMENT PEUT ETRE AMELIORE 
-                    self.afficher_fenetre()
-                    self.window.blit(self.text_font.render(f"Mission", True, (255, 255, 255)),(0.625*self.fen_width, 0.917*self.fen_height))
-                    self.window.blit(self.text_font.render(f"{self.a_qui_le_tour.mission.detail}", True, (0, 0, 0)),(int(0.375*self.fen_width), int(0.200*self.fen_height+20)))
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_m:
-                            self.view = self.t
+                
 
                 elif self.view == 5: #repartition troupes apres victoire
                     self.display_dice = False
                     self.afficher_fenetre()
 
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-
+                    
+                        if self.mission_rect.collidepoint(pygame.mouse.get_pos()):
+                            self.t = 5
+                            self.etat_mission
+                        elif self.etat_mission == 1:
+                            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.mission_rect.collidepoint(pygame.mouse.get_pos()):
+                                self.view = self.t
+                                self.etat_mission = 0
                         #clic sur bouton +
                         try:
                             scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90)), int(event.pos[1]-int(self.fen_height/(self.pos_reduc)))) #pour verifier si souris sur bouton sur le mask
@@ -354,10 +378,7 @@ class PygameWindow(pygame.Surface):
 
                         except IndexError : pass
 
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_m:
-                            self.t = 1
-                            self.view = 4
+                    
 
             # update the window
             pygame.display.update()
@@ -405,6 +426,9 @@ class PygameWindow(pygame.Surface):
         self.transfert_mask = pygame.mask.from_surface(self.transfert)
         self.ecran_victoire = pygame.image.load("Images/ecran_victoire.jpg").convert_alpha()
         self.ecran_victoire = pygame.transform.scale(self.ecran_victoire, (int(self.fen_width/(self.fac_reduc)-5), int(self.fen_height/(self.fac_reduc))))
+        #bouton mission
+        self.mission = pygame.image.load("Pictures/mission.png").convert_alpha()
+        self.mission = pygame.transform.scale(self.mission,((self.adios.get_size()[1]-20)*1.93,self.adios.get_size()[1]-20))
 
     def charger_coord_texte(self):
         with open('Fichiers/coords.json', 'r', encoding='utf-8') as f:
@@ -444,6 +468,8 @@ class PygameWindow(pygame.Surface):
             self.window.blit(self.lines, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         self.window.blit(self.adios,(int(self.fen_width-self.adios.get_size()[0]-5),5))
         self.window.blit(self.next,(int(self.fen_width-80),int(self.fen_height-80)))
+        if self.etat_mission == 0: #affichage bouton mission top_secret
+            self.window.blit(self.mission,(2*int(self.fen_width/(self.pos_reduc))+(int(self.fen_width/(self.fac_reduc)-5)-self.adios.get_size()[0]-5)/2-((self.adios.get_size()[1]-50)*1.93)/2,15))
         self.add_borders() #ajoute les bordures noires
         self.add_texts() #ajoute les texts
         if self.view == 0 or self.view == 5 : #renforcement ou repartition
@@ -497,6 +523,8 @@ class PygameWindow(pygame.Surface):
         pygame.draw.rect(self.window, (0,0,0), (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc)),int(self.fen_width/(self.fac_reduc)-5),int(self.fen_height/(self.fac_reduc))),3)
         #bordure controles
         pygame.draw.rect(self.window, (0,0,0),(5,5, int(2*self.fen_width/(self.pos_reduc)-10),int(self.fen_height - 10)),4)
+        #bordure box mission
+        self.mission_rect = pygame.draw.rect(self.window, (0,0,0),(2*int(self.fen_width/(self.pos_reduc)),5, int(self.fen_width/(self.fac_reduc)-5)-self.adios.get_size()[0]-5,self.adios.get_size()[1]),4)
         #bordure adios
         self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
         
@@ -530,7 +558,9 @@ class PygameWindow(pygame.Surface):
  
         elif self.view == 2: #deplacement
             self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (int(0.625*self.fen_width), int(0.917*self.fen_height)))
-                    
+        if self.etat_mission == 1:
+            self.window.blit(self.text_font.render(f"Mission", True, (255, 255, 255)),(150, 10)) #TODO
+            self.window.blit(self.text_font.render(f"{self.a_qui_le_tour.mission.detail}", True, (0, 0, 0)),(150, 20)) #TODO A centrer widget l202 208
         #Affiche les pays selectionnés et le joueur associé
         text4 = "Pays selectionnés :"
         self.window.blit(self.text_font.render(text4, True, (255, 255, 255)), (int(0.023*self.fen_width),int(0.694*self.fen_height))) #RELATIF
@@ -550,7 +580,6 @@ class PygameWindow(pygame.Surface):
         # Barre de texte
         self.barre_texte.afficher_texte()
 
-    
     def changer_lumi(self, country):
         """
         Assombri un territoire quand il est selectionné
@@ -661,9 +690,12 @@ class PygameWindow(pygame.Surface):
                     list_play.append(country)
             if list_play == []:
                 self.liste_joueurs_obj.remove(player)
-    
 
-
+    def afficher_mission(self):
+        if self.etat_mission == 0:
+            self.etat_mission = 1
+        elif self.etat_mission == 1:
+            self.etat_mission = 0
 
 if __name__ == "__main__": #pour debug
     import main

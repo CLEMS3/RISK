@@ -35,8 +35,12 @@ class PygameWindow(pygame.Surface):
         self.dice_list2 = [0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5]
 
         # Barre de texte pour les messages
-        self.barre_texte = widgets.barreTexte(self.window, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.fac_reduc))+5), self.water.get_size()[0], 30)
-        self.barre_texte.changer_texte(["Bonjour ! Ceci est une barre de texte pour afficher des messages."])
+        self.barre_texte = widgets.barreTexte(self.window, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.fac_reduc))+5), self.water.get_size()[0], 30, couleur_texte=(0,0,0), couleur_contour=(0,0,0))
+        self.barre_texte.changer_texte(["Bonjour ! La partie est prête à débuter"])
+
+        # Chronomètre
+        self.chrono = widgets.Timer(self.window, (0.36*self.fen_width, 0.95*self.fen_height), couleur_texte=(0,0,0), taille_police=25)
+        self.temps = time.time()
 
         self.game = Rules.Game(self.liste_joueurs_obj, self.fen_width, self.fen_height, self.barre_texte)
         self.a_qui_le_tour = choice(self.liste_joueurs_obj) #celui qui commence
@@ -57,6 +61,7 @@ class PygameWindow(pygame.Surface):
         self.selnbr_troupes = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+(int(self.fen_height/(self.pos_reduc)-10))/2), 1, 1, 3)
         self.selnbr_des1 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection 
         self.selnbr_des2 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+140), 1, 1, 2) 
+
 
     def main_loop(self):
         running = True
@@ -378,7 +383,7 @@ class PygameWindow(pygame.Surface):
 
                         except IndexError : pass
 
-                    
+            self.framerate(1) # 1 fps minimum, j'espère que les pc vont tenir :))
 
             # update the window
             pygame.display.update()
@@ -495,6 +500,20 @@ class PygameWindow(pygame.Surface):
             #régiments
             for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
                 self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (0, 0, 0)),(self.coords[country.nom_territoire][0]*self.fen_width/(self.fac_reduc)+2*int(self.fen_width/(self.pos_reduc)), self.coords[country.nom_territoire][1]*self.fen_height/(self.fac_reduc)+int(self.fen_height/(self.pos_reduc))))#{country.nombre_troupes}
+        
+        # Chrono       
+        self.chrono.update()
+
+    def framerate(self, temps : float):
+        """
+        Si le temps depuis le dernier rafraîchissement est plus que `temps`, ça rafraîchit.
+
+        N.B. : On ne force pas le rafraîchissement, vu que la fonction est appellée juste avant de le faire de toute façon.
+        Ça ferait double-emploi.
+        """
+        if (time.time() - self.temps) >= temps:
+            self.afficher_fenetre()
+
 
     def affiche_des(self, valeur, etat): #ATTAQUE
         '''affiche le nombre de dés nécésaires selon le choix du joueur, affiche une valeur aléatoire'''
@@ -517,6 +536,7 @@ class PygameWindow(pygame.Surface):
                         self.window.blit(self.dice[self.game.scores_attaque[i]- 1],pos[i])
                     else : 
                         self.window.blit(self.dice[self.dice_list2[i]],pos[i]) #affiche une face du dé aléatoire
+
 
     def add_borders(self):
         #bordure autour de la map
@@ -577,6 +597,7 @@ class PygameWindow(pygame.Surface):
             for i in range(len(select)):
                 self.window.blit(self.text_font.render(select_name[i], True, (255, 255, 255)), pos[i]) #place le nom du pays + propriétaire
                 self.window.blit(self.text_font.render("appartient à "+select_player[i], True, (255, 255, 255)), pos[i+2])
+
         # Barre de texte
         self.barre_texte.afficher_texte()
 

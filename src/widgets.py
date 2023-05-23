@@ -105,14 +105,14 @@ class barreTexte():
 
     Paramètres
     ----------
-    Args :
+    Args
     - surface <pygame.Surface> : Surface sur laquelle la barre est implantée
     - position <tuple> : Position du coin supérieur droit de la barre sur `surface`
     - longueur <int> : Longueur de la barre
     - hauteur <int> : Hauteur de la barre
-    Kwargs :
+    Kwargs
     - couleur_texte <tuple> : Couleur d'affichage du texte (défaut : blanc)
-    - couleur_contour <tuple> : Couleur du contour de la barre (défaut : rouge)
+    - couleur_contour <tuple> : Couleur du contour de la barre (défaut : blanc)
     - epaisseur <int> : Épaisseur de la bordure
     - police <int> : Taille de police
 
@@ -133,9 +133,9 @@ class barreTexte():
     - police_obj <pygame.font.Font> : Objet pygame de la police utilisée
     """
     
-    def __init__(self, surface : pygame.Surface, position : tuple, longueur : int, hauteur : int, couleur_texte : tuple = (0,0,0), couleur_contour : tuple = (0,0,0), epaisseur : int = 3, police : int = None):
+    def __init__(self, surface : pygame.Surface, position : tuple, longueur : int, hauteur : int, couleur_texte : tuple = (255,255,255), couleur_contour : tuple = (255,255,255), epaisseur : int = 3, police : int = None):
 
-        # Paramètres/Variables
+        # Paramètres/Attributs
         self.LONGUEUR_BARRE = int(longueur)
         self.HAUTEUR_BARRE = int(hauteur)
         self.COULEUR_CONTOUR = couleur_contour
@@ -150,7 +150,7 @@ class barreTexte():
         self.surface_barre = pygame.Surface((self.LONGUEUR_BARRE, self.HAUTEUR_BARRE), pygame.SRCALPHA)     # Surface contenant le contour et sur laquelle le texte est blit
 
         # Police
-        police_chemin = "Fonts/Monocraft.ttf"
+        police_chemin = "Fonts/ARLRDBD.TTF"
         police_taille = int((19/30)*self.HAUTEUR_BARRE) if (police == None) else police
         self.police_obj = pygame.font.Font(police_chemin, police_taille)
 
@@ -203,6 +203,68 @@ class barreTexte():
         hauteur = self.HAUTEUR_BARRE/(len(self.chaine) + 1)                             # Calcul de l'intervalle entre chaque ligne
         for cptr, chaine in enumerate(self.chaine):                                     # Placement des lignes
             texte = self.police_obj.render(chaine, True, self.COULEUR_TEXTE)
-            rect_texte = texte.get_rect(center=(self.LONGUEUR_BARRE/2, (cptr+1)*hauteur))
-            self.surface_barre.blit(texte, rect_texte)
-            self.surface.blit(self.surface_barre, self.POSITION)
+            rect_texte = texte.get_rect(center=(self.LONGUEUR_BARRE/2, (cptr+1)*hauteur))   # Position centrée pour le texte
+            self.surface_barre.blit(texte, rect_texte)                                      # On met le texte sur centré sur la surface de la barre
+            self.surface.blit(self.surface_barre, self.POSITION)                            # Puis la surface de la barre sur la surface de base
+
+
+class Timer():
+    """
+    Chronomètre le temps passé depuis le lancement de la fenêtre pygame.
+    Source initiale : Bing AI
+
+    Paramètres
+    ----------
+    Args
+    - surface <pygame.Surface> : Surface sur laquelle la barre est implantée
+    - position <tuple> : Position du coin supérieur droit de la barre sur `surface`
+    Kwargs
+    - couleur_texte <tuple> : Couleur d'affichage du texte (défaut : blanc)
+    - taille_police <int> : Taille de police
+
+    Attributs
+    ---------
+    - TEMPS_DEBUT <float> : Temps epoch à l'initialisation du widget
+    - COULEUR_TEXTE <tuple> : Couleur d'affichage du texte
+    - POSITION <tuple> : Position du coin supérieur droit de la barre sur `surface`
+    - temps_actuel <float> : Temps epoch actuellement affiché/retenu
+    - surface <pygame.Surface> : Surface sur laquelle le chronomètre est placé
+    - police_obj <pygame.font.Font> : Objet pygame de la police utilisée
+    """
+    def __init__(self, surface : pygame.Surface, position : tuple, couleur_texte : tuple = (255,255,255), taille_police : int = None):
+        
+        # Paramètres/Attributs
+        self.TEMPS_DEBUT = time.time()          # Temps epoch à l'initialisation
+        self.COULEUR_TEXTE = couleur_texte      # Couleur du texte du timer
+        self.POSITION = position                # Position sur la surface
+        self.temps_actuel = self.TEMPS_DEBUT    # Temps actuellement affiché
+        self.surface = surface
+
+        # Police
+        police_chemin = "Fonts/ARLRDBD.TTF"
+        print(self.surface.get_size())
+        police_taille = int((19/1080)*self.surface.get_size()[1]) if (taille_police == None) else taille_police
+        self.police_obj = pygame.font.Font(police_chemin, police_taille)
+
+    def update(self, forceupdate : bool = False):
+        """
+        Met à jour le chronomètre au temps de jeu actuel.
+
+        Ne rafraîchit automatiquement que si `forceupdate == True`
+        """
+        old = self.temps_actuel
+        self.temps_actuel = time.time() - self.TEMPS_DEBUT      # Temps passé depuis le lancement
+
+        # Format
+        heurs = int(self.temps_actuel // 3600)
+        minutes = int((self.temps_actuel % 3600) // 60)
+        secondes = int(self.temps_actuel % 60)
+
+        # Affichage
+        temps_str = f"{heurs:02d}:{minutes:02d}:{secondes:02d}"                     # Chaîne à afficher
+        temps_rendu = self.police_obj.render(temps_str, True, self.COULEUR_TEXTE)   # Rendu de le chaîne
+        self.surface.blit(temps_rendu, self.POSITION)
+
+        # Rafraîchissement
+        if (self.temps_actuel - old) >= 1:  # Si on a pas rafraîchit depuis une seconde ou plus
+            pygame.display.update()

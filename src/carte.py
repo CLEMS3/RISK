@@ -200,12 +200,6 @@ class PygameWindow(pygame.Surface):
                             if self.next_mask.get_at(scaled_pos):
                                 if len(self.select) == 2:
                                     if self.selnbr_troupes.etat <= self.select[0].nombre_troupes :
-                                        print("attaque")
-                                        print(f"nombre de troupes : {self.selnbr_troupes.etat}")
-                                        print(f"nombre de des attaque : {self.selnbr_des1.etat}")
-                                        print(f"nombre de des defence : {self.selnbr_des2.etat}")
-                                        #self.game.attaque(self.select[0], self.select[1], self.selnbr_troupes.etat, self.selnbr_des1.etat, self.selnbr_des2.etat) 
-                                        
                                         if self.game.attaque(self.select[0], self.select[1], self.selnbr_troupes.etat, self.selnbr_des1.etat, self.selnbr_des2.etat):
                                             print('ok conquis')
                                             self.select[1].color = self.select[0].color

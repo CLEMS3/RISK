@@ -460,13 +460,16 @@ class Game:
 
     def init_mission(self):
         for i in self.liste_joueurs:
-            type = randint(1, 8)
+            #type = randint(1, 8)
+            type_mission = 7
             # il y a peut etre un problème d'organistion la dedans entre les classes
-            if type == 7:
+            if type_mission == 7:
                 aim = choice(self.liste_joueurs)
-                i.mission = Mission(type, i.nom, self.li_territoires_obj, aim=aim )
+                i.mission = Mission(type_mission, i.nom, self.li_territoires_obj, aim=aim.nom )
             else:
-                i.mission = Mission(type, i.nom, self.li_territoires_obj)
+                i.mission = Mission(type_mission, i.nom, self.li_territoires_obj)
+
+            print(f"le joueur {i.nom} a pour mission {i.mission.type_mission} et doit {i.mission.detail}")
 
     def get_territoire_object(self,nom_territoire):
         territoire_obj=None
@@ -624,50 +627,50 @@ class Mission:
         destroy all armies of a named opponent or, in the case of being the named player oneself, to capture 24 territories # type = 7
         capture 18 territories and occupy each with two troops # type = 8
     """
-    def __init__(self, type:int, player:str, liste_territoire_obj,aim:str = None):
-        self.type = type
+    def __init__(self, type_mission:int, player:str, liste_territoire_obj,aim:str = None):
+        self.type_mission = type_mission
         self.aim = aim #ne mettre une valeur que pour la mission 7, qui sera alors le joueur nommé
         self.player = player
         self.liste_territoire_obj = liste_territoire_obj #liste_territoire_obj est la liste de tout les objet territoire de associé à chacun des territoires de la carte
         self.detail = self.init_detail()
 
     def init_detail(self):
-        if self.type == 1:
+        if self.type_mission == 1:
             return "capture Europe, Australia and one other continent"
-        elif self.type == 2:
+        elif self.type_mission == 2:
             return "capture Europe, South America and one other continent"
-        elif self.type == 3:
+        elif self.type_mission == 3:
             return "capture North America and Africa"
-        elif self.type == 4:
+        elif self.type_mission == 4:
             return "capture Asia and South America"
-        elif self.type == 5:
+        elif self.type_mission == 5:
             return "capture North America and Australia"
-        elif self.type == 6:
+        elif self.type_mission == 6:
             return "capture 24 territories"
-        elif self.type == 7:
+        elif self.type_mission == 7:
             if self.aim == self.player:
                 return "capture 24 territories"
             else:
                 return f"destroy all armies of {self.aim}"
-        elif self.type == 8:
+        elif self.type_mission == 8:
             return "capture 18 territories and occupy each with two troops"
     def check(self):
         #Pourquoi il y a pas de switch case en python putain
-        if self.type == 1:
+        if self.type_mission == 1:
             return self.check_mission1()
-        elif self.type == 2:
+        elif self.type_mission == 2:
             return self.check_mission2()
-        elif self.type == 3:
+        elif self.type_mission == 3:
             return self.check_mission3()
-        elif self.type == 4:
+        elif self.type_mission == 4:
             return self.check_mission4()
-        elif self.type == 5:
+        elif self.type_mission == 5:
             return self.check_mission5()
-        elif self.type == 6:
+        elif self.type_mission == 6:
             return self.check_mission6()
-        elif self.type == 7:
+        elif self.type_mission == 7:
             return self.check_mission7()
-        elif self.type == 8:
+        elif self.type_mission == 8:
             return self.check_mission8()
 
     def check_continent_owner(self, continent:str):

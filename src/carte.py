@@ -444,8 +444,7 @@ class PygameWindow(pygame.Surface):
             self.window.blit(self.lines, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         self.window.blit(self.adios,(int(self.fen_width-self.adios.get_size()[0]-5),5))
         self.window.blit(self.next,(int(self.fen_width-80),int(self.fen_height-80)))
-        self.barre_info = self.add_borders() #ajoute les bordures noires
-        self.barre_info.changer_texte(["Test !", "ligne 2", "ligne 3", "ligne 4"])
+        self.add_borders() #ajoute les bordures noires
         self.add_texts() #ajoute les texts
         if self.view == 0 or self.view == 5 : #renforcement ou repartition
             #affichage boutons + et - (juste pendant renforcement)
@@ -498,12 +497,9 @@ class PygameWindow(pygame.Surface):
         pygame.draw.rect(self.window, (0,0,0), (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc)),int(self.fen_width/(self.fac_reduc)-5),int(self.fen_height/(self.fac_reduc))),3)
         #bordure controles
         pygame.draw.rect(self.window, (0,0,0),(5,5, int(2*self.fen_width/(self.pos_reduc)-10),int(self.fen_height - 10)),4)
-        #bordure info succes
-        barre_info = widgets.barreTexte(self.window, (0.333*self.fen_width, 0.0053*self.fen_height), self.water.get_size()[0] - self.adios.get_size()[0] - 3, self.fen_height*0.159, epaisseur=4, couleur_contour=(0,0,0), police=27)
         #bordure adios
         self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
         
-        return barre_info
 
     def add_texts(self):
         '''ajoute tous les textes necessaires durant la partie'''
@@ -554,8 +550,6 @@ class PygameWindow(pygame.Surface):
         # Barre de texte
         self.barre_texte.afficher_texte()
 
-        # Barre info
-        self.barre_info.afficher_texte()
     
     def changer_lumi(self, country):
         """

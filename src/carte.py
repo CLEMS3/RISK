@@ -48,7 +48,6 @@ class PygameWindow(pygame.Surface):
         self.placement_initial = []
         self.tour_initial = []
         self.transfert_done = {}
-
         #liste couleurs
         self.colors = [(230 ,214,144),(132,92,2),(69,72,25),(144,117,2),(174,160,75),(114,125,0)]
 
@@ -196,6 +195,7 @@ class PygameWindow(pygame.Surface):
 
                         #clic sur "Attaque"
                         try:
+                            self.lancer_des = False
                             scaled_pos = (event.pos[0]-(self.fen_width-150),event.pos[1]-(self.fen_height-80))
                             if self.next_mask.get_at(scaled_pos):
                                 if len(self.select) == 2:
@@ -481,14 +481,14 @@ class PygameWindow(pygame.Surface):
                 for i in range(valeur): 
                     if len(self.game.scores_attaquant)== valeur : 
                         self.window.blit(self.dice[self.game.scores_attaquant[i]- 1],pos[i])
-                    else : 
+                    else  : 
                         self.window.blit(self.dice[self.dice_list1[i]],pos[i]) #affiche une face du dé aléatoire
             if etat == 2: #des defence
                 x = int((2*self.fen_width/(self.pos_reduc)-10)/2) - 60 #pour centrer les 3 dés
                 y = int(0.319*self.fen_width)
                 pos = [(x,y),(x+80, y)] #écart de 120pixel entre les x (60 entre chaque dés) 
                 for i in range(valeur):
-                    if len (self.game.scores_attaque) == valeur: 
+                    if len (self.game.scores_attaque) == valeur : 
                         self.window.blit(self.dice[self.game.scores_attaque[i]- 1],pos[i])
                     else : 
                         self.window.blit(self.dice[self.dice_list2[i]],pos[i]) #affiche une face du dé aléatoire

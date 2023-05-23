@@ -46,9 +46,6 @@ class territoire:
         self.selec = 0
         self.collor = color
 
-class Player: #voir avec antoine si on peut pas utiliser directement sa classe Joueur
-    def __init__(self, nom):
-        self.nom = nom
 
 class Game:
     def __init__(self, liste_joueurs, fen_width, fen_height, barre_texte : widgets.barreTexte):

@@ -46,9 +46,6 @@ class territoire:
         self.selec = 0
         self.collor = color
 
-class Player: #voir avec antoine si on peut pas utiliser directement sa classe Joueur
-    def __init__(self, nom):
-        self.nom = nom
 
 class Game:
     def __init__(self, liste_joueurs, fen_width, fen_height, barre_texte : widgets.barreTexte):
@@ -489,17 +486,7 @@ class Game:
                 return player
         return "Joueur non trouvé"
 
-    def changer_couleur(self, country):
-        """Remplace tous les pixels de la surface avec color, garde la transparence"""
-        player = country.joueur
-        color = player.couleur
-        width, height = country.surface.get_size()
-        r, g, b = color
-        for x in range(width):
-            for y in range(height):
-                a = country.surface.get_at((x, y))[3]  # obtient la valeur de la couleur de ce pixel, et le [3] prend donc le 4ème élement, ce qui correspond à la valeur de transparence du pixel
-                country.surface.set_at((x, y), pygame.Color(r, g, b,a))  # défini la couleur du pixel selon les valeurs de rgb donné en paramètre, et avec la valeur de transparence initiale
-
+    
     def liste_voisin(self, territoire):
         """
         Fonction qui retourne la liste des territoires voisins d'un territoire donné

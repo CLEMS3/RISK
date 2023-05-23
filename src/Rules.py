@@ -204,8 +204,8 @@ class Game:
                 for i in range(nb_des_attaque):
                     scores_attaque.append(des())
                     print(scores_attaque)
-                scores_attaquant = tri_fusion(scores_attaquant)
-                scores_attaque = tri_fusion(scores_attaque)
+                scores_attaquant = tri_fusion(scores_attaquant)[::-1]
+                scores_attaque = tri_fusion(scores_attaque)[::-1]
                 self.scores_attaquant = scores_attaquant
                 self.scores_attaque = scores_attaque
                 i=0
@@ -578,7 +578,6 @@ class Game:
 def tri_fusion(liste):
     """Permet de retourner la liste de scores de dés dans l'ordre décroissant """
     liste_triee = []
-    liste_triee_ordre_decroissant = []
     if len(liste) == 1:
         liste_triee = liste
     else:
@@ -586,8 +585,7 @@ def tri_fusion(liste):
         gauche = tri_fusion(liste[:milieu])
         droite = tri_fusion(liste[milieu:])
         liste_triee = fusion_triee(gauche, droite)
-    liste_triee_ordre_decroissant = liste_triee[::-1]
-    return liste_triee_ordre_decroissant
+    return liste_triee
 
 
 def fusion_triee(liste1, liste2):

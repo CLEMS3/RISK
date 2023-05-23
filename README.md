@@ -54,22 +54,33 @@ La carte, élément principal du jeu, se trouve au centre-droit de la fenêtre. 
 
 Au dessous se trouve une barre notifiant le joueur de toute information pertinente.
 
-TODO : finir ici
+Sur la gauche se trouve le volet de commande, qui permet aux joueurs d'interagir avec le jeu.
+
+Il est possible d'afficher les missions en utilisant la touche `m` du clavier.
 
 
 ### Phases de jeu <div id="gphases"></div>
 
 #### Renforcement <div id="renforcement"></div>
 
-TODO : Compléter
+Pendant le renforcement, les joueurs doivent chacun leur tour placer le nombre de troupes affiché dans le volet de commande sur leurs territoires, comme ils le souhaitent.
+
+Pour ce faire, il faut sélectionner un pays et utiliser les boutons `+` et `-` situés en dessous du compteur.
+
+Pour passer au joueur suivant, utiliser la flèche en bas à droite. Une fois toutes les troupes de tous les joueurs placées, la flèche permet de passer à la phase d'**Attaque**.
 
 #### Attaque <div id="attaque"></div>
 
-TODO : Compléter
+La phase d'attaque demande au joueur attaquant de choisir le territoire à attaquer, et remplir les paramètres du volet. Le joueur qui défend fait de même pour le nombre de dés.
+
+Quand tous les paramètres rentrés, le joueur clique sur les épées en bas à gauche pour attaquer une fois.
+Lorsque l'attaque est terminée, le bouton flèche permet de passer à la phase suivante.
 
 #### Déplacement <div id="depl"></div>
 
-TODO : Compléter
+Durant la phase de déplacement, le joueur sélectionne deux territoires, et peut déplacer les troupes à l'aide du bouton double-flèches en bas à droite.
+
+Une fois la phase terminée, cliquer sur le bouton flèche pour passer à la phase suivante.
 
 ## 📁 Structure du projet
 
@@ -85,7 +96,6 @@ TODO : Compléter
 │   ├── Rules.py            # Définition des règles du jeu en python
 │   └── widgets.py          # Widgets pygame utilisés en jeu
 ├── requirements.txt        # Fichier pour les dépendances dans le venv
-├── LICENSE
 └── README.md
 ```
 
@@ -102,7 +112,3 @@ TODO : Compléter
   </tbody>
 </table>
 
-
-## 📜 License <div id="license"></div>
-
-Ce programme est distribué sous license MIT. Copie incluse à la racine.

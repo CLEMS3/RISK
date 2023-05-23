@@ -212,11 +212,14 @@ class Game:
                 while i < nb_des_a_comparer and gagnant == 0:
                     print(scores_attaquant)
                     print(scores_attaque)
-                    if scores_attaquant[i] <= scores_attaque[i]:
+                    force = 999
+                    #if scores_attaquant[i] <= scores_attaque[i]:
+                    if force <= scores_attaque[i]:
                         territoire_attaquant.nombre_troupes -= 1
                         territoire_attaquant.joueur.nb_troupes-=1
                         nb_troupes_perdues_attaquant+=1   
-                    if scores_attaquant[i] > scores_attaque[i]:
+                    #if scores_attaquant[i] > scores_attaque[i]:
+                    if force > scores_attaque[i]:
                         territoire_attaque.nombre_troupes -= 1
                         territoire_attaque.joueur.nb_troupes-=1
                         nb_troupes_perdues_attaque+=1
@@ -664,9 +667,11 @@ class Mission:
         """
         own_continent = True
         for i_territoire in self.liste_territoire_obj:
-            if i_territoire.nom_zone == continent and i_territoire.joueur != self.player:
+            if i_territoire.nom_zone == continent and i_territoire.joueur.nom != self.player:
                 own_continent = False
+                print(f"{i_territoire.nom_territoire} appartient à {i_territoire.joueur.nom} et non à {self.player}")
                 break # blc des conventions de codage du fimi
+        print(f"Le joueur {self.player} {'' if own_continent else 'ne'} possède {'' if own_continent else 'pas'} le continent {continent}")
         return own_continent
 
     #perspective d'amélioration pour les check_mission : faire une fonction pour regrouper les missions similaires
@@ -723,7 +728,7 @@ class Mission:
         """capture 24 territories"""
         n = 0
         for i_territoire in self.liste_territoire_obj:
-            if i_territoire.joueur == self.player:
+            if i_territoire.joueur.nom == self.player:
                 n+=1
         return True if n >= 24 else False
 
@@ -733,7 +738,7 @@ class Mission:
         check = True
         if self.aim != self.player:
             for i_territoire in self.liste_territoire_obj:
-                if i_territoire.joueur == self.aim and i_territoire.nombre_troupes != 0:
+                if i_territoire.joueur.nom == self.aim and i_territoire.nombre_troupes != 0:
                     check = False
             return check
         else:
@@ -747,7 +752,7 @@ class Mission:
         """
         n = 0
         for i_territoire in self.liste_territoire_obj:
-            if i_territoire.joueur == self.player and i_territoire.nombre_troupes >= 2:
+            if i_territoire.joueur.nom == self.player and i_territoire.nombre_troupes >= 2:
                 n += 1
         return True if n >= 18 else False
 

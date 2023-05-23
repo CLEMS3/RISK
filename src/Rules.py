@@ -460,8 +460,7 @@ class Game:
 
     def init_mission(self):
         for i in self.liste_joueurs:
-            #type = randint(1, 8)
-            type_mission = 7
+            type_mission = randint(1, 8)
             # il y a peut etre un problème d'organistion la dedans entre les classes
             if type_mission == 7:
                 aim = choice(self.liste_joueurs)

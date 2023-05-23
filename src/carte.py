@@ -637,8 +637,10 @@ class PygameWindow(pygame.Surface):
         if len(self.tour_initial) <= 3:
             self.tour_initial.append(self.a_qui_le_tour)
         if self.a_qui_le_tour.mission.check():
+            print("Victoire du joueur", self.a_qui_le_tour.nom)
             self.view = 3
         else:
+            print(f"Le joueur {self.a_qui_le_tour.nom} n'a pas encore rempli sa mission")
             self.next_player()
             self.deplacement = True
             self.view = 0 if self.a_qui_le_tour in self.tour_initial else 1

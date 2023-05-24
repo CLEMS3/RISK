@@ -86,13 +86,13 @@ Le déplacement n'est possible qu'entre deux territoires. Le pays selectionné e
 
 Une fois la phase terminée, cliquer sur le bouton flèche pour passer à la phase suivante.
 
-#### Missions <div id="depl"></div>
+#### Missions <div id="mission"></div>
 
 Chaque joueur se voit attribué en début de partie une mission secrète qu'il va devoir accomplir pour gagner la partie. Cette mission est visible en cliquant sur le tampon "TOP SECRET" au dessus de la carte. Il ne faut pas dévoiler sa missions aux autres joueurs, cela leur donnerait un avantage sur vous.
 
 Une fois qu'un joueur a rempli sa mission, la partie prend fin.
 
-### Fin de partie <div id="depl"></div>
+#### Fin de partie <div id="endgame"></div>
 
 Une fois la partie remportée par un joueur, il suffit de fermer la fenêtre de jeu pour retourner au **menu**. On peut alors recommencer une partie ou choisir d'arrêter de jouer. Le gagnant de la partie remporte un point de score, ce qui le fera peut-être gagner une place dans le classement général !
 

@@ -17,7 +17,6 @@ Le jeu populaire **RISK** écrit en python.
         - [Attaque](#attaque)
         - [Déplacement](#depl)
 3. [Auteurs](#auteurs)
-4. [License](#license)
 
 
 ## 💽 Installation <div id="installation"></div>
@@ -33,7 +32,7 @@ Pour simplifier l'installation, l'utilisation d'un environnement virtuel est pos
 Après décompression de l'archive, il suffit de lancer le fichier `./src/main.py` en étant dans le dossier `src` racine du projet :
 ```bash
 $ cd ./src
-$ python3 src/main.py
+$ python3 main.py
 ```
 
 ## 🕹 Comment jouer ? <div id="howto"></div>

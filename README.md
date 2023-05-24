@@ -52,11 +52,9 @@ La fenêtre de jeu se compose de quatre zones.
 
 La carte, élément principal du jeu, se trouve au centre-droit de la fenêtre. Elle est cliquable tout au long du jeu, et permet de sélectionner les régions.
 
-Au dessous se trouve une barre notifiant le joueur de toute information pertinente.
+En dessous se trouve une barre notifiant le joueur de toute information pertinente.
 
 Sur la gauche se trouve le volet de commande, qui permet aux joueurs d'interagir avec le jeu.
-
-Il est possible d'afficher les missions en utilisant la touche `m` du clavier.
 
 
 ### Phases de jeu <div id="gphases"></div>
@@ -73,14 +71,33 @@ Pour passer au joueur suivant, utiliser la flèche en bas à droite. Une fois to
 
 La phase d'attaque demande au joueur attaquant de choisir le territoire à attaquer, et remplir les paramètres du volet. Le joueur qui défend fait de même pour le nombre de dés.
 
+[indications sur regles avec troupes et dés ça serait bien]
+
 Quand tous les paramètres rentrés, le joueur clique sur les épées en bas à gauche pour attaquer une fois.
 Lorsque l'attaque est terminée, le bouton flèche permet de passer à la phase suivante.
+
+Le joueur peut attaquer le nombre de territoire qu'il souhaite, selon sa stratégie. Une fois qu'il conquit un pays, il doit y placer un certain nombre de troupe, le minimum étant le nombre de troupe qu'il a utilisé pour attaquer.
 
 #### Déplacement <div id="depl"></div>
 
 Durant la phase de déplacement, le joueur sélectionne deux territoires, et peut déplacer les troupes à l'aide du bouton double-flèches en bas à droite.
 
+Le déplacement n'est possible qu'entre deux territoires. Le pays selectionné en premier est celui qui donne les troupes et le deuxième est celui qui les reçoit.
+
 Une fois la phase terminée, cliquer sur le bouton flèche pour passer à la phase suivante.
+
+#### Missions <div id="depl"></div>
+
+Chaque joueur se voit attribué en début de partie une mission secrète qu'il va devoir accomplir pour gagner la partie. Cette mission est visible en cliquant sur le tampon "TOP SECRET" au dessus de la carte. Il ne faut pas dévoiler sa missions aux autres joueurs, cela leur donnerait un avantage sur vous.
+
+Une fois qu'un joueur a rempli sa mission, la partie prend fin.
+
+### Fin de partie <div id="depl"></div>
+
+Une fois la partie remportée par un joueur, il suffit de fermer la fenêtre de jeu pour retourner au **menu**. On peut alors recommencer une partie ou choisir d'arrêter de jouer. Le gagnant de la partie remporte un point de score, ce qui le fera peut-être gagner une place dans le classement général !
+
+A vous de jouer maintenant ! N'hésitez pas à revenir sur cette fenêtre en cours de jeu si vous voulez verifier des détails.
+
 
 ## 📁 Structure du projet
 

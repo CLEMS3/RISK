@@ -4,19 +4,11 @@
 TO DO
 
 
-#MODIFIER FICHIER JOUEUR APRES VICTOIRE (score)
-
-#écran victoire avec pseudo du gagnant + mission reussie @clement
-
 #Corriger les missions incoherentes @clement IMPORTANT IMPORTANT
-
-Peut etre améliorée mais OK #carte /fenetre Mission @Clement 
 
 #son/musique @Vittore
 
-#ajouter tous les message necesaires sur bar texte @Vittore
-
-#Fonction "algorithmiquement complexe" pour chemin plus court @Clement IMPORTANT IMPORTANT 
+#ajouter tous les message necesaires sur bar texte @Vittore @Vincent >> message erreur d'attaque pas complet
 
 #decoupage fonctionnel Rules.py @vincent
 

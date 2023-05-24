@@ -16,6 +16,8 @@ Le jeu populaire **RISK** écrit en python.
         - [Renforcement](#renforcement)
         - [Attaque](#attaque)
         - [Déplacement](#depl)
+        - [Missions](#mission)
+        - [Fin de partie](#endgame)
 3. [Auteurs](#auteurs)
 
 

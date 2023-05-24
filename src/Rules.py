@@ -103,9 +103,7 @@ class Game:
                     droit_attaque = True
                 else : 
                     self.print_barre("Le territoire que vous voulez attaquer n'est pas adjacents à votre territoire attaquant", err=True)
-                    chemin_str= '-> '.join([country.nom_territoire for country in self.suggestion_trajet(territoire_attaquant,territoire_attaque)])
-                    print(chemin_str)
-                    self.print_barre(f"Le meilleur chemin pour y arriver est {chemin_str}", err=True)
+                    
 
             else : 
                 self.print_barre("Vous n'avez pas assez de troupes pour attaquer", err=True)
@@ -554,14 +552,14 @@ class Game:
             print("\n")"""
 
 
-        print("Liste des étapes:")
+        #print("Liste des étapes:")
         etapes = [territoire_arrivee]
         fin = False
         while not fin:
             etapes.append(chemins[etapes[-1]][0])
             if etapes[-1] == territoire_depart:
                 fin = True
-        print(etapes[::-1])
+        #print(etapes[::-1])
         return etapes[::-1]
 
 

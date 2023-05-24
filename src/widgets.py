@@ -268,3 +268,5 @@ class Timer():
         # Rafraîchissement
         if (self.temps_actuel - old) >= 1:  # Si on a pas rafraîchit depuis une seconde ou plus
             pygame.display.update()
+
+print(len('bon  jour'))

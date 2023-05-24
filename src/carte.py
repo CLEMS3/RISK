@@ -5,6 +5,7 @@ import json
 import Rules
 import widgets
 import time
+import csv
 
 
 class PygameWindow(pygame.Surface):
@@ -39,7 +40,7 @@ class PygameWindow(pygame.Surface):
         self.barre_texte.changer_texte(["Bonjour ! La partie est prête à débuter"])
 
         # Chronomètre
-        self.chrono = widgets.Timer(self.window, (0.36*self.fen_width, 0.95*self.fen_height), couleur_texte=(0,0,0), taille_police=25)
+        self.chrono = widgets.Timer(self.window, (0.36*self.fen_width, int(self.fen_height-70)), couleur_texte=(0,0,0), taille_police=25)
         self.temps = time.time()
 
         self.game = Rules.Game(self.liste_joueurs_obj, self.fen_width, self.fen_height, self.barre_texte)
@@ -53,6 +54,10 @@ class PygameWindow(pygame.Surface):
         self.tour_initial = []
         self.transfert_done = {}
         self.etat_mission = 0 #mission non affichée
+        self.score = False #score du gagnant non mis à jour
+        self.help_on = False #affichage aide OFF
+        self.color_tempo = []
+
         #liste couleurs
         self.colors = [(230 ,214,144),(132,92,2),(69,72,25),(144,117,2),(174,160,75),(114,125,0)]
 
@@ -82,7 +87,9 @@ class PygameWindow(pygame.Surface):
                     nbr_restant = self.a_qui_le_tour.troupe_a_repartir
 
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                        
+                        print(event.pos)
+                        print(self.fen_height)
+                        print(self.fen_width)
                         if self.mission_rect.collidepoint(pygame.mouse.get_pos()):
                             if self.etat_mission == 0:
                                 self.t = 0
@@ -164,8 +171,8 @@ class PygameWindow(pygame.Surface):
                     self.afficher_fenetre()
                    
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                       
                        #selecteur nombre de regiment
-                        
                         if self.selnbr_troupes(pygame.mouse.get_pos()) == 0:
                             self.selnbr_troupes.increment()
                         elif self.selnbr_troupes(pygame.mouse.get_pos()) == 1:
@@ -190,6 +197,7 @@ class PygameWindow(pygame.Surface):
                             shuffle(self.dice_list2) #change les faces de dés affichées
                         self.selnbr_des2.draw(self.window)
 
+                        #clic sur mission
                         if self.mission_rect.collidepoint(pygame.mouse.get_pos()):
                             if self.etat_mission == 0:
                                 self.t = 1
@@ -198,16 +206,15 @@ class PygameWindow(pygame.Surface):
                                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.mission_rect.collidepoint(pygame.mouse.get_pos()):
                                     self.view = self.t
                                     self.etat_mission = 0
+                        
                         #check clic sur pays
                         for country in self.game.li_territoires_obj:
                             try:
                                 scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
-                                if country.mask.get_at(scaled_pos):
+                                if country.mask.get_at(scaled_pos) and not self.help_on:
                                     print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                                     self.select_deux_surface(country)
                                     print('ok clic pays')
-                                    
-
                             except IndexError:
                                 pass
                         
@@ -225,7 +232,7 @@ class PygameWindow(pygame.Surface):
                                             self.select[1].joueur = self.select[0].joueur
                                             self.changer_couleur(self.select[1], self.select[1].color)
                                             troupe_attaque = self.selnbr_des1.etat
-                                            self.barre_texte.changer_texte([f"Bravo {self.a_qui_le_tour.nom}, vous avez conquis {self.select[1].nom_territoire}"], err=False, forceupdate=True)
+                                            self.barre_texte.changer_texte([f"Bravo {self.a_qui_le_tour.nom}, vous avez conquis {self.select[1].nom_territoire}"], err=True, forceupdate=True)
                                             self.view = 5 #REPARTITION TROUPES 
                                     
                         except IndexError : pass
@@ -237,8 +244,39 @@ class PygameWindow(pygame.Surface):
                                 self.view = 2
                                 self.barre_texte.changer_texte(["Fin de la phase d'attaque"], err=True, forceupdate=True)
                                 self.empty_select()
+                        except IndexError : pass
+
+                        #clic sur help
+                        try:
+                            scaled_pos = (event.pos[0]-(self.fen_width-80-60),event.pos[1]-(self.fen_height-80))
+                            if self.help.get_at(scaled_pos):
+                                
+                                if len(self.select) == 2 and self.select[2].joueur == self.a_qui_le_tour:
+                                    if not self.help_on:
+                                        print('afficher Dijkstra')
+                                        nombre_pays = len(self.game.suggestion_trajet(self.select[0],self.select[1]))
+                                        colors = self.generate_gradient(nombre_pays)
+                                        for i in range(nombre_pays):
+                                            print(f"ok {country.nom_territoire}")
+                                            country =  self.game.suggestion_trajet(self.select[0],self.select[1])[i]
+                                            self.color_tempo.append(country.color)
+                                            country.color = colors[i]
+                                            self.changer_couleur(country,country.color)
+                                            self.help_on = True
+                                    elif self.help_on:
+                                        print('enlever Dijkstra')
+                                        for i in range(nombre_pays):
+                                            self.game.suggestion_trajet(self.select[0],self.select[1])[i].color = self.color_tempo[i]
+                                            self.changer_couleur(self.game.suggestion_trajet(self.select[0],self.select[1])[i],self.color_tempo[i])
+                                        self.help_on = False
+                                        self.color_tempo = []
+                                else: self.barre_texte.changer_texte(["Vous n'avez pas besoin d'aide avec votre selection."], err=True, forceupdate=True)
 
                         except IndexError : pass
+     
+
+
+                        
 
                     if self.select != [] : 
                         if self.select[0].joueur != self.a_qui_le_tour :
@@ -251,7 +289,8 @@ class PygameWindow(pygame.Surface):
                     
                     
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 :
-
+                        
+                        #clic sur mission
                         if self.mission_rect.collidepoint(pygame.mouse.get_pos()):
                             if self.etat_mission == 0:
                                 self.t = 2
@@ -261,7 +300,7 @@ class PygameWindow(pygame.Surface):
                                     self.view = self.t
                                     self.etat_mission = 0
 
-
+                        #clic sur pays
                         for country in self.game.li_territoires_obj:
                             try:
                                 scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
@@ -320,7 +359,12 @@ class PygameWindow(pygame.Surface):
                     self.afficher_fenetre()
                     self.window.blit(self.ecran_victoire, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
                     self.display_dice = False
-                    #afficher nom du gagnant + ajouter +1 au score sur fichier csv joueurs
+
+                    #ajouter +1 au score sur fichier csv joueurs pour le gagnat
+                    if self.score == False:
+                        self.joueur_win(self.a_qui_le_tour)
+
+                    #clic sur mission
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.mission_rect.collidepoint(pygame.mouse.get_pos()):
                         if self.etat_mission == 0:
                                 self.t = 3
@@ -330,7 +374,7 @@ class PygameWindow(pygame.Surface):
                                 self.view = self.t
                                 self.etat_mission = 0
 
-                
+
 
                 elif self.view == 5: #repartition troupes apres victoire
                     self.display_dice = False
@@ -338,6 +382,7 @@ class PygameWindow(pygame.Surface):
 
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     
+                        #clic sur mission
                         if self.mission_rect.collidepoint(pygame.mouse.get_pos()):
                             self.t = 5
                             self.etat_mission
@@ -345,6 +390,7 @@ class PygameWindow(pygame.Surface):
                             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.mission_rect.collidepoint(pygame.mouse.get_pos()):
                                 self.view = self.t
                                 self.etat_mission = 0
+
                         #clic sur bouton +
                         try:
                             scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90)), int(event.pos[1]-int(self.fen_height/(self.pos_reduc)))) #pour verifier si souris sur bouton sur le mask
@@ -356,8 +402,8 @@ class PygameWindow(pygame.Surface):
                                         self.select[0].nombre_troupes -= 1 
                                         
                                     else :  self.barre_texte.changer_texte([f"Nombre minimum de troupes atteint sur {self.select[0].nom_territoire}."], err=True, forceupdate=True)
-                                
                         except IndexError: pass
+
                         #clic sur bouton -
                         try:
                             scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) +30)), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
@@ -369,8 +415,8 @@ class PygameWindow(pygame.Surface):
                                         self.select[0].nombre_troupes += 1
 
                                     else :  self.barre_texte.changer_texte([f"Nombre minimum de troupes atteint sur {self.select[1].nom_territoire}."], err=True, forceupdate=True)
-                                
                         except IndexError: pass 
+
                      #clic sur next, 
                         try:
                             scaled_pos = (event.pos[0]-(self.fen_width-80),event.pos[1]-(self.fen_height-80))
@@ -434,6 +480,10 @@ class PygameWindow(pygame.Surface):
         #bouton mission
         self.mission = pygame.image.load("Pictures/mission.png").convert_alpha()
         self.mission = pygame.transform.scale(self.mission,((self.adios.get_size()[1]-20)*1.93,self.adios.get_size()[1]-20))
+        #bouton aide (affichage chemin plus efficace )
+        self.help = pygame.image.load("Pictures/help.png").convert_alpha()
+        self.help = pygame.transform.scale(self.help,(50,50))
+        self.help_mask = pygame.mask.from_surface(self.help)
 
     def charger_coord_texte(self):
         with open('Fichiers/coords.json', 'r', encoding='utf-8') as f:
@@ -461,6 +511,17 @@ class PygameWindow(pygame.Surface):
 
             country.surface = new_surface
 
+    def generate_gradient(self, x):
+        gradient = []
+        step = 200 // (x-1)  # calcul l'interval par couleur
+    
+        for i in range(x):
+            value = 200 - (step * i)  # diminue l'intensité à chaque tour
+            color = (value, value, value)  # Creer la couleur
+            gradient.append(color) 
+    
+        return gradient
+    
     def afficher_fenetre(self):
         """
         Affiche les pays sur la surface de la fenêtre
@@ -468,12 +529,16 @@ class PygameWindow(pygame.Surface):
 
         #bg
         self.window.blit(self.bg,(0,0))
-        if self.view not in [3,4]: #pas de carte pour les fenetres win et mission
+        #
+        if self.view != 3: #pas de carte pour les fenetres win 
             self.window.blit(self.water, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
             self.window.blit(self.lines, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
+        #bouton quitter
         self.window.blit(self.adios,(int(self.fen_width-self.adios.get_size()[0]-5),5))
+        #bouton next
         self.window.blit(self.next,(int(self.fen_width-80),int(self.fen_height-80)))
-        if self.etat_mission == 0: #affichage bouton mission top_secret
+        # bouton mission top_secret
+        if self.etat_mission == 0: 
             self.window.blit(self.mission,(2*int(self.fen_width/(self.pos_reduc))+(int(self.fen_width/(self.fac_reduc)-5)-self.adios.get_size()[0]-5)/2-((self.adios.get_size()[1]-50)*1.93)/2,15))
         self.add_borders() #ajoute les bordures noires
         self.add_texts() #ajoute les texts
@@ -487,12 +552,15 @@ class PygameWindow(pygame.Surface):
             self.selnbr_troupes.draw(self.window)   # Dessiner le sélecteur du nombre de troupes
             self.affiche_des(self.selnbr_des1.etat, 1) # met à jour les dés
             self.affiche_des(self.selnbr_des2.etat , 2)
+            #bouton aide
+            self.window.blit(self.help,(int(self.fen_width-80)-60,int(self.fen_height-80)))
             #affichage icone attaque
-            self.window.blit(self.attack,(int(self.fen_width-150),int(self.fen_height-80)))
+            self.window.blit(self.attack,(int(self.fen_width)-200,int(self.fen_height-80)))
 
         elif self.view == 2: #deplacement
             self.window.blit(self.transfert,(int(self.fen_width-150),int(self.fen_height-80)))
-
+        elif self.view == 3: #win
+            self.window.blit(self.ecran_victoire, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
         if self.view not in [3, 4]:  # pas de carte pour les fenetres win et mission
             #territoires
             for country in self.game.li_territoires_obj:
@@ -513,7 +581,6 @@ class PygameWindow(pygame.Surface):
         """
         if (time.time() - self.temps) >= temps:
             self.afficher_fenetre()
-
 
     def affiche_des(self, valeur, etat): #ATTAQUE
         '''affiche le nombre de dés nécésaires selon le choix du joueur, affiche une valeur aléatoire'''
@@ -537,7 +604,6 @@ class PygameWindow(pygame.Surface):
                     else : 
                         self.window.blit(self.dice[self.dice_list2[i]],pos[i]) #affiche une face du dé aléatoire
 
-
     def add_borders(self):
         #bordure autour de la map
         pygame.draw.rect(self.window, (0,0,0), (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc)),int(self.fen_width/(self.fac_reduc)-5),int(self.fen_height/(self.fac_reduc))),3)
@@ -548,7 +614,6 @@ class PygameWindow(pygame.Surface):
         #bordure adios
         self.closebutton_rect = pygame.draw.rect(self.window, (0,0,0),(int(self.fen_width-self.adios.get_size()[0]-5),5,self.adios.get_size()[0],self.adios.get_size()[1]),3)
         
-
     def add_texts(self):
         '''ajoute tous les textes necessaires durant la partie'''
         #Nom du joueur en haut de la partie controle
@@ -579,8 +644,9 @@ class PygameWindow(pygame.Surface):
         elif self.view == 2: #deplacement
             self.window.blit(self.text_font.render(f"Phase de déplacement", True, (255, 255, 255)), (int(0.625*self.fen_width), int(0.917*self.fen_height)))
         if self.etat_mission == 1:
-            self.window.blit(self.text_font.render(f"Mission", True, (255, 255, 255)),(150, 10)) #TODO
-            self.window.blit(self.text_font.render(f"{self.a_qui_le_tour.mission.detail}", True, (0, 0, 0)),(150, 20)) #TODO A centrer widget l202 208
+            self.window.blit(self.text_font.render(f"Mission", True, (255, 255, 255)),(2*int(self.fen_width/(self.pos_reduc))+(int(self.fen_width/(self.fac_reduc)-5)-self.adios.get_size()[0]-5)/2-37, 0.0405*self.fen_height)) 
+            x = len(self.a_qui_le_tour.mission.detail) #pour centrer plus facilement dans la barre
+            self.window.blit(self.text_font.render(f"{self.a_qui_le_tour.mission.detail}", True, (0, 0, 0)),(2*int(self.fen_width/(self.pos_reduc))+(int(self.fen_width/(self.fac_reduc)-5)-self.adios.get_size()[0]-5)/2-((10*x)/2), 0.069*self.fen_height)) 
         #Affiche les pays selectionnés et le joueur associé
         text4 = "Pays selectionnés :"
         self.window.blit(self.text_font.render(text4, True, (255, 255, 255)), (int(0.023*self.fen_width),int(0.694*self.fen_height))) #RELATIF
@@ -645,6 +711,7 @@ class PygameWindow(pygame.Surface):
         new_surface = surface_mask.to_surface() #creer une surface noir et blanc depuis le mask (noir = pixel vide, blanc = pixel utilisé)
         new_surface.set_colorkey((0,0,0)) #efface le noir
         new_surface.fill(color, special_flags=pygame.BLEND_RGBA_MULT)
+        country.surface = new_surface
 
     def select_deux_surface(self, country):
         """
@@ -718,6 +785,17 @@ class PygameWindow(pygame.Surface):
         elif self.etat_mission == 1:
             self.etat_mission = 0
 
+    def joueur_win(self, joueur):
+        '''met à jour le score du gagnant'''
+        with open('Fichiers/Joueurs.csv', 'w', encoding='windows-1252' ) as f2:
+            csv_joueur = csv.reader(f2,delimiter=",")
+            csv_joueur.__next__()
+            for row in csv_joueur:
+                if row[0] == joueur.nom:
+                    row[2] = row[2]+1
+            f2.close()
+        self.score = True 
+
 if __name__ == "__main__": #pour debug
     import main
     menu = main.MainMenu()
@@ -727,9 +805,6 @@ if __name__ == "__main__": #pour debug
     out.append(temp[0])
     out.append(temp[1])
     out.append(temp[4])
-    out.append(temp[2])
-    out.append(temp[3])
-    out.append(temp[5])
     
 
     window_pg = PygameWindow((menu.WIDTH, menu.HEIGHT), out)

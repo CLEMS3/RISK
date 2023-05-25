@@ -386,8 +386,7 @@ class Game:
         for i_territoire in self.li_territoires_obj:
             if i_territoire.nom_zone == continent and i_territoire.joueur != player:
                 own_continent = False
-                break  # blc des conventions de codage du fimi
-                break  # blc des conventions de codage du fimi
+                break
         return own_continent
     
     def liste_territoires_joueur(self, joueur):
@@ -401,8 +400,10 @@ class Game:
     def count_player_territories(self, player):
         n_territoire = 0
         for i_territoire in self.li_territoires_obj:
+            print(type(i_territoire.joueur))
+            print(type(player))
             if i_territoire.joueur == player: #verifier si il faut verifier l'objet ou le nom
-                n_territoire +=i_territoire.nombre_troupes
+                n_territoire +=1
         return n_territoire
 
     def bonus(self, player):
@@ -450,6 +451,8 @@ class Game:
             bonus+=7
         if self.check_continent_owner("Océanie", player):
             bonus+=2
+
+        print(f"le bonus est de {bonus}, avec {n_territoire} territoires")
 
         player.troupe_a_repartir += bonus
 

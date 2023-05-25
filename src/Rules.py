@@ -113,7 +113,8 @@ class Game:
         return droit_attaque
     
     def choix_du_nombre_de_regiments_attaquant(self,territoire_qui_attaque,nombre_de_regiments_attaquant) :  
-        """Cette fonction permet de définir combien de régiments attaquent"""
+        """Cette fonction permet de vérifier que le nombre de troupes sélectionnés pour attaquer est cohérent avec le
+        nombre de troupes du territoires"""
         test_nombre_de_regiments_attaquant = False 
         if territoire_qui_attaque.nombre_troupes == 1 and nombre_de_regiments_attaquant==1 : 
             test_nombre_de_regiments_attaquant = True
@@ -135,8 +136,7 @@ class Game:
         return test_nombre_de_regiments_attaquant
 
     def nombre_de_des_a_jouer(self,territoire,nb_regiments_attaquant,nombre_de_des_joues, statut) : 
-        """Cette fonction permet au joueur de déterminer avec combien de dés il veut jouer. Evidemment il a intérêt a jouer avec le plus de dés possibles
-        mais il peut faire un autre choix ..."""
+        """Cette fonction permet au joueur de vérifier que le nombre de dés est cohérent avec le nombre de troupes sélectionnées pour attaquer"""
         test_nombre_des = False
         if statut == "Attaquant" : 
             print("On est passé")
@@ -146,15 +146,15 @@ class Game:
                 print("Le test a fonctionné")
                 test_nombre_des = True
             elif nb_regiments_attaquant == 1 and nombre_de_des_joues!=1 : 
-                self.print_barre("Attaquant : Vous devez utiliser qu'un seul régiment pour attaquer", err=True)
+                self.print_barre("Attaquant : Vous devez utiliser qu'un seul régiment pour attaquer avec ce nombre de troupes", err=True)
             elif nb_regiments_attaquant == 2 and (nombre_de_des_joues ==1 or nombre_de_des_joues ==2):
                 test_nombre_des = True
             elif nb_regiments_attaquant == 2 and (nombre_de_des_joues !=1 and nombre_de_des_joues !=2):
-                self.print_barre("Attaquant : Vous devez choisir parmi 1 ou 2 dés ! ", err=True)
+                self.print_barre("Attaquant : Vous devez choisir parmi 1 ou 2 dés avec ce nombre de troupes! ", err=True)
             elif nb_regiments_attaquant == 3 and (nombre_de_des_joues ==1 or nombre_de_des_joues ==2 or nombre_de_des_joues ==3 ):
                 test_nombre_des = True
             elif nb_regiments_attaquant == 2 and (nombre_de_des_joues !=1 and nombre_de_des_joues !=2):
-                self.print_barre("Attaquant : Vous devez choisir parmi 1, 2 ou 3 dés ! ", err=True)
+                self.print_barre("Attaquant : Vous devez choisir parmi 1 ou 2 dés avec ce nombre de troupes ! ", err=True)
         elif statut == "Attaqué" : 
             if (territoire.nombre_troupes == 1 or territoire.nombre_troupes == 2) and nombre_de_des_joues==1 :
                 test_nombre_des = True
@@ -572,7 +572,6 @@ class Game:
 
 
 
-#A quoi ça sert ?
 def tri_fusion(liste):
     """Permet de retourner la liste de scores de dés dans l'ordre décroissant """
     liste_triee = []

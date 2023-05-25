@@ -222,7 +222,7 @@ class PygameWindow(pygame.Surface):
                         #clic sur "Attaque"
                         try:
                             self.lancer_des = False
-                            scaled_pos = (event.pos[0]-(self.fen_width-150),event.pos[1]-(self.fen_height-80))
+                            scaled_pos = (event.pos[0]-(self.fen_width-200),event.pos[1]-(self.fen_height-80))
                             if self.next_mask.get_at(scaled_pos):
                                 if len(self.select) == 2:
                                     if self.selnbr_troupes.etat <= self.select[0].nombre_troupes :
@@ -248,10 +248,10 @@ class PygameWindow(pygame.Surface):
 
                         #clic sur help
                         try:
-                            scaled_pos = (event.pos[0]-(self.fen_width-80-60),event.pos[1]-(self.fen_height-80))
-                            if self.help.get_at(scaled_pos):
+                            scaled_pos_help = (event.pos[0]-(self.fen_width-140),event.pos[1]-(self.fen_height-80))
+                            if self.help.get_at(scaled_pos_help):
                                 
-                                if len(self.select) == 2 and self.select[2].joueur == self.a_qui_le_tour:
+                                if len(self.select) == 2 and self.select[1].joueur != self.a_qui_le_tour:
                                     if not self.help_on:
                                         print('afficher Dijkstra')
                                         nombre_pays = len(self.game.suggestion_trajet(self.select[0],self.select[1]))
@@ -553,7 +553,7 @@ class PygameWindow(pygame.Surface):
             self.affiche_des(self.selnbr_des1.etat, 1) # met à jour les dés
             self.affiche_des(self.selnbr_des2.etat , 2)
             #bouton aide
-            self.window.blit(self.help,(int(self.fen_width-80)-60,int(self.fen_height-80)))
+            self.window.blit(self.help,(int(self.fen_width-140),int(self.fen_height-80)))
             #affichage icone attaque
             self.window.blit(self.attack,(int(self.fen_width)-200,int(self.fen_height-80)))
 

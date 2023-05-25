@@ -210,14 +210,11 @@ class Game:
                 while i < nb_des_a_comparer and gagnant == 0:
                     print(scores_attaquant)
                     print(scores_attaque)
-                    force = 999
-                    #if scores_attaquant[i] <= scores_attaque[i]:
-                    if force <= scores_attaque[i]:
+                    if scores_attaquant[i] <= scores_attaque[i]:
                         territoire_attaquant.nombre_troupes -= 1
                         territoire_attaquant.joueur.nb_troupes-=1
                         nb_troupes_perdues_attaquant+=1   
-                    #if scores_attaquant[i] > scores_attaque[i]:
-                    if force > scores_attaque[i]:
+                    if scores_attaquant[i] > scores_attaque[i]:
                         territoire_attaque.nombre_troupes -= 1
                         territoire_attaque.joueur.nb_troupes-=1
                         nb_troupes_perdues_attaque+=1
@@ -226,7 +223,7 @@ class Game:
                         territoire_conquis = True 
                         gagnant = 1
                     i+=1
-                self.print_barre(f"territoire attaquant a perdu {nb_troupes_perdues_attaquant} troupes,le territoire attaqué a perdu {nb_troupes_perdues_attaque} troupes")
+                self.print_barre(f" Le territoire attaquant a perdu {nb_troupes_perdues_attaquant} troupes,le territoire attaqué a perdu {nb_troupes_perdues_attaque} troupes")
         return territoire_conquis
 
     def import_territoire(self):

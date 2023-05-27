@@ -5,7 +5,13 @@ import json
 import Rules
 import widgets
 import time
-import csv
+import subprocess   
+import sys
+try :
+    import pandas as pd
+except:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", 'pandas'])
+    import pandas as pd
 
 
 class PygameWindow(pygame.Surface):
@@ -787,14 +793,16 @@ class PygameWindow(pygame.Surface):
 
     def joueur_win(self, joueur):
         '''met à jour le score du gagnant'''
-        with open('Fichiers/Joueurs.csv', 'w', encoding='windows-1252' ) as f2:
-            csv_joueur = csv.reader(f2,delimiter=",")
-            csv_joueur.__next__()
-            for row in csv_joueur:
-                if row[0] == joueur.nom:
-                    row[2] = row[2]+1
-            f2.close()
-        self.score = True 
+        f2 = pd.read_csv('Fichiers/Joueurs.csv')
+
+        player_row = f2.loc[f2['Pseudo'] == joueur.nom]
+
+        player_row['Win'] += 1
+
+        f2.to_csv('Fichiers/Joueurs.csv', index=False)
+
+
+        
 
 if __name__ == "__main__": #pour debug
     import main

@@ -356,7 +356,7 @@ class MainMenu :
 
             elif len(password) > 5 :
                 hashed_mdp = hashlib.sha256(password.encode('UTF-8')).hexdigest() #encode le mot de passe pour le stockage
-                with open('src/Fichiers/Joueurs.csv', 'a', newline='') as f3:
+                with open('Fichiers/Joueurs.csv', 'a', newline='') as f3:
                     writer = csv.writer(f3)
                     nouvelles_données = [name,hashed_mdp,0]
                     self.liste_joueurs.append(Joueur(name,hashed_mdp,0))

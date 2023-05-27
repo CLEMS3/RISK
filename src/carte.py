@@ -63,6 +63,7 @@ class PygameWindow(pygame.Surface):
         self.score = False #score du gagnant non mis à jour
         self.help_on = False #affichage aide OFF
         self.color_tempo = []
+        self.end = False #partie fini True or false
 
         #liste couleurs
         self.colors = [(230 ,214,144),(132,92,2),(69,72,25),(144,117,2),(174,160,75),(114,125,0)]
@@ -118,6 +119,7 @@ class PygameWindow(pygame.Surface):
                         try:
                             scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) +30)), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
                             if  self.minus_mask.get_at(scaled_pos):
+                                self.view = 3 #TEMPO
                                 if self.select[0].joueur == self.a_qui_le_tour:
                                     if self.select[0].nombre_troupes > self.game.nb_troupes_minimum[self.select[0].nom_territoire]:
                                         print("moins")
@@ -360,8 +362,13 @@ class PygameWindow(pygame.Surface):
                                
                 elif self.view == 3: #win @CLEMENT A FINIR
                     self.afficher_fenetre()
+
                     self.window.blit(self.ecran_victoire, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
                     self.display_dice = False
+
+                    #fin timer
+                    if not self.end:
+                        self.end = True
 
                     #ajouter +1 au score sur fichier csv joueurs pour le gagnat
                     if self.score == False:
@@ -376,6 +383,8 @@ class PygameWindow(pygame.Surface):
                             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.mission_rect.collidepoint(pygame.mouse.get_pos()):
                                 self.view = self.t
                                 self.etat_mission = 0
+
+                    
 
                 elif self.view == 4: #repartition troupes apres victoire
                     self.display_dice = False
@@ -432,11 +441,11 @@ class PygameWindow(pygame.Surface):
 
                         except IndexError : pass
 
-
+            self.framerate(1) # 1 fps minimum, j'espère que les pc vont tenir :))
             # update the window
             pygame.display.update()
         
-        self.framerate(1) # 1 fps minimum, j'espère que les pc vont tenir :))
+            
 
     def charger_images(self):
         """
@@ -573,8 +582,9 @@ class PygameWindow(pygame.Surface):
             for country in self.game.li_territoires_obj: #on est obligé de faire deux boucles pour que tout se superpose comme il faut
                 self.window.blit(self.text_font.render(f"{country.nombre_troupes}", True, (0, 0, 0)),(self.coords[country.nom_territoire][0]*self.fen_width/(self.fac_reduc)+2*int(self.fen_width/(self.pos_reduc)), self.coords[country.nom_territoire][1]*self.fen_height/(self.fac_reduc)+int(self.fen_height/(self.pos_reduc))))#{country.nombre_troupes}
         
-        # Chrono       
-        self.chrono.update()
+        # Chrono   
+        if not self.end :    
+            self.chrono.update()
 
     def framerate(self, temps : float):
         """
@@ -667,6 +677,15 @@ class PygameWindow(pygame.Surface):
             for i in range(len(select)):
                 self.window.blit(self.text_font.render(select_name[i], True, (255, 255, 255)), pos[i]) #place le nom du pays + propriétaire
                 self.window.blit(self.text_font.render("appartient à "+select_player[i], True, (255, 255, 255)), pos[i+2])
+        if not self.end:
+            self.heures = self.chrono.heures
+            self.minutes = self.chrono.minutes
+            self.secondes = self.chrono.secondes
+        if self.end:
+            self.window.blit(self.text_font.render(f"Partie terminée, {self.a_qui_le_tour} a gagné ! Elle a duré {self.heures}h {self.minutes}min {self.secondes}s ", True, (0,0,0)), (0.36*self.fen_width, int(self.fen_height-70)))
+
+
+
 
         # Barre de texte
         self.barre_texte.afficher_texte()
@@ -791,15 +810,8 @@ class PygameWindow(pygame.Surface):
 
     def joueur_win(self, joueur):
         '''met à jour le score du gagnant'''
-        f2 = pd.read_csv('Fichiers/Joueurs.csv')
-
-        player_row = f2.loc[f2['Pseudo'] == joueur.nom]
-
-        player_row['Win'] += 1
-
-        f2.to_csv('Fichiers/Joueurs.csv', index=False)
-
-
+        joueur.win = str(int(joueur.win) +1)
+        
         
 
 if __name__ == "__main__": #pour debug

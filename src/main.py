@@ -111,19 +111,12 @@ class MainMenu :
         test.sort(reverse=True) #liste des nombre de victoire par ordre décroissant
         self.liste_classe=[]
         tempo = list(self.liste_joueurs)
-        
-        try:
-            for i in range(5): #fais un top 5
-                for player in tempo:
-                    if player.win == test[i]:
-                        self.liste_classe.append(player)
-                        tempo.remove(player)
-        except: #si il y a moins de 5 joueurs, ne prend que ceux qui existent
-            for i in range(len(tempo)):
-                for player in tempo:
-                    if player.win == test[i]:
-                        self.liste_classe.append(player)
-                        tempo.remove(player)
+        print(f"len(tempo) = {len(tempo)}")
+        for i in range(len(tempo)):
+            for player in tempo:
+                if player.win == test[i]:
+                    self.liste_classe.append(player)
+                    tempo.remove(player)
         
     def backmenu(self):
         '''retour au menu apres avoir cliqué sur'NOUVELLE PARTIE', affichages de boutons "menu"'''
@@ -168,11 +161,18 @@ class MainMenu :
         self.liste_play_classe()
         self.playername = []
         #placement du top 5 et assignement des fonctions entre et leave (affichage score/pseudo)
-        for i in range(len(self.liste_classe)):
-            self.playername.append(tk.Button(self.zone, text=self.liste_classe[i].nom ,bg='lightgray', font = self.Impact25))
-            self.playername[i].bind('<Enter>',lambda event, i=i : self.playerbutton_enter(event, i))
-            self.playername[i].bind('<Leave>',lambda event, i=i : self.playerbutton_leave(event, i))
-            self.playername[i].grid(column=0, row=i, sticky=tk.N)
+        if len(self.liste_classe) >=5:
+            for i in range(5):
+                self.playername.append(tk.Button(self.zone, text=self.liste_classe[i].nom ,bg='lightgray', font = self.Impact25))
+                self.playername[i].bind('<Enter>',lambda event, i=i : self.playerbutton_enter(event, i))
+                self.playername[i].bind('<Leave>',lambda event, i=i : self.playerbutton_leave(event, i))
+                self.playername[i].grid(column=0, row=i, sticky=tk.N)
+        else:
+            for i in range(len(self.liste_classe)):
+                self.playername.append(tk.Button(self.zone, text=self.liste_classe[i].nom ,bg='lightgray', font = self.Impact25))
+                self.playername[i].bind('<Enter>',lambda event, i=i : self.playerbutton_enter(event, i))
+                self.playername[i].bind('<Leave>',lambda event, i=i : self.playerbutton_leave(event, i))
+                self.playername[i].grid(column=0, row=i, sticky=tk.N)
         self.back3 = tk.Button(self.TOP2, text= 'Retour', font=self.Impact15, bg='grey', command=self.escapeTOP2 )
         self.back3.pack(pady=30)
             

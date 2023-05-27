@@ -63,7 +63,6 @@ class PygameWindow(pygame.Surface):
         self.score = False #score du gagnant non mis à jour
         self.help_on = False #affichage aide OFF
         self.color_tempo = []
-        self.troupe_attaque = 0
 
         #liste couleurs
         self.colors = [(230 ,214,144),(132,92,2),(69,72,25),(144,117,2),(174,160,75),(114,125,0)]
@@ -235,9 +234,9 @@ class PygameWindow(pygame.Surface):
                                             self.select[1].color = self.select[0].color
                                             self.select[1].joueur = self.select[0].joueur
                                             self.changer_couleur(self.select[1], self.select[1].color)
-                                            self.troupe_attaque = self.selnbr_des1.etat
+                                            troupe_attaque = self.selnbr_des1.etat
                                             self.barre_texte.changer_texte([f"Bravo {self.a_qui_le_tour.nom}, vous avez conquis {self.select[1].nom_territoire}"], err=True, forceupdate=True)
-                                            self.view = 5 #REPARTITION TROUPES 
+                                            self.view = 4 #REPARTITION TROUPES 
                                     
                         except IndexError : pass
 
@@ -423,13 +422,13 @@ class PygameWindow(pygame.Surface):
                         try:
                             scaled_pos = (event.pos[0]-(self.fen_width-80),event.pos[1]-(self.fen_height-80))
                             if self.next_mask.get_at(scaled_pos):
-                                if self.select[1].nombre_troupes >= self.troupe_attaque :
+                                if self.select[1].nombre_troupes >= troupe_attaque :
                                     self.view = 1 #retour à l'attaque
                                     self.barre_texte.changer_texte(["Fin de la phase de repartition"], err=True, forceupdate=True)
                                     self.changer_lumi(self.select[1])
                                     self.select = [self.select[0]]
-                                elif self.select[1].nombre_troupes < self.troupe_attaque : 
-                                    self.barre_texte.changer_texte([f"Vous devez ajouter au minimum {self.troupe_attaque} troupes sur le territoire conquis "], err=True, forceupdate=True) #force le joueur à ajouter au minimum le nombre de troupes avec lesquelles il a attaqué sur le territoire conquis.
+                                elif self.select[1].nombre_troupes < troupe_attaque : 
+                                    self.barre_texte.changer_texte([f"Vous devez ajouter au minimum {troupe_attaque} troupes sur le territoire conquis "], err=True, forceupdate=True) #force le joueur à ajouter au minimum le nombre de troupes avec lesquelles il a attaqué sur le territoire conquis.
 
                         except IndexError : pass
 

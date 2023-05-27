@@ -239,6 +239,9 @@ class Timer():
         self.POSITION = position                # Position sur la surface
         self.temps_actuel = self.TEMPS_DEBUT    # Temps actuellement affiché
         self.surface = surface
+        self.heures = 0
+        self.minutes = 0
+        self.secondes = 0
 
         # Police
         police_chemin = "Fonts/ARLRDBD.TTF"
@@ -256,17 +259,15 @@ class Timer():
         self.temps_actuel = time.time() - self.TEMPS_DEBUT      # Temps passé depuis le lancement
 
         # Format
-        heurs = int(self.temps_actuel // 3600)
-        minutes = int((self.temps_actuel % 3600) // 60)
-        secondes = int(self.temps_actuel % 60)
+        self.heures = int(self.temps_actuel // 3600)
+        self.minutes = int((self.temps_actuel % 3600) // 60)
+        self.secondes = int(self.temps_actuel % 60)
 
         # Affichage
-        temps_str = f"{heurs:02d}:{minutes:02d}:{secondes:02d}"                     # Chaîne à afficher
+        temps_str = f"{self.heures:02d}:{self.minutes:02d}:{self.secondes:02d}"                     # Chaîne à afficher
         temps_rendu = self.police_obj.render(temps_str, True, self.COULEUR_TEXTE)   # Rendu de le chaîne
         self.surface.blit(temps_rendu, self.POSITION)
 
         # Rafraîchissement
         if (self.temps_actuel - old) >= 1:  # Si on a pas rafraîchit depuis une seconde ou plus
             pygame.display.update()
-
-print(len('bon  jour'))

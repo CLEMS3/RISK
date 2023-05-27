@@ -18,6 +18,7 @@ def des():
 #Fais une fonction qui renvoie des chiffres au hasard pour imiter le comportement d'un dés
 
 
+
 class territoire:
     def __init__(self, nom_zone, nom_territoire, mask, surface, joueur=None, nombre_troupes = 0,color=None):
         self.nom_territoire = nom_territoire
@@ -293,7 +294,27 @@ class Game:
             territoire.joueur = joueur
             nombre_de_troupes_qu_il_reste_a_placer -= 1
             joueur.troupe_a_repartir = nombre_de_troupes_qu_il_reste_a_placer
+            #self.changer_couleur(territoire)
+        
+        #while nombre_de_troupes_qu_il_reste_a_placer > 0:
+            #nombre_de_troupes_qu_il_reste_a_placer = self.ajout_de_troupes_sur_territoires(joueur)
             
+
+        # il faut que le joueur tire des territoires au hasard où il placera ses troupes comme il le souhaite avec toujours au minimum une troupe sur chaque territoire occupé
+    def ajout_de_troupes_sur_territoires(self, joueur, territoire, nombre):
+        if territoire.joueur == joueur : 
+            nombre_de_troupes_qu_il_reste_a_placer = joueur.troupe_a_repartir
+            liste_territoires_joueurs = self.liste_territoires_joueur(joueur)
+            if nombre > nombre_de_troupes_qu_il_reste_a_placer:  # Le joueur ajoute des troupes sur les territoires qu'il
+                self.print_barre("Il ne vous reste pas assez de troupes !!", err=True)
+            else:
+                territoire.nombre_troupes += nombre
+                nombre_de_troupes_qu_il_reste_a_placer -= nombre
+            joueur.troupe_a_repartir = nombre_de_troupes_qu_il_reste_a_placer
+            return nombre_de_troupes_qu_il_reste_a_placer 
+        else : 
+            self.print_barre("Vous ne pouvez pas ajouter de troupes sur un territoires qui ne vous appartient pas ! ", err=True)
+    
     def import_adjacence(self):
         with open('Fichiers/adjacences_territoires.csv', newline='') as csvfile:
             reader = csv.reader(csvfile, delimiter=',', quotechar='"')
@@ -595,6 +616,7 @@ class Mission:
         elif self.type_mission == 8:
             return "capture 18 territories and occupy each with two troops"
     def check(self):
+        #Pourquoi il y a pas de switch case en python putain
         if self.type_mission == 1:
             return self.check_mission1()
         elif self.type_mission == 2:
@@ -706,3 +728,14 @@ class Mission:
                 n += 1
         return True if n >= 18 else False
 
+'''CE qu'il reste a faire : 
+    - Mettre en place les différentes missions et détecter lorsque un joueur les a toutes accomplies
+    - Mettre en place les bonus 
+    - Créer une armée neutre pour les parties à 2 joueurs
+    - Créer une classe qui définit ce qu'esst précisément un tour (le temps, les opéraitons effectuées...) 
+    
+    
+    
+    
+    
+    '''

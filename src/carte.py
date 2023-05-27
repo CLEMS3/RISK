@@ -73,7 +73,6 @@ class PygameWindow(pygame.Surface):
         self.selnbr_des1 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection 
         self.selnbr_des2 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+140), 1, 1, 2) 
 
-
     def main_loop(self):
         running = True
         while running:
@@ -441,7 +440,6 @@ class PygameWindow(pygame.Surface):
         
         self.framerate(1) # 1 fps minimum, j'espère que les pc vont tenir :))
 
-
     def charger_images(self):
         """
         Charge toute les images et les transforme comme il faut, sauf les pays qui sont liés à la classe territoire
@@ -521,11 +519,10 @@ class PygameWindow(pygame.Surface):
 
     def generate_gradient(self, x):
         gradient = []
-        step = 200 // (x-1)  # calcul l'interval par couleur
+        step = 180 // (x-1)  # calcul l'interval par couleur
     
         for i in range(x):
-            value = 200 - (step * i)  # diminue l'intensité à chaque tour
-            color = (value, value, value)  # Creer la couleur
+            value = 200 - (step * i)   # diminue l'intensité à chaque tour, minimum 
             gradient.append(color) 
     
         return gradient

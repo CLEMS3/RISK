@@ -372,7 +372,6 @@ class MainMenu :
             self.errorlabel2 = tk.Label(self.TL, text = "Pseudo non conforme \n Il doit être entre 1 et 9 caractères", font = self.Impact15, fg='red', bg='grey')
             self.errorlabel2.pack(pady=10)
 
-
 class Joueur():
 
     def __init__(self,nom,MDP,GameWin):

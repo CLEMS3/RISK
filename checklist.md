@@ -9,6 +9,8 @@ TO DO
 
 #decoupage fonctionnel Rules.py @vincent
 
+#finir readme @vitto
+
 #details widget.py @vitto
 
 #VIDEO

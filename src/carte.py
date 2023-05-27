@@ -37,7 +37,7 @@ class PygameWindow(pygame.Surface):
 
         # Barre de texte pour les messages
         self.barre_texte = widgets.barreTexte(self.window, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.fac_reduc))+5), self.water.get_size()[0], 30, couleur_texte=(0,0,0), couleur_contour=(0,0,0))
-        self.barre_texte.changer_texte(["Bonjour ! La partie est prête à débuter"])
+        self.barre_texte.changer_texte([""])
 
         # Chronomètre
         self.chrono = widgets.Timer(self.window, (0.36*self.fen_width, int(self.fen_height-70)), couleur_texte=(0,0,0), taille_police=25)

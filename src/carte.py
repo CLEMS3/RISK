@@ -63,6 +63,7 @@ class PygameWindow(pygame.Surface):
         self.score = False #score du gagnant non mis à jour
         self.help_on = False #affichage aide OFF
         self.color_tempo = []
+        self.troupe_attaque = 0
 
         #liste couleurs
         self.colors = [(230 ,214,144),(132,92,2),(69,72,25),(144,117,2),(174,160,75),(114,125,0)]
@@ -92,9 +93,7 @@ class PygameWindow(pygame.Surface):
                     nbr_restant = self.a_qui_le_tour.troupe_a_repartir
 
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                        print(event.pos)
-                        print(self.fen_height)
-                        print(self.fen_width)
+                        
                         if self.mission_rect.collidepoint(pygame.mouse.get_pos()):
                             if self.etat_mission == 0:
                                 self.t = 0
@@ -236,7 +235,7 @@ class PygameWindow(pygame.Surface):
                                             self.select[1].color = self.select[0].color
                                             self.select[1].joueur = self.select[0].joueur
                                             self.changer_couleur(self.select[1], self.select[1].color)
-                                            troupe_attaque = self.selnbr_des1.etat
+                                            self.troupe_attaque = self.selnbr_des1.etat
                                             self.barre_texte.changer_texte([f"Bravo {self.a_qui_le_tour.nom}, vous avez conquis {self.select[1].nom_territoire}"], err=True, forceupdate=True)
                                             self.view = 5 #REPARTITION TROUPES 
                                     
@@ -379,7 +378,7 @@ class PygameWindow(pygame.Surface):
                                 self.view = self.t
                                 self.etat_mission = 0
 
-                elif self.view == 5: #repartition troupes apres victoire
+                elif self.view == 4: #repartition troupes apres victoire
                     self.display_dice = False
                     self.afficher_fenetre()
 
@@ -387,7 +386,7 @@ class PygameWindow(pygame.Surface):
                     
                         #clic sur mission
                         if self.mission_rect.collidepoint(pygame.mouse.get_pos()):
-                            self.t = 5
+                            self.t = 4
                             self.etat_mission
                         elif self.etat_mission == 1:
                             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.mission_rect.collidepoint(pygame.mouse.get_pos()):
@@ -424,13 +423,13 @@ class PygameWindow(pygame.Surface):
                         try:
                             scaled_pos = (event.pos[0]-(self.fen_width-80),event.pos[1]-(self.fen_height-80))
                             if self.next_mask.get_at(scaled_pos):
-                                if self.select[1].nombre_troupes >= troupe_attaque :
+                                if self.select[1].nombre_troupes >= self.troupe_attaque :
                                     self.view = 1 #retour à l'attaque
                                     self.barre_texte.changer_texte(["Fin de la phase de repartition"], err=True, forceupdate=True)
                                     self.changer_lumi(self.select[1])
                                     self.select = [self.select[0]]
-                                elif self.select[1].nombre_troupes < troupe_attaque : 
-                                    self.barre_texte.changer_texte([f"Vous devez ajouter au minimum {troupe_attaque} troupes sur le territoire conquis "], err=True, forceupdate=True) #force le joueur à ajouter au minimum le nombre de troupes avec lesquelles il a attaqué sur le territoire conquis.
+                                elif self.select[1].nombre_troupes < self.troupe_attaque : 
+                                    self.barre_texte.changer_texte([f"Vous devez ajouter au minimum {self.troupe_attaque} troupes sur le territoire conquis "], err=True, forceupdate=True) #force le joueur à ajouter au minimum le nombre de troupes avec lesquelles il a attaqué sur le territoire conquis.
 
                         except IndexError : pass
 
@@ -548,7 +547,7 @@ class PygameWindow(pygame.Surface):
             self.window.blit(self.mission,(2*int(self.fen_width/(self.pos_reduc))+(int(self.fen_width/(self.fac_reduc)-5)-self.adios.get_size()[0]-5)/2-((self.adios.get_size()[1]-50)*1.93)/2,15))
         self.add_borders() #ajoute les bordures noires
         self.add_texts() #ajoute les texts
-        if self.view == 0 or self.view == 5 : #renforcement ou repartition
+        if self.view == 0 or self.view == 4 : #renforcement ou repartition
             #affichage boutons + et - (juste pendant renforcement)
             self.window.blit(self.plus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) - 90,int(self.fen_height/(self.pos_reduc))))
             self.window.blit(self.minus, (int((2*self.fen_width/(self.pos_reduc)-10)/2) +30 ,int(self.fen_height/(self.pos_reduc))))
@@ -567,7 +566,7 @@ class PygameWindow(pygame.Surface):
             self.window.blit(self.transfert,(int(self.fen_width-150),int(self.fen_height-80)))
         elif self.view == 3: #win
             self.window.blit(self.ecran_victoire, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
-        if self.view not in [3, 4]:  # pas de carte pour les fenetres win et mission
+        if self.view != 3:  # pas de carte pour les fenetres win et mission
             #territoires
             for country in self.game.li_territoires_obj:
                 self.window.blit(country.surface, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))

@@ -810,15 +810,8 @@ class PygameWindow(pygame.Surface):
 
     def joueur_win(self, joueur):
         '''met à jour le score du gagnant'''
-        #f2 = pd.read_csv('Fichiers/Joueurs.csv')
-
-        #f2.loc[joueur.nom,'Win'] == joueur.win + 1
-
-        #f2.to_csv('Fichiers/Joueurs.csv', index=False)
-
-        #self.score = True
-
-
+        joueur.win = str(int(joueur.win) +1)
+        
         
 
 if __name__ == "__main__": #pour debug

@@ -615,7 +615,6 @@ class Mission:
         elif self.type_mission == 8:
             return "capture 18 territories and occupy each with two troops"
     def check(self):
-        #Pourquoi il y a pas de switch case en python putain
         if self.type_mission == 1:
             return self.check_mission1()
         elif self.type_mission == 2:

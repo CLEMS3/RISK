@@ -4,7 +4,6 @@
 TO DO
 
 
-#Corriger degradé Djikstra
 
 #verifier mise a jour score
 

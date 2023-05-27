@@ -426,6 +426,8 @@ class PygameWindow(pygame.Surface):
                                     self.barre_texte.changer_texte(["Fin de la phase de repartition"], err=True, forceupdate=True)
                                     self.changer_lumi(self.select[1])
                                     self.select = [self.select[0]]
+                                elif self.select[1].nombre_troupes < troupe_attaque : 
+                                    self.barre_texte.changer_texte([f"Vous devez ajouter au minimum {troupe_attaque} troupes sur le territoire conquis "], err=True, forceupdate=True) #force le joueur à ajouter au minimum le nombre de troupes avec lesquelles il a attaqué sur le territoire conquis.
 
                         except IndexError : pass
 

@@ -4,7 +4,9 @@
 TO DO
 
 
-#Corriger les missions incoherentes @clement IMPORTANT IMPORTANT
+#Corriger degradé Djikstra
+
+#verifier mise a jour score
 
 #son/musique @Vittore
 
@@ -13,6 +15,8 @@ TO DO
 #decoupage fonctionnel Rules.py @vincent
 
 #VIDEO
+
+#demande prof 1,5 point chacun pour ampleur travail
 
 
 

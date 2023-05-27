@@ -727,14 +727,3 @@ class Mission:
                 n += 1
         return True if n >= 18 else False
 
-'''CE qu'il reste a faire : 
-    - Mettre en place les différentes missions et détecter lorsque un joueur les a toutes accomplies
-    - Mettre en place les bonus 
-    - Créer une armée neutre pour les parties à 2 joueurs
-    - Créer une classe qui définit ce qu'esst précisément un tour (le temps, les opéraitons effectuées...) 
-    
-    
-    
-    
-    
-    '''

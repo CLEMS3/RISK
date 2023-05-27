@@ -17,23 +17,6 @@ def des():
     return x
 #Fais une fonction qui renvoie des chiffres au hasard pour imiter le comportement d'un dés
 
-class Timer:
-
-    def __init__(self, duree):
-        self.reference = time.time()
-        self.duree = duree
-
-    def temps_restant(self):
-        return self.reference - (time.time() - self.reference)
-
-
-class troupes:
-    def __init__(self, nom, type, joueur, territoire):
-        self.nom = nom
-        self.type = type
-        self.joueur = joueur
-        self.territoire = territoire
-
 
 class territoire:
     def __init__(self, nom_zone, nom_territoire, mask, surface, joueur=None, nombre_troupes = 0,color=None):

@@ -91,11 +91,9 @@ class Game:
     def choix_du_nombre_de_regiments_attaquant(self,territoire_qui_attaque,nombre_de_regiments_attaquant) :  
         """Cette fonction permet de vérifier que le nombre de troupes sélectionnées pour attaquer est cohérent avec le
         nombre de troupes du territoire"""
-        test_nombre_de_regiments_attaquant = False 
-        if territoire_qui_attaque.nombre_troupes == 1 and nombre_de_regiments_attaquant==1 : 
-            test_nombre_de_regiments_attaquant = True
-        elif territoire_qui_attaque.nombre_troupes == 1 and nombre_de_regiments_attaquant!=1 : 
-            self.print_barre("Vous ne pouvez utiliser qu'une seule troupe pour attaquer", err=True)
+        test_nombre_de_regiments_attaquant = False
+        if territoire_qui_attaque.nombre_troupes == 1 : 
+            self.print_barre("Vous n'avez pas assez de troupes pour attaquer", err=True)
         elif territoire_qui_attaque.nombre_troupes == 2 and nombre_de_regiments_attaquant==1:
             test_nombre_de_regiments_attaquant = True
         elif territoire_qui_attaque.nombre_troupes == 2 and nombre_de_regiments_attaquant!=1 : 

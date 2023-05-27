@@ -374,8 +374,6 @@ class PygameWindow(pygame.Surface):
                                 self.view = self.t
                                 self.etat_mission = 0
 
-
-
                 elif self.view == 5: #repartition troupes apres victoire
                     self.display_dice = False
                     self.afficher_fenetre()
@@ -429,10 +427,12 @@ class PygameWindow(pygame.Surface):
 
                         except IndexError : pass
 
-            self.framerate(1) # 1 fps minimum, j'espère que les pc vont tenir :))
 
             # update the window
             pygame.display.update()
+        
+        self.framerate(1) # 1 fps minimum, j'espère que les pc vont tenir :))
+
 
     def charger_images(self):
         """

@@ -360,7 +360,7 @@ class PygameWindow(pygame.Surface):
                     self.window.blit(self.ecran_victoire, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))))
                     self.display_dice = False
 
-                    #ajouter +1 au score sur fichier csv joueurs pour le gagnat
+                    #ajouter +1 au score sur fichier csv joueurs pour le gagnant
                     if self.score == False:
                         self.joueur_win(self.a_qui_le_tour)
 
@@ -425,7 +425,7 @@ class PygameWindow(pygame.Surface):
                                     self.changer_lumi(self.select[1])
                                     self.select = [self.select[0]]
                                 elif self.select[1].nombre_troupes < troupe_attaque : 
-                                    self.barre_texte.changer_texte([f"Vous devez ajouter au minimum {troupe_attaque} troupes sur le territoire conquis "], err=True, forceupdate=True) #force le joueur à ajouter au minimum le nombre de troupes avec lesquelles il a attaqué sur le territoire conquis.
+                                    self.barre_texte.changer_texte([f"Vous devez placer au minimum {troupe_attaque} troupes sur le territoire conquis "], err=True, forceupdate=True) #force le joueur à ajouter au minimum le nombre de troupes avec lesquelles il a attaqué sur le territoire conquis.
 
                         except IndexError : pass
 

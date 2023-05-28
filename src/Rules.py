@@ -260,7 +260,7 @@ class Game:
         liste_indice_joueurs_selectionnes = []
         indice_joueur_selectionne_1 = -1
         indice_joueur_selectionne_2 = -1
-        while indice_joueur_selectionne_1 == indice_joueur_selectionne_2:
+        while indice_joueur_selectionne_1 == indice_joueur_selectionne_2 or (indice_joueur_selectionne_1 == -1 or indice_joueur_selectionne_2==-1) :
             indice_joueur_selectionne_1 = randint(0, len(liste_joueurs) - 1)
             indice_joueur_selectionne_2 = randint(0, len(liste_joueurs) - 1)
         liste_indice_joueurs_selectionnes.append(indice_joueur_selectionne_1)

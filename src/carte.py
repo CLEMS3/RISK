@@ -558,9 +558,13 @@ class PygameWindow(pygame.Surface):
     def framerate(self, temps : float):
         """
         Si le temps depuis le dernier rafraîchissement est plus que `temps`, ça rafraîchit.
+        (Sert à forcer le rafraîchissement du chronomètre. En fin de compte on aura que le jeu
+        se rafraîchit au moins une fois toutes les secondes, mais plus si nécessaire)
+
 
         N.B. : On ne force pas le rafraîchissement, vu que la fonction est appellée juste avant de le faire de toute façon.
         Ça ferait double-emploi.
+
         """
         if (time.time() - self.temps) >= temps:
             self.afficher_fenetre()

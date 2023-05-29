@@ -321,12 +321,6 @@ class Game:
                 own_continent = False
             i+=1
         return own_continent
-        #own_continent = True
-        #for i_territoire in self.li_territoires_obj:
-            #if i_territoire.nom_zone == continent and i_territoire.joueur != player:
-                #own_continent = False
-                #break
-        #return own_continent
     
     def liste_territoires_joueur(self, joueur):
             liste_territoires = []
@@ -583,13 +577,6 @@ class Mission:
                 own_continent = False
             i+=1
         return own_continent
-    
-        #own_continent = True
-        #for i_territoire in self.liste_territoire_obj:
-            #if i_territoire.nom_zone == continent and i_territoire.joueur.nom != self.player:
-                #own_continent = False
-                #break 
-        #return own_continent
 
     #perspective d'amélioration pour les check_mission : faire une fonction pour regrouper les missions similaires
     def check_mission1(self):

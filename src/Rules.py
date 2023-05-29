@@ -80,9 +80,9 @@ class Game:
                 if adjacence == True : 
                     droit_attaque = True
                 else : 
-                    self.print_barre("Le territoire que vous voulez attaquer n'est pas adjacents à votre territoire attaquant", err=True)
+                    self.print_barre("Le territoire que vous voulez attaquer n'est pas adjacent à votre territoire attaquant", err=True)
             else : 
-                self.print_barre("Vous n'avez pas assez de troupes pour attaquer", err=True)
+                self.print_barre("Vous n'avez pas assez de troupes pour attaquer ", err=True)
         else : 
             self.print_barre("Vous ne pouvez pas attaquer votre propre territoire !!", err=True)        
         
@@ -92,9 +92,7 @@ class Game:
         """Cette fonction permet de vérifier que le nombre de troupes sélectionnées pour attaquer est cohérent avec le
         nombre de troupes du territoire"""
         test_nombre_de_regiments_attaquant = False
-        if territoire_qui_attaque.nombre_troupes == 1 : 
-            self.print_barre("Vous n'avez pas assez de troupes pour attaquer", err=True)
-        elif territoire_qui_attaque.nombre_troupes == 2 and nombre_de_regiments_attaquant==1:
+        if territoire_qui_attaque.nombre_troupes == 2 and nombre_de_regiments_attaquant==1:
             test_nombre_de_regiments_attaquant = True
         elif territoire_qui_attaque.nombre_troupes == 2 and nombre_de_regiments_attaquant!=1 : 
             self.print_barre("Vous ne pouvez utiliser qu'une seule troupe pour attaquer", err=True) 
@@ -119,7 +117,7 @@ class Game:
             if nb_regiments_attaquant == 1 and nombre_de_des_joues == 1 : 
                 print("Le test a fonctionné")
                 test_nombre_des = True
-            elif nb_regiments_attaquant == 1 and nombre_de_des_joues!=1 : 
+            elif nb_regiments_attaquant == 1 and nombre_de_des_joues!=1 and territoire.nombre_troupes !=1 : 
                 self.print_barre("Attaquant : Vous devez utiliser qu'un seul régiment pour attaquer avec ce nombre de troupes", err=True)
             elif nb_regiments_attaquant == 2 and (nombre_de_des_joues ==1 or nombre_de_des_joues ==2):
                 test_nombre_des = True
@@ -127,8 +125,6 @@ class Game:
                 self.print_barre("Attaquant : Vous devez choisir parmi 1 ou 2 dés avec ce nombre de troupes! ", err=True)
             elif nb_regiments_attaquant == 3 and (nombre_de_des_joues ==1 or nombre_de_des_joues ==2 or nombre_de_des_joues ==3 ):
                 test_nombre_des = True
-            elif nb_regiments_attaquant == 2 and (nombre_de_des_joues !=1 and nombre_de_des_joues !=2):
-                self.print_barre("Attaquant : Vous devez choisir parmi 1 ou 2 dés avec ce nombre de troupes ! ", err=True)
         elif statut == "Attaqué" : 
             if (territoire.nombre_troupes == 1 or territoire.nombre_troupes == 2) and nombre_de_des_joues==1 :
                 test_nombre_des = True

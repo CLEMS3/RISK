@@ -145,10 +145,10 @@ class Game:
         """      
         territoire_conquis = False
         print("L'attaque est lancée")
-        droit_attaque = self.droit_attaque(territoire_attaquant, territoire_attaque)
-        nb_regiments = self.choix_du_nombre_de_regiments_attaquant(territoire_attaquant,nombre_de_regiments_attaquant)
         verif_des_attaquant = self.nombre_de_des_a_jouer(territoire_attaquant,nombre_de_regiments_attaquant,nombre_de_des_attaquant,"Attaquant")
         verif_des_defenseur = self.nombre_de_des_a_jouer(territoire_attaque,nombre_de_regiments_attaquant,nombre_de_des_attaque,"Attaqué")
+        nb_regiments = self.choix_du_nombre_de_regiments_attaquant(territoire_attaquant,nombre_de_regiments_attaquant)
+        droit_attaque = self.droit_attaque(territoire_attaquant, territoire_attaque)
         if droit_attaque and nb_regiments and verif_des_attaquant and verif_des_defenseur : 
                 scores_attaquant = []
                 scores_attaque = []

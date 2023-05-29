@@ -245,7 +245,6 @@ class Timer():
 
         # Police
         police_chemin = "Fonts/ARLRDBD.TTF"
-        print(self.surface.get_size())
         police_taille = int((19/1080)*self.surface.get_size()[1]) if (taille_police == None) else taille_police
         self.police_obj = pygame.font.Font(police_chemin, police_taille)
 
@@ -264,10 +263,10 @@ class Timer():
         self.secondes = int(self.temps_actuel % 60)
 
         # Affichage
-        temps_str = f"{self.heures:02d}:{self.minutes:02d}:{self.secondes:02d}"                     # Chaîne à afficher
-        temps_rendu = self.police_obj.render(temps_str, True, self.COULEUR_TEXTE)   # Rendu de le chaîne
-        self.surface.blit(temps_rendu, self.POSITION)
+        temps_str = f"{self.heures:02d}:{self.minutes:02d}:{self.secondes:02d}"     # Chaîne à afficher
+        temps_rendu = self.police_obj.render(temps_str, True, self.COULEUR_TEXTE)   # Rendu de la chaîne
 
         # Rafraîchissement
         if (self.temps_actuel - old) >= 1:  # Si on a pas rafraîchit depuis une seconde ou plus
+            self.surface.blit(temps_rendu, self.POSITION)
             pygame.display.update()

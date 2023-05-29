@@ -113,8 +113,8 @@ class PygameWindow(pygame.Surface):
                             scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) +30)), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
                             if  self.minus_mask.get_at(scaled_pos):
                                 if self.select[0].joueur == self.a_qui_le_tour:
-                                    if self.select[0].nombre_troupes > self.game.nb_troupes_minimum[self.select[0].nom_territoire]:
-                                        self.select[0].nombre_troupes -= 1
+                                    if self.select[0].nombre_troupes > self.game.nb_troupes_minimum[self.select[0].nom_territoire]:#cela permet de ne pas faire de transfert de troupes en retirant des troupes 
+                                        self.select[0].nombre_troupes -= 1                                                         # à un territoire et en les ajoutant au compteur de troupes à répartir
                                         self.a_qui_le_tour.troupe_a_repartir += 1
                                     else :  self.barre_texte.changer_texte([f"Vous ne pouvez pas avoir moins de {self.game.nb_troupes_minimum[self.select[0].nom_territoire]} troupes sur ce territoire."], err=True, forceupdate=True)
                                 else:
@@ -127,8 +127,6 @@ class PygameWindow(pygame.Surface):
                             try:
                                 scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
                                 if country.mask.get_at(scaled_pos):
-                                    
-                                    print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                                     self.select_deux_surface(country)
     
                             except IndexError:
@@ -206,7 +204,6 @@ class PygameWindow(pygame.Surface):
                             try:
                                 scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
                                 if country.mask.get_at(scaled_pos) and not self.help_on:
-                                    print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                                     self.select_deux_surface(country)
                             except IndexError:
                                 pass
@@ -244,18 +241,15 @@ class PygameWindow(pygame.Surface):
                                 
                                 if len(self.select) == 2 and self.select[1].joueur != self.a_qui_le_tour:
                                     if not self.help_on:
-                                        print('afficher Dijkstra')
                                         nombre_pays = len(self.game.suggestion_trajet(self.select[0],self.select[1]))
                                         colors = self.generate_gradient(nombre_pays)
                                         for i in range(nombre_pays):
-                                            print(f"ok {country.nom_territoire}")
                                             country =  self.game.suggestion_trajet(self.select[0],self.select[1])[i]
                                             self.color_tempo.append(country.color)
                                             country.color = colors[i]
                                             self.changer_couleur(country,country.color)
                                             self.help_on = True
                                     elif self.help_on:
-                                        print('enlever Dijkstra')
                                         for i in range(nombre_pays):
                                             self.game.suggestion_trajet(self.select[0],self.select[1])[i].color = self.color_tempo[i]
                                             self.changer_couleur(self.game.suggestion_trajet(self.select[0],self.select[1])[i],self.color_tempo[i])
@@ -296,7 +290,6 @@ class PygameWindow(pygame.Surface):
                             try:
                                 scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
                                 if country.mask.get_at(scaled_pos):
-                                    print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                                     self.select_deux_surface(country)
                             except IndexError:
                                 pass
@@ -565,9 +558,13 @@ class PygameWindow(pygame.Surface):
     def framerate(self, temps : float):
         """
         Si le temps depuis le dernier rafraîchissement est plus que `temps`, ça rafraîchit.
+        (Sert à forcer le rafraîchissement du chronomètre. En fin de compte on aura que le jeu
+        se rafraîchit au moins une fois toutes les secondes, mais plus si nécessaire)
+
 
         N.B. : On ne force pas le rafraîchissement, vu que la fonction est appellée juste avant de le faire de toute façon.
         Ça ferait double-emploi.
+
         """
         if (time.time() - self.temps) >= temps:
             self.afficher_fenetre()
@@ -581,7 +578,7 @@ class PygameWindow(pygame.Surface):
                 pos = [(x,y),(x+80, y),(x+160,y)] #écart de 90pixel entre les x (60 entre chaque dés) 
                 for i in range(valeur): 
                     if len(self.game.scores_attaquant)== valeur : 
-                        self.window.blit(self.dice[self.game.scores_attaquant[i]- 1],pos[i])
+                        self.window.blit(self.dice[self.game.scores_attaquant[i]- 1],pos[i])   #permet d'afficher les valeurs des dés tirés durant l'attaque
                     else  : 
                         self.window.blit(self.dice[self.dice_list1[i]],pos[i]) #affiche une face du dé aléatoire
             if etat == 2: #des defence
@@ -589,8 +586,8 @@ class PygameWindow(pygame.Surface):
                 y = int(0.319*self.fen_width)
                 pos = [(x,y),(x+80, y)] #écart de 120pixel entre les x (60 entre chaque dés) 
                 for i in range(valeur):
-                    if len (self.game.scores_attaque) == valeur : 
-                        self.window.blit(self.dice[self.game.scores_attaque[i]- 1],pos[i])
+                    if len (self.game.scores_attaque) == valeur :     
+                        self.window.blit(self.dice[self.game.scores_attaque[i]- 1],pos[i])  #permet d'afficher les valeurs des dés tirés durant l'attaque
                     else : 
                         self.window.blit(self.dice[self.dice_list2[i]],pos[i]) #affiche une face du dé aléatoire
 
@@ -722,11 +719,9 @@ class PygameWindow(pygame.Surface):
         if select== [] or (len(select) == 1 and country != select[0]):
             select.append(country)
             self.changer_lumi(country)
-            print('add to select')
         elif len(select) == 2 and country == select[1]:
             select = select [:-1]
             self.changer_lumi(country)
-            print('del last')
         elif len(select)==1 and country == select[0]:
             self.changer_lumi(country)
             select = []
@@ -737,7 +732,6 @@ class PygameWindow(pygame.Surface):
         for country in self.select:
             self.changer_lumi(country)
         self.select = []
-        print('ok empty')
 
     def end_turn(self):
         """
@@ -746,11 +740,9 @@ class PygameWindow(pygame.Surface):
         self.game.bonus(self.a_qui_le_tour)
         if len(self.tour_initial) <= 3:
             self.tour_initial.append(self.a_qui_le_tour)
-        if self.a_qui_le_tour.mission.check() or True:
-            print("Victoire du joueur", self.a_qui_le_tour.nom)
+        if self.a_qui_le_tour.mission.check() :
             self.view = 3
         else:
-            print(f"Le joueur {self.a_qui_le_tour.nom} n'a pas encore rempli sa mission")
             self.next_player()
             self.deplacement = True
             self.view = 0 if self.a_qui_le_tour in self.tour_initial else 1
@@ -794,13 +786,15 @@ class PygameWindow(pygame.Surface):
             rows = list(reader)
 
         # Parcourir chaque ligne du CSV
-        for row in rows:
-            if row[0] == joueur:
+        indice_row = 0
+        arret = False
+        while indice_row < len(rows) and arret == False : 
+            if rows[indice_row][0] == joueur :
                 # on incremente en faisant attention aux types de variables
-                print(int(row[2]))
-                row[2] = str(int(row[2]) + 1)
-                break  # On sort de la boucle quand on a trouvé le nom pour limiter la complexité
-                # Un while n'aurais pas forcément été mieux car on peut ici parcourire directement rows
+                rows[indice_row][2] = str(int(rows[indice_row][2]) + 1)
+                arret = True # On sort de la boucle quand on a trouvé le nom pour limiter la complexité
+            indice_row+=1
+
         # Écrire les données mises à jour dans le fichier CSV
         with open(csv_file, 'w', newline='') as file:
             writer = csv.writer(file)
@@ -811,7 +805,6 @@ if __name__ == "__main__": #pour debug
     import main
     menu = main.MainMenu()
     temp = menu.liste_joueurs
-    print(len(temp))
     out = []
     out.append(temp[0])
     out.append(temp[1])

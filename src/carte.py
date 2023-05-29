@@ -5,15 +5,9 @@ import json
 import Rules
 import widgets
 import time
-import subprocess   
+import subprocess
+import csv
 import sys
-try :
-    import pandas as pd
-except:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", 'pandas'])
-    import pandas as pd
-
-
 class PygameWindow(pygame.Surface):
     def __init__(self, size, liste_joueurs_obj):
         super().__init__(size) #sert à éviter un problème d'héritage de classe
@@ -364,7 +358,8 @@ class PygameWindow(pygame.Surface):
 
                     #ajouter +1 au score sur fichier csv joueurs pour le gagnat
                     if self.score == False:
-                        self.joueur_win(self.a_qui_le_tour)
+                        self.joueur_win(self.a_qui_le_tour.nom)
+                        self.score = True
 
 
                     
@@ -751,7 +746,7 @@ class PygameWindow(pygame.Surface):
         self.game.bonus(self.a_qui_le_tour)
         if len(self.tour_initial) <= 3:
             self.tour_initial.append(self.a_qui_le_tour)
-        if self.a_qui_le_tour.mission.check():
+        if self.a_qui_le_tour.mission.check() or True:
             print("Victoire du joueur", self.a_qui_le_tour.nom)
             self.view = 3
         else:
@@ -789,12 +784,27 @@ class PygameWindow(pygame.Surface):
         elif self.etat_mission == 1:
             self.etat_mission = 0
 
-    def joueur_win(self, joueur):
+    def joueur_win(self, joueur:str):
         '''met à jour le score du gagnant'''
-        joueur.win = str(int(joueur.win) +1)
+        csv_file = "Fichiers/Joueurs.csv"
+        # Ouvre le fichier CSV en mode lecture
+        with open(csv_file, 'r') as file:
+            # Lire les données CSV
+            reader = csv.reader(file)
+            rows = list(reader)
 
-        ###mettre a jour le csv###
-        
+        # Parcourir chaque ligne du CSV
+        for row in rows:
+            if row[0] == joueur:
+                # on incremente en faisant attention aux types de variables
+                print(int(row[2]))
+                row[2] = str(int(row[2]) + 1)
+                break  # On sort de la boucle quand on a trouvé le nom pour limiter la complexité
+                # Un while n'aurais pas forcément été mieux car on peut ici parcourire directement rows
+        # Écrire les données mises à jour dans le fichier CSV
+        with open(csv_file, 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerows(rows)
         
 
 if __name__ == "__main__": #pour debug

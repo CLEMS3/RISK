@@ -223,15 +223,14 @@ class PygameWindow(pygame.Surface):
                             scaled_pos = (event.pos[0]-(self.fen_width-200),event.pos[1]-(self.fen_height-80))
                             if self.next_mask.get_at(scaled_pos):
                                 if len(self.select) == 2:
-                                    if self.selnbr_troupes.etat <= self.select[0].nombre_troupes :
-                                        if self.game.attaque(self.select[0], self.select[1], self.selnbr_troupes.etat, self.selnbr_des1.etat, self.selnbr_des2.etat):
-                                            print('ok conquis')
-                                            self.select[1].color = self.select[0].color
-                                            self.select[1].joueur = self.select[0].joueur
-                                            self.changer_couleur(self.select[1], self.select[1].color)
-                                            troupe_attaque = self.selnbr_des1.etat
-                                            self.barre_texte.changer_texte([f"Bravo {self.a_qui_le_tour.nom}, vous avez conquis {self.select[1].nom_territoire}"], err=True, forceupdate=True)
-                                            self.view = 4 #REPARTITION TROUPES 
+                                    if self.game.attaque(self.select[0], self.select[1], self.selnbr_troupes.etat, self.selnbr_des1.etat, self.selnbr_des2.etat):
+                                        print('ok conquis')
+                                        self.select[1].color = self.select[0].color
+                                        self.select[1].joueur = self.select[0].joueur
+                                        self.changer_couleur(self.select[1], self.select[1].color)
+                                        troupe_attaque = self.selnbr_des1.etat
+                                        self.barre_texte.changer_texte([f"Bravo {self.a_qui_le_tour.nom}, vous avez conquis {self.select[1].nom_territoire}"], err=True, forceupdate=True)
+                                        self.view = 4 #REPARTITION TROUPES 
                                     
                         except IndexError : pass
 

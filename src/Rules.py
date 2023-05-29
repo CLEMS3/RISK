@@ -431,7 +431,7 @@ class Game:
         for territoire in candidats:
             graphe[territoire] = {}
             for voisin in self.liste_voisin(territoire):
-                graphe[territoire][voisin] = voisin.nombre_troupes
+                graphe[territoire][voisin] = voisin.nombre_troupes if voisin.joueur != territoire_depart.joueur else 0
 
         chemins = {territoire_depart: (None, 0)} #pour un sommets, on a un tuple (prédesesseur, poids_total)
         parcourus = [territoire_depart]

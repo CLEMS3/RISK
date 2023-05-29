@@ -574,7 +574,7 @@ class PygameWindow(pygame.Surface):
                 pos = [(x,y),(x+80, y),(x+160,y)] #écart de 90pixel entre les x (60 entre chaque dés) 
                 for i in range(valeur): 
                     if len(self.game.scores_attaquant)== valeur : 
-                        self.window.blit(self.dice[self.game.scores_attaquant[i]- 1],pos[i])
+                        self.window.blit(self.dice[self.game.scores_attaquant[i]- 1],pos[i])   #permet d'afficher les valeurs des dés tirés durant l'attaque
                     else  : 
                         self.window.blit(self.dice[self.dice_list1[i]],pos[i]) #affiche une face du dé aléatoire
             if etat == 2: #des defence
@@ -582,8 +582,8 @@ class PygameWindow(pygame.Surface):
                 y = int(0.319*self.fen_width)
                 pos = [(x,y),(x+80, y)] #écart de 120pixel entre les x (60 entre chaque dés) 
                 for i in range(valeur):
-                    if len (self.game.scores_attaque) == valeur : 
-                        self.window.blit(self.dice[self.game.scores_attaque[i]- 1],pos[i])
+                    if len (self.game.scores_attaque) == valeur :     
+                        self.window.blit(self.dice[self.game.scores_attaque[i]- 1],pos[i])  #permet d'afficher les valeurs des dés tirés durant l'attaque
                     else : 
                         self.window.blit(self.dice[self.dice_list2[i]],pos[i]) #affiche une face du dé aléatoire
 

@@ -89,7 +89,7 @@ Pour passer au joueur suivant, utiliser la flèche en bas à droite. Une fois to
 
 #### Attaque
 
-La phase d'attaque demande au joueur attaquant de choisir le territoire à attaquer, et remplir les paramètres du volet. Le joueur qui défend fait de même pour le nombre de dés.
+La phase d'attaque demande au joueur attaquant de choisir le territoire attaquant et attaqué, et remplir les paramètres du volet. Le joueur qui défend fait de même pour le nombre de dés.
 
 Volet :
 > - Le joueur **attaquant** peut choisir jusqu'à trois **régiments** pour attaquer.

@@ -314,12 +314,19 @@ class Game:
     def check_continent_owner(self, continent: str, player):
         """Continent prend les valeurs Europe, Asie, Amérique du Nord, Amérique du Sud, Afrique, Océanie
         """
-        own_continent = True
-        for i_territoire in self.li_territoires_obj:
-            if i_territoire.nom_zone == continent and i_territoire.joueur != player:
+        own_continent = True 
+        i =0 
+        while i<(len(self.li_territoires_obj)) and own_continent == True : 
+            if self.li_territoires_obj[i].nom_zone == continent and self.li_territoires_obj[i].joueur != player:
                 own_continent = False
-                break
+            i+=1
         return own_continent
+        #own_continent = True
+        #for i_territoire in self.li_territoires_obj:
+            #if i_territoire.nom_zone == continent and i_territoire.joueur != player:
+                #own_continent = False
+                #break
+        #return own_continent
     
     def liste_territoires_joueur(self, joueur):
             liste_territoires = []
@@ -570,11 +577,19 @@ class Mission:
         """Continent prend les valeurs Europe, Asie, Amérique du Nord, Amérique du Sud, Afrique, Océanie
         """
         own_continent = True
-        for i_territoire in self.liste_territoire_obj:
-            if i_territoire.nom_zone == continent and i_territoire.joueur.nom != self.player:
+        i=0
+        while i<len(self.liste_territoire_obj) and own_continent== True : 
+            if self.liste_territoire_obj[i].nom_zone == continent and self.liste_territoire_obj[i].joueur.nom != self.player:
                 own_continent = False
-                break 
+            i+=1
         return own_continent
+    
+        #own_continent = True
+        #for i_territoire in self.liste_territoire_obj:
+            #if i_territoire.nom_zone == continent and i_territoire.joueur.nom != self.player:
+                #own_continent = False
+                #break 
+        #return own_continent
 
     #perspective d'amélioration pour les check_mission : faire une fonction pour regrouper les missions similaires
     def check_mission1(self):

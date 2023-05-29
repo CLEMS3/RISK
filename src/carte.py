@@ -113,8 +113,8 @@ class PygameWindow(pygame.Surface):
                             scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) +30)), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
                             if  self.minus_mask.get_at(scaled_pos):
                                 if self.select[0].joueur == self.a_qui_le_tour:
-                                    if self.select[0].nombre_troupes > self.game.nb_troupes_minimum[self.select[0].nom_territoire]:
-                                        self.select[0].nombre_troupes -= 1
+                                    if self.select[0].nombre_troupes > self.game.nb_troupes_minimum[self.select[0].nom_territoire]:#cela permet de ne pas faire de transfert de troupes en retirant des troupes 
+                                        self.select[0].nombre_troupes -= 1                                                         # à un territoire et en les ajoutant au compteur de troupes à répartir
                                         self.a_qui_le_tour.troupe_a_repartir += 1
                                     else :  self.barre_texte.changer_texte([f"Vous ne pouvez pas avoir moins de {self.game.nb_troupes_minimum[self.select[0].nom_territoire]} troupes sur ce territoire."], err=True, forceupdate=True)
                                 else:
@@ -736,7 +736,7 @@ class PygameWindow(pygame.Surface):
         self.game.bonus(self.a_qui_le_tour)
         if len(self.tour_initial) <= 3:
             self.tour_initial.append(self.a_qui_le_tour)
-        if self.a_qui_le_tour.mission.check() or True:
+        if self.a_qui_le_tour.mission.check() :
             self.view = 3
         else:
             self.next_player()
@@ -782,12 +782,23 @@ class PygameWindow(pygame.Surface):
             rows = list(reader)
 
         # Parcourir chaque ligne du CSV
-        for row in rows:
-            if row[0] == joueur:
+        indice_row = 0
+        arret = False
+        while indice_row < len(rows) and arret == False : 
+            if rows[indice_row][0] == joueur :
                 # on incremente en faisant attention aux types de variables
-                row[2] = str(int(row[2]) + 1)
-                break  # On sort de la boucle quand on a trouvé le nom pour limiter la complexité
+                rows[indice_row][2] = str(int(rows[indice_row][2]) + 1)
+                arret = True
+            indice_row+=1
+                 
+        #for row in rows:
+            #if row[0] == joueur:
+                # on incremente en faisant attention aux types de variables
+                #row[2] = str(int(row[2]) + 1)
+                #break  # On sort de la boucle quand on a trouvé le nom pour limiter la complexité
                 # Un while n'aurais pas forcément été mieux car on peut ici parcourire directement rows
+
+
         # Écrire les données mises à jour dans le fichier CSV
         with open(csv_file, 'w', newline='') as file:
             writer = csv.writer(file)

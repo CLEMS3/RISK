@@ -105,6 +105,7 @@ A vous de jouer maintenant ! N'hésitez pas à revenir sur cette fenêtre en cou
 
 ```
 .
+├── Rendu/                  # Fichiers de rendu
 ├── src/
 │   ├── Fichiers/           # Divers fichier de données pour le jeu
 │   ├── Fonts/              # Polices utilisées

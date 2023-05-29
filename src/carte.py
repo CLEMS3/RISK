@@ -792,16 +792,8 @@ class PygameWindow(pygame.Surface):
             if rows[indice_row][0] == joueur :
                 # on incremente en faisant attention aux types de variables
                 rows[indice_row][2] = str(int(rows[indice_row][2]) + 1)
-                arret = True
+                arret = True # On sort de la boucle quand on a trouvé le nom pour limiter la complexité
             indice_row+=1
-                 
-        #for row in rows:
-            #if row[0] == joueur:
-                # on incremente en faisant attention aux types de variables
-                #row[2] = str(int(row[2]) + 1)
-                #break  # On sort de la boucle quand on a trouvé le nom pour limiter la complexité
-                # Un while n'aurais pas forcément été mieux car on peut ici parcourire directement rows
-
 
         # Écrire les données mises à jour dans le fichier CSV
         with open(csv_file, 'w', newline='') as file:

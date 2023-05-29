@@ -127,8 +127,6 @@ class PygameWindow(pygame.Surface):
                             try:
                                 scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
                                 if country.mask.get_at(scaled_pos):
-                                    
-                                    print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                                     self.select_deux_surface(country)
     
                             except IndexError:
@@ -206,7 +204,6 @@ class PygameWindow(pygame.Surface):
                             try:
                                 scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
                                 if country.mask.get_at(scaled_pos) and not self.help_on:
-                                    print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                                     self.select_deux_surface(country)
                             except IndexError:
                                 pass
@@ -244,18 +241,15 @@ class PygameWindow(pygame.Surface):
                                 
                                 if len(self.select) == 2 and self.select[1].joueur != self.a_qui_le_tour:
                                     if not self.help_on:
-                                        print('afficher Dijkstra')
                                         nombre_pays = len(self.game.suggestion_trajet(self.select[0],self.select[1]))
                                         colors = self.generate_gradient(nombre_pays)
                                         for i in range(nombre_pays):
-                                            print(f"ok {country.nom_territoire}")
                                             country =  self.game.suggestion_trajet(self.select[0],self.select[1])[i]
                                             self.color_tempo.append(country.color)
                                             country.color = colors[i]
                                             self.changer_couleur(country,country.color)
                                             self.help_on = True
                                     elif self.help_on:
-                                        print('enlever Dijkstra')
                                         for i in range(nombre_pays):
                                             self.game.suggestion_trajet(self.select[0],self.select[1])[i].color = self.color_tempo[i]
                                             self.changer_couleur(self.game.suggestion_trajet(self.select[0],self.select[1])[i],self.color_tempo[i])
@@ -296,7 +290,6 @@ class PygameWindow(pygame.Surface):
                             try:
                                 scaled_pos = (int(event.pos[0]-2*int(self.fen_width/(self.pos_reduc))), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
                                 if country.mask.get_at(scaled_pos):
-                                    print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                                     self.select_deux_surface(country)
                             except IndexError:
                                 pass
@@ -722,11 +715,9 @@ class PygameWindow(pygame.Surface):
         if select== [] or (len(select) == 1 and country != select[0]):
             select.append(country)
             self.changer_lumi(country)
-            print('add to select')
         elif len(select) == 2 and country == select[1]:
             select = select [:-1]
             self.changer_lumi(country)
-            print('del last')
         elif len(select)==1 and country == select[0]:
             self.changer_lumi(country)
             select = []
@@ -737,7 +728,6 @@ class PygameWindow(pygame.Surface):
         for country in self.select:
             self.changer_lumi(country)
         self.select = []
-        print('ok empty')
 
     def end_turn(self):
         """
@@ -747,10 +737,8 @@ class PygameWindow(pygame.Surface):
         if len(self.tour_initial) <= 3:
             self.tour_initial.append(self.a_qui_le_tour)
         if self.a_qui_le_tour.mission.check() or True:
-            print("Victoire du joueur", self.a_qui_le_tour.nom)
             self.view = 3
         else:
-            print(f"Le joueur {self.a_qui_le_tour.nom} n'a pas encore rempli sa mission")
             self.next_player()
             self.deplacement = True
             self.view = 0 if self.a_qui_le_tour in self.tour_initial else 1
@@ -797,7 +785,6 @@ class PygameWindow(pygame.Surface):
         for row in rows:
             if row[0] == joueur:
                 # on incremente en faisant attention aux types de variables
-                print(int(row[2]))
                 row[2] = str(int(row[2]) + 1)
                 break  # On sort de la boucle quand on a trouvé le nom pour limiter la complexité
                 # Un while n'aurais pas forcément été mieux car on peut ici parcourire directement rows
@@ -811,7 +798,6 @@ if __name__ == "__main__": #pour debug
     import main
     menu = main.MainMenu()
     temp = menu.liste_joueurs
-    print(len(temp))
     out = []
     out.append(temp[0])
     out.append(temp[1])

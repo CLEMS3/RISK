@@ -332,8 +332,6 @@ class Game:
     def count_player_territories(self, player):
         n_territoire = 0
         for i_territoire in self.li_territoires_obj:
-            print(type(i_territoire.joueur))
-            print(type(player))
             if i_territoire.joueur == player: #verifier si il faut verifier l'objet ou le nom
                 n_territoire +=1
         return n_territoire
@@ -384,8 +382,6 @@ class Game:
         if self.check_continent_owner("Océanie", player):
             bonus+=2
 
-        print(f"le bonus est de {bonus}, avec {n_territoire} territoires")
-
         player.troupe_a_repartir += bonus
 
     def init_mission(self):
@@ -397,8 +393,6 @@ class Game:
             else:
                 i.mission = Mission(type_mission, i.nom, self.li_territoires_obj)
 
-            print(f"le joueur {i.nom} a pour mission {i.mission.type_mission} et doit {i.mission.detail}")
-
     def get_territoire_object(self,nom_territoire):
         territoire_obj=None
         for territoire in self.li_territoires_obj :
@@ -408,9 +402,6 @@ class Game:
     
     def get_player(self, str):
         for player in self.liste_joueurs:
-            print(f"Dans get_player, le type de player est {type(player)}")
-            print(f"{player.nom} / {str}")
-            print(f"le type de player.nom est {type(player.nom)} et celui de str {type(str)}")
             if (player.nom) == (str):
                 return player
         return "Joueur non trouvé"
@@ -474,7 +465,7 @@ class Game:
             candidats.remove(sommet_min)
             parcourus.append(sommet_min)
 
-            #affichage (ces prints incroyable reproduisent l'algorithme de Dijkstra fait à la main)
+            #affichage (ces prints  reproduisent l'algorithme de Dijkstra fait à la main)
 
             """print('<départ>' if len(parcourus) == 0 else f"<{parcourus[-1].nom_territoire}({chemins[sommet_min][1]})>", end='/')
             for sommet in chemins.keys():
@@ -582,9 +573,7 @@ class Mission:
         for i_territoire in self.liste_territoire_obj:
             if i_territoire.nom_zone == continent and i_territoire.joueur.nom != self.player:
                 own_continent = False
-                print(f"{i_territoire.nom_territoire} appartient à {i_territoire.joueur.nom} et non à {self.player}")
                 break 
-        print(f"Le joueur {self.player} {'' if own_continent else 'ne'} possède {'' if own_continent else 'pas'} le continent {continent}")
         return own_continent
 
     #perspective d'amélioration pour les check_mission : faire une fonction pour regrouper les missions similaires

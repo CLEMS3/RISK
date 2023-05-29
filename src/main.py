@@ -111,7 +111,6 @@ class MainMenu :
         test.sort(reverse=True) #liste des nombre de victoire par ordre décroissant
         self.liste_classe=[]
         tempo = list(self.liste_joueurs)
-        print(f"len(tempo) = {len(tempo)}")
         for i in range(len(tempo)):
             for player in tempo:
                 if player.win == test[i]:
@@ -193,7 +192,6 @@ class MainMenu :
 
     def STARTLOGIN(self):
         '''fenetre pour boutons de connection et creation de compte'''
-        print(f"login {int(self.NbrJoueur.get())} acounts")
         #menage, on enleve les anciens widgets
         self.LabelJoueur.destroy()
         self.ChoixJoueur.destroy()
@@ -246,7 +244,6 @@ class MainMenu :
     
     def checkmdp(self,i,joueur):
         '''verifie le mot de passe et valide la connection'''
-        print(f'joueur {i+1},{joueur}')
 
         ok = 0 #joueur selectionné ou pas
 
@@ -307,8 +304,6 @@ class MainMenu :
     def pygame_launcher(self):
         '''lance la partie'''
         if __name__ == '__main__':
-            print(int(self.NbrJoueur.get()))
-            print(self.OUT)
             if len(self.OUT) == int(self.NbrJoueur.get()):
                 # create the window
                 window_pg = carte.PygameWindow((self.WIDTH, self.HEIGHT), self.OUT)

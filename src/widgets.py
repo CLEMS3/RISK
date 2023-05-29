@@ -245,7 +245,6 @@ class Timer():
 
         # Police
         police_chemin = "Fonts/ARLRDBD.TTF"
-        print(self.surface.get_size())
         police_taille = int((19/1080)*self.surface.get_size()[1]) if (taille_police == None) else taille_police
         self.police_obj = pygame.font.Font(police_chemin, police_taille)
 

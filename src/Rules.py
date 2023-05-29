@@ -29,7 +29,7 @@ class territoire:
 
 
 class Game:
-    def __init__(self, liste_joueurs, fen_width, fen_height, barre_texte : widgets.barreTexte):
+    def __init__(self, liste_joueurs, fen_width, fen_height, barre_texte : widgets.BarreTexte):
         #initialisation des variables et chargement des données
         self.liste_joueurs = liste_joueurs #liste d'objet
         self.graphe = self.import_adjacence()
@@ -61,7 +61,7 @@ class Game:
         return nb_troupes_minimum
 
 
-    def print_closure(self, barre_texte : widgets.barreTexte):
+    def print_closure(self, barre_texte : widgets.BarreTexte):
         """
         Fermeture permettant de remplacer la fonction `print` en envoyant l'output dans la barre
         """

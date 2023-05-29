@@ -8,7 +8,7 @@ import time
 
 
 
-class selectNB:
+class SelectNB:
     """
     Classe pour widget `Sélecteur de nombre`.
     Source initiale :
@@ -98,7 +98,7 @@ class selectNB:
                 
 
 
-class barreTexte():
+class BarreTexte():
     """
     Classe pour le widget `Barre de texte`
     Source initiale : Bing AI

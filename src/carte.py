@@ -42,7 +42,7 @@ class PygameWindow(pygame.Surface):
         self.dice_list2 = [0,1,2,3,4,5,0,1,2,3,4,5,0,1,2,3,4,5]
 
         # Barre de texte pour les messages
-        self.barre_texte = widgets.barreTexte(self.window, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.fac_reduc))+5), self.water.get_size()[0], 30, couleur_texte=(0,0,0), couleur_contour=(0,0,0))
+        self.barre_texte = widgets.BarreTexte(self.window, (2*int(self.fen_width/(self.pos_reduc)),int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.fac_reduc))+5), self.water.get_size()[0], 30, couleur_texte=(0,0,0), couleur_contour=(0,0,0))
         self.barre_texte.changer_texte([""])
 
         # Chronomètre
@@ -70,9 +70,9 @@ class PygameWindow(pygame.Surface):
 
         # Sélecteur de nombres
         self.init_couleurs()
-        self.selnbr_troupes = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+(int(self.fen_height/(self.pos_reduc)-10))/2), 1, 1, 3)
-        self.selnbr_des1 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection 
-        self.selnbr_des2 = widgets.selectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+140), 1, 1, 2) 
+        self.selnbr_troupes = widgets.SelectNB((15, int(self.fen_height/(self.pos_reduc))+(int(self.fen_height/(self.pos_reduc)-10))/2), 1, 1, 3)
+        self.selnbr_des1 = widgets.SelectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)), 1, 1, 3) #nombre de dés => affichage du bon nombre de dés en fonction de la selection 
+        self.selnbr_des2 = widgets.SelectNB((15, int(self.fen_height/(self.pos_reduc))+int(self.fen_height/(self.pos_reduc)-10)+140), 1, 1, 2) 
 
     def main_loop(self):
         running = True

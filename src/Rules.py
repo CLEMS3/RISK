@@ -15,9 +15,6 @@ from math import inf
 def des():
     x = randint(1, 6)
     return x
-#Fais une fonction qui renvoie des chiffres au hasard pour imiter le comportement d'un dés
-
-
 
 class territoire:
     def __init__(self, nom_zone, nom_territoire, mask, surface, joueur=None, nombre_troupes = 0,color=None):
@@ -94,11 +91,9 @@ class Game:
     def choix_du_nombre_de_regiments_attaquant(self,territoire_qui_attaque,nombre_de_regiments_attaquant) :  
         """Cette fonction permet de vérifier que le nombre de troupes sélectionnées pour attaquer est cohérent avec le
         nombre de troupes du territoire"""
-        test_nombre_de_regiments_attaquant = False 
-        if territoire_qui_attaque.nombre_troupes == 1 and nombre_de_regiments_attaquant==1 : 
-            test_nombre_de_regiments_attaquant = True
-        elif territoire_qui_attaque.nombre_troupes == 1 and nombre_de_regiments_attaquant!=1 : 
-            self.print_barre("Vous ne pouvez utiliser qu'une seule troupe pour attaquer", err=True)
+        test_nombre_de_regiments_attaquant = False
+        if territoire_qui_attaque.nombre_troupes == 1 : 
+            self.print_barre("Vous n'avez pas assez de troupes pour attaquer", err=True)
         elif territoire_qui_attaque.nombre_troupes == 2 and nombre_de_regiments_attaquant==1:
             test_nombre_de_regiments_attaquant = True
         elif territoire_qui_attaque.nombre_troupes == 2 and nombre_de_regiments_attaquant!=1 : 
@@ -150,7 +145,7 @@ class Game:
         Fonction qui gère l'attaque d'un territoire par un joueur selon les règles du jeu RISK.
         https://www.regledujeu.fr/risk-regle-du-jeu/#des
         Le nombre de troupes perdues correspond au nombre de dés perdants. On classe les dés dans l'ordre décroissant 
-        et on les compare 2 à 2. 
+        et on les compare 1 à 1. 
         """      
         territoire_conquis = False
         print("L'attaque est lancée")
@@ -238,7 +233,7 @@ class Game:
         territoires nécessaires aux joueurs"""
         nb_joueurs = len(self.liste_joueurs)
         self.liste_territoires_restant = self.li_territoires_obj.copy()
-        if nb_joueurs == 3:  # et 2 régiments par territoire
+        if nb_joueurs == 3:  
             for joueur in self.liste_joueurs:
                 self.placement_initial(joueur, 35, 14)
         elif nb_joueurs == 4:
@@ -265,7 +260,7 @@ class Game:
         liste_indice_joueurs_selectionnes = []
         indice_joueur_selectionne_1 = -1
         indice_joueur_selectionne_2 = -1
-        while indice_joueur_selectionne_1 == indice_joueur_selectionne_2:
+        while indice_joueur_selectionne_1 == indice_joueur_selectionne_2 or (indice_joueur_selectionne_1 == -1 or indice_joueur_selectionne_2==-1) :
             indice_joueur_selectionne_1 = randint(0, len(liste_joueurs) - 1)
             indice_joueur_selectionne_2 = randint(0, len(liste_joueurs) - 1)
         liste_indice_joueurs_selectionnes.append(indice_joueur_selectionne_1)
@@ -294,26 +289,6 @@ class Game:
             territoire.joueur = joueur
             nombre_de_troupes_qu_il_reste_a_placer -= 1
             joueur.troupe_a_repartir = nombre_de_troupes_qu_il_reste_a_placer
-            #self.changer_couleur(territoire)
-        
-        #while nombre_de_troupes_qu_il_reste_a_placer > 0:
-            #nombre_de_troupes_qu_il_reste_a_placer = self.ajout_de_troupes_sur_territoires(joueur)
-            
-
-        # il faut que le joueur tire des territoires au hasard où il placera ses troupes comme il le souhaite avec toujours au minimum une troupe sur chaque territoire occupé
-    def ajout_de_troupes_sur_territoires(self, joueur, territoire, nombre):
-        if territoire.joueur == joueur : 
-            nombre_de_troupes_qu_il_reste_a_placer = joueur.troupe_a_repartir
-            liste_territoires_joueurs = self.liste_territoires_joueur(joueur)
-            if nombre > nombre_de_troupes_qu_il_reste_a_placer:  # Le joueur ajoute des troupes sur les territoires qu'il
-                self.print_barre("Il ne vous reste pas assez de troupes !!", err=True)
-            else:
-                territoire.nombre_troupes += nombre
-                nombre_de_troupes_qu_il_reste_a_placer -= nombre
-            joueur.troupe_a_repartir = nombre_de_troupes_qu_il_reste_a_placer
-            return nombre_de_troupes_qu_il_reste_a_placer 
-        else : 
-            self.print_barre("Vous ne pouvez pas ajouter de troupes sur un territoires qui ne vous appartient pas ! ", err=True)
     
     def import_adjacence(self):
         with open('Fichiers/adjacences_territoires.csv', newline='') as csvfile:
@@ -330,13 +305,9 @@ class Game:
         Vérifie si deux territoires sont adjacents
         ⚠ l'indice dans la liste est pas le même que dans le graphe
         """
-        #print("vérification de l'adjacence")
         graphe = self.graphe
         index1 = graphe[0].index(territoire1.nom_territoire)
         index2 = graphe[0].index(territoire2.nom_territoire)
-        #print(graphe[index1][0])
-        #print(graphe[0][index2])
-        #print(graphe[index1][index2])
         return graphe[index1][index2] == str(1)
 
     def init_territoires(self):
@@ -430,13 +401,9 @@ class Game:
 
         player.troupe_a_repartir += bonus
 
-
-
-
     def init_mission(self):
         for i in self.liste_joueurs:
             type_mission = randint(1, 8)
-            # il y a peut etre un problème d'organistion la dedans entre les classes
             if type_mission == 7:
                 aim = choice(self.liste_joueurs)
                 i.mission = Mission(type_mission, i.nom, self.li_territoires_obj, aim=aim.nom )
@@ -494,7 +461,6 @@ class Game:
         for sommet in candidats:
             chemins[sommet] = (None, inf)
 
-        #print("//////", '/'.join([territoire.nom_territoire for territoire in self.li_territoires_obj]))
         while parcourus[-1] != territoire_arrivee and candidats != []:
             #on actualise les poids pour chaque sommet
             """
@@ -529,25 +495,13 @@ class Game:
             print("\n")"""
 
 
-        #print("Liste des étapes:")
         etapes = [territoire_arrivee]
         fin = False
         while not fin:
             etapes.append(chemins[etapes[-1]][0])
             if etapes[-1] == territoire_depart:
                 fin = True
-        #print(etapes[::-1])
         return etapes[::-1]
-
-
-
-
-
-
-
-
-
-
 
 def tri_fusion(liste):
     """Permet de retourner la liste de scores de dés dans l'ordre décroissant """

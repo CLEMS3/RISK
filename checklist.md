@@ -7,11 +7,11 @@ TO DO
 
 #verifier mise a jour score
 
-#son/musique @Vittore
-
-#ajouter tous les message necesaires sur bar texte @Vittore @Vincent >> message erreur d'attaque pas complet
-
 #decoupage fonctionnel Rules.py @vincent
+
+#finir readme @vitto
+
+#details widget.py @vitto
 
 #VIDEO
 

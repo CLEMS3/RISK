@@ -119,7 +119,6 @@ class PygameWindow(pygame.Surface):
                         try:
                             scaled_pos = (int(event.pos[0]-(int((2*self.fen_width/(self.pos_reduc)-10)/2) +30)), int(event.pos[1]-int(self.fen_height/(self.pos_reduc))))
                             if  self.minus_mask.get_at(scaled_pos):
-                                self.view = 3 #TEMPO
                                 if self.select[0].joueur == self.a_qui_le_tour:
                                     if self.select[0].nombre_troupes > self.game.nb_troupes_minimum[self.select[0].nom_territoire]:
                                         print("moins")
@@ -374,15 +373,6 @@ class PygameWindow(pygame.Surface):
                     if self.score == False:
                         self.joueur_win(self.a_qui_le_tour)
 
-                    #clic sur mission
-                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.mission_rect.collidepoint(pygame.mouse.get_pos()):
-                        if self.etat_mission == 0:
-                                self.t = 3
-                                self.etat_mission = 1
-                        elif self.etat_mission == 1:
-                            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and self.mission_rect.collidepoint(pygame.mouse.get_pos()):
-                                self.view = self.t
-                                self.etat_mission = 0
 
                     
 
@@ -811,6 +801,8 @@ class PygameWindow(pygame.Surface):
     def joueur_win(self, joueur):
         '''met à jour le score du gagnant'''
         joueur.win = str(int(joueur.win) +1)
+
+        ###mettre a jour le csv###
         
         
 

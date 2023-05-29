@@ -108,7 +108,6 @@ class PygameWindow(pygame.Surface):
                             if  self.plus_mask.get_at(scaled_pos):
                                 if self.select[0].joueur == self.a_qui_le_tour:
                                     if nbr_restant > 0:           
-                                        print("plus")
                                         self.select[0].nombre_troupes += 1 #ajout de la troupe sur le pays
                                         self.a_qui_le_tour.troupe_a_repartir -= 1 #retrait d'une troupe dans la liste des troupes a ajouter
                                     else :  self.barre_texte.changer_texte(["Vous n'avez plus de troupes à répartir."], err=True, forceupdate=True)
@@ -121,7 +120,6 @@ class PygameWindow(pygame.Surface):
                             if  self.minus_mask.get_at(scaled_pos):
                                 if self.select[0].joueur == self.a_qui_le_tour:
                                     if self.select[0].nombre_troupes > self.game.nb_troupes_minimum[self.select[0].nom_territoire]:
-                                        print("moins")
                                         self.select[0].nombre_troupes -= 1
                                         self.a_qui_le_tour.troupe_a_repartir += 1
                                     else :  self.barre_texte.changer_texte([f"Vous ne pouvez pas avoir moins de {self.game.nb_troupes_minimum[self.select[0].nom_territoire]} troupes sur ce territoire."], err=True, forceupdate=True)
@@ -154,10 +152,8 @@ class PygameWindow(pygame.Surface):
                                         self.changer_lumi(self.select[0])
                                         self.select.remove(self.select[0])
                                     except : pass
-                                    print('next')
                                     if len(self.placement_initial) >= len(self.liste_joueurs_obj)-1:
                                         self.view = 1
-                                        print('go attack')
                                     else: #si tous les joueurs ont placé leurs troupes
                                         self.placement_initial.append(self.a_qui_le_tour)
                                         self.next_player()
@@ -218,7 +214,6 @@ class PygameWindow(pygame.Surface):
                                 if country.mask.get_at(scaled_pos) and not self.help_on:
                                     print(f"{country.nom_territoire} : {pygame.mouse.get_pos()}") #pays sélectionné
                                     self.select_deux_surface(country)
-                                    print('ok clic pays')
                             except IndexError:
                                 pass
                         
@@ -230,7 +225,6 @@ class PygameWindow(pygame.Surface):
                             if self.next_mask.get_at(scaled_pos):
                                 if len(self.select) == 2:
                                     if self.game.attaque(self.select[0], self.select[1], self.selnbr_troupes.etat, self.selnbr_des1.etat, self.selnbr_des2.etat):
-                                        print('ok conquis')
                                         self.select[1].color = self.select[0].color
                                         self.select[1].joueur = self.select[0].joueur
                                         self.changer_couleur(self.select[1], self.select[1].color)
@@ -396,7 +390,6 @@ class PygameWindow(pygame.Surface):
                             if  self.plus_mask.get_at(scaled_pos):
                                 
                                     if self.select[0].nombre_troupes > 1:        
-                                        print("plus")
                                         self.select[1].nombre_troupes += 1 #ajout de la troupe sur le pays
                                         self.select[0].nombre_troupes -= 1 
                                         
@@ -409,7 +402,6 @@ class PygameWindow(pygame.Surface):
                             if  self.minus_mask.get_at(scaled_pos):
                                
                                     if self.select[1].nombre_troupes > 1:
-                                        print("moins")
                                         self.select[1].nombre_troupes -= 1
                                         self.select[0].nombre_troupes += 1
 

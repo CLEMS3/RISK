@@ -111,11 +111,7 @@ class Game:
         """Cette fonction permet au joueur de vérifier que le nombre de dés est cohérent avec le nombre de troupes sélectionnées pour attaquer"""
         test_nombre_des = False
         if statut == "Attaquant" : 
-            print("On est passé")
-            print(f"nombre_de_regiments_attaquant = {nb_regiments_attaquant}")
-            print(f"nombre de des a jouer = {nombre_de_des_joues}")
             if nb_regiments_attaquant == 1 and nombre_de_des_joues == 1 : 
-                print("Le test a fonctionné")
                 test_nombre_des = True
             elif nb_regiments_attaquant == 1 and nombre_de_des_joues!=1 and territoire.nombre_troupes !=1 : 
                 self.print_barre("Attaquant : Vous devez utiliser qu'un seul régiment pour attaquer avec ce nombre de troupes", err=True)
@@ -131,7 +127,7 @@ class Game:
             elif (territoire.nombre_troupes == 1 or territoire.nombre_troupes == 2) and nombre_de_des_joues!=1 :
                 self.print_barre("Attaqué : Vous devez jouer avec 1 dés au maximum", err=True)
             elif nombre_de_des_joues!=1 and nombre_de_des_joues!=2 : 
-                    self.print_barre("Attaqué: Vous devez choisir parmi 1 et 2 dés", err=True)
+                self.print_barre("Attaqué: Vous devez choisir parmi 1 et 2 dés", err=True)
             elif territoire.nombre_troupes>=3 and (nombre_de_des_joues==1 or nombre_de_des_joues==2):
                 test_nombre_des = True
         return test_nombre_des
@@ -144,7 +140,6 @@ class Game:
         et on les compare 1 à 1. 
         """      
         territoire_conquis = False
-        print("L'attaque est lancée")
         verif_des_attaquant = self.nombre_de_des_a_jouer(territoire_attaquant,nombre_de_regiments_attaquant,nombre_de_des_attaquant,"Attaquant")
         verif_des_defenseur = self.nombre_de_des_a_jouer(territoire_attaque,nombre_de_regiments_attaquant,nombre_de_des_attaque,"Attaqué")
         nb_regiments = self.choix_du_nombre_de_regiments_attaquant(territoire_attaquant,nombre_de_regiments_attaquant)
@@ -164,18 +159,14 @@ class Game:
                     nb_des_a_comparer = nb_des_attaquant
                 for i in range(nb_des_attaquant):
                     scores_attaquant.append(des())
-                    print(scores_attaquant)
                 for i in range(nb_des_attaque):
                     scores_attaque.append(des())
-                    print(scores_attaque)
                 scores_attaquant = tri_fusion(scores_attaquant)[::-1]
                 scores_attaque = tri_fusion(scores_attaque)[::-1]
                 self.scores_attaquant = scores_attaquant
                 self.scores_attaque = scores_attaque
                 i=0
                 while i < nb_des_a_comparer and gagnant == 0:
-                    print(scores_attaquant)
-                    print(scores_attaque)
                     if scores_attaquant[i] <= scores_attaque[i]:
                         territoire_attaquant.nombre_troupes -= 1
                         territoire_attaquant.joueur.nb_troupes-=1

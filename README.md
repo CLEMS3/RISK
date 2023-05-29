@@ -18,18 +18,25 @@ Le jeu populaire **RISK** écrit en python.
         - [Déplacement](#depl)
         - [Missions](#mission)
         - [Fin de partie](#endgame)
-3. [Auteurs](#auteurs)
+3. [Structure du projet](#struct)
+4. [Auteurs](#auteurs)
 
 
-## 💽 Installation <div id="installation"></div>
+<div id="installation"></div>
 
-### Dépendances <div id="dependances"></div>
+## 💽 Installation
+
+<div id="dependances"></div>
+
+### Dépendances
 
 Le projet utilise `pygame`, ainsi que plusieurs librairies incluses dans python par défaut (qu'il n'est donc pas nécessaire d'installer).
 
 Pour simplifier l'installation, l'utilisation d'un environnement virtuel est possible, [comme décrite ici](https://docs.python.org/fr/3/tutorial/venv.html).
 
-### Utilisation <div id="utilisation"></div>
+<div id="utilisation"></div>
+
+### Utilisation
 
 Après décompression de l'archive, il suffit de lancer le fichier `/src/main.py` en étant dans le dossier `src` du projet :
 ```bash
@@ -37,9 +44,13 @@ $ cd ./src
 $ python3 main.py
 ```
 
-## 🕹 Comment jouer ? <div id="howto"></div>
+<div id="howto"></div>
 
-### Menu principal <div id="mmenu"></div>
+## 🕹 Comment jouer ?
+
+<div id="mmenu"></div>
+
+### Menu principal
 
 Le menu principal est composé de trois boutons.
 
@@ -48,7 +59,9 @@ Le joueur peut choisir de :
 - Afficher le **classement**, menu contenant les noms des différents joueurs, classés en fonction de leur nombre de victoires.
 - Lire les **règles du jeu**, affiche un texte contenant les règles du jeu RISK.
 
-### Fenêtre de jeu <div id="dependences"></div>
+<div id="dependences"></div>
+
+### Fenêtre de jeu
 
 La fenêtre de jeu se compose de quatre zones.
 
@@ -58,10 +71,13 @@ En dessous se trouve une barre notifiant le joueur de toute information pertinen
 
 Sur la gauche se trouve le volet de commande, qui permet aux joueurs d'interagir avec le jeu.
 
+<div id="gphases"></div>
 
-### Phases de jeu <div id="gphases"></div>
+### Phases de jeu
 
-#### Renforcement <div id="renforcement"></div>
+<div id="renforcement"></div>
+
+#### Renforcement
 
 Pendant le renforcement, les joueurs doivent chacun leur tour placer le nombre de troupes affiché dans le volet de commande sur leurs territoires, comme ils le souhaitent.
 
@@ -69,7 +85,9 @@ Pour ce faire, il faut sélectionner un pays et utiliser les boutons `+` et `-` 
 
 Pour passer au joueur suivant, utiliser la flèche en bas à droite. Une fois toutes les troupes de tous les joueurs placées, la flèche permet de passer à la phase d'**Attaque**.
 
-#### Attaque <div id="attaque"></div>
+<div id="attaque"></div>
+
+#### Attaque
 
 La phase d'attaque demande au joueur attaquant de choisir le territoire à attaquer, et remplir les paramètres du volet. Le joueur qui défend fait de même pour le nombre de dés.
 
@@ -83,7 +101,9 @@ Lorsque l'attaque est terminée, le bouton flèche permet de passer à la phase 
 
 Le joueur peut attaquer le nombre de territoire qu'il souhaite, selon sa stratégie. Une fois qu'il conquit un pays, il doit y placer un certain nombre de troupe, le minimum étant le nombre de troupe qu'il a utilisé pour attaquer.
 
-#### Déplacement <div id="depl"></div>
+<div id="depl"></div>
+
+#### Déplacement
 
 Durant la phase de déplacement, le joueur sélectionne deux territoires, et peut déplacer les troupes à l'aide du bouton double-flèches en bas à droite.
 
@@ -91,18 +111,24 @@ Le déplacement n'est possible qu'entre deux territoires. Le pays selectionné e
 
 Une fois la phase terminée, cliquer sur le bouton flèche pour passer à la phase suivante.
 
-#### Missions <div id="mission"></div>
+<div id="mission"></div>
+
+#### Missions
 
 Chaque joueur se voit attribué en début de partie une mission secrète qu'il va devoir accomplir pour gagner la partie. Cette mission est visible en cliquant sur le tampon "TOP SECRET" au dessus de la carte. Il ne faut pas dévoiler sa missions aux autres joueurs, cela leur donnerait un avantage sur vous.
 
 Une fois qu'un joueur a rempli sa mission, la partie prend fin.
 
-#### Fin de partie <div id="endgame"></div>
+<div id="endgame"></div>
+
+#### Fin de partie
 
 Une fois la partie remportée par un joueur, il suffit de fermer la fenêtre de jeu pour retourner au **menu**. On peut alors recommencer une partie ou choisir d'arrêter de jouer. Le gagnant de la partie remporte un point de score, ce qui le fera peut-être gagner une place dans le classement général !
 
 A vous de jouer maintenant ! N'hésitez pas à revenir sur cette fenêtre en cours de jeu si vous voulez verifier des détails.
 
+
+<div id="struct"></div>
 
 ## 📁 Structure du projet
 
@@ -122,7 +148,9 @@ A vous de jouer maintenant ! N'hésitez pas à revenir sur cette fenêtre en cou
 └── README.md
 ```
 
-## ✨ Auteurs <div id="auteurs"></div>
+<div id="auteurs"></div>
+
+## ✨ Auteurs
 
 <table>
   <tbody>

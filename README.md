@@ -73,7 +73,10 @@ Pour passer au joueur suivant, utiliser la flèche en bas à droite. Une fois to
 
 La phase d'attaque demande au joueur attaquant de choisir le territoire à attaquer, et remplir les paramètres du volet. Le joueur qui défend fait de même pour le nombre de dés.
 
-[indications sur regles avec troupes et dés ça serait bien]@vitto
+Volet :
+> - Le joueur **attaquant** peut choisir jusqu'à trois **régiments** pour attaquer.
+> - Il choisit ensuite le nombre de **dés** qu'il désire utiliser pour réaliser l'attaque. Ce nombre doit être inférieur ou égal au nombre de régiments mobilisés.
+> - Le joueur défenseur peut choisir jusqu'à deux **régiments** pour défendre, et utilisera le nombre dés correspondant.
 
 Quand tous les paramètres rentrés, le joueur clique sur les épées en bas à gauche pour attaquer une fois.
 Lorsque l'attaque est terminée, le bouton flèche permet de passer à la phase suivante.

@@ -5,15 +5,7 @@ TO DO
 
 
 
-#verifier mise a jour score
 
-#decoupage fonctionnel Rules.py @vincent
-
-#finir readme @vitto
-
-#details widget.py @vitto
-
-#VIDEO
 
 #demande prof 1,5 point chacun pour ampleur travail
 
